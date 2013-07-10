@@ -8,10 +8,14 @@ import uk.ac.cam.signups.controllers.*;
 
 public class Signapps extends Application {
   public Set<Class<?>> getClasses() {
-// 	SessionFactoryManager.getInstance();
+  	SessionFactoryManager.getInstance();
     Set<Class<?>> myServices = new HashSet<Class<?>>();
 
     // Add controllers
+    myServices.add(EventsController.class);
+    myServices.add(DeadlinesController.class);
+    myServices.add(GroupsController.class);
+    myServices.add(HomePage.class);
 
     // Add Htmleasy Providers
     myServices.addAll(HtmleasyProviders.getClasses());
