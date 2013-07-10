@@ -28,20 +28,13 @@ import javax.servlet.http.HttpServletRequest;
 
 @Path("/")
 public class RavenTestController {
-
-	/*
-	 * The request will automatically be given the value of the current request
-	 * when using the @Context tag. You need the request for getting a hibernate
-	 * session and also for getting the current user, which is passed as a session
-	 * attribute (the session being contained in the request).
-	 */
+	private Session session;
+	
+	//Current request
 	@Context
 	HttpServletRequest request;
 
-	/* 
-	 * You could also declare the following in a method locally; you might as well
-	 * have one logger for the entire class. Make sure it is static if you do.  
-	 */
+	// TODO: logging
 //	private static Logger log = LoggerFactory.getLogger(MainController.class);
 	
 	
@@ -61,6 +54,10 @@ public class RavenTestController {
 		String crsid = (String) request.getSession().getAttribute("RavenRemoteUser");
 		// This will get the user's name from LDAP
 		String name = LDAPProvider.getData(crsid, "cn");
+		
+		// Get a session from hibernate using the current request
+		session = HibernateSessionRequestFilter.openSession(request);
+		
 		
 		// Return a map of all the users data
 		return ImmutableMap.of("crsid", crsid, "name", name);
