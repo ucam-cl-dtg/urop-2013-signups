@@ -1,6 +1,6 @@
 package uk.ac.cam.signups.models;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
@@ -16,7 +16,7 @@ public class User {
 	@Id
 	private String crsid;
 	
-	private Set<Deadline> deadlines;
+	private List<Deadline> deadlines;
 	
 	public User() {}
 	
@@ -31,11 +31,11 @@ public class User {
 	@JoinTable(name = "DEADLINES_STUDENTS", 
 						joinColumns = { @JoinColumn(name = "USER_CRSID")},
 						inverseJoinColumns = {@JoinColumn(name = "DEADLINE_ID")})
-	public Set<Deadline> getDeadlines() {
+	public List<Deadline> getDeadlines() {
 		return deadlines;
 	}
 	
-	public void setDeadlines(Set<Deadline> deadlines) {
+	public void setDeadlines(List<Deadline> deadlines) {
 		this.deadlines = deadlines;
 	}
 }
