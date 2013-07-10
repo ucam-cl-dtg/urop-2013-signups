@@ -51,12 +51,8 @@
         <!-- Drop and re-create the database schema on startup -->
         <property name="hbm2ddl.auto">create</property>
 
-        <mapping class="models.Event" />
-        <mapping class="models.Slot" />
-        <mapping class="models.Type" />
-        <mapping class="models.Deadline" />
-        <mapping class="models.User" />
-        <mapping class="models.Group" />
+        <mapping class="uk.ac.cam.signups.models.User" />
+
 
     </session-factory>
 
