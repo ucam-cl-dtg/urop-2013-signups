@@ -15,11 +15,10 @@ import org.slf4j.LoggerFactory;
 
 // Import for hibernate requests
 import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
+import org.hibernate.Session;
 
 //Import for cam lookup requests
 import uk.ac.cam.signups.util.LDAPProvider;
-
-import org.hibernate.Session;
 
 // Import the following for raven AND hibernate
 import javax.ws.rs.core.Context;
