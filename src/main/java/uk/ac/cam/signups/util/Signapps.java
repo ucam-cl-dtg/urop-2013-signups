@@ -13,9 +13,9 @@ public class Signapps extends Application {
     Set<Class<?>> myServices = new HashSet<Class<?>>();
 
     // Add controllers
-    myServices.add(EventsController.class);
-    myServices.add(DeadlinesController.class);
-    myServices.add(GroupsController.class);
+    //myServices.add(EventsController.class);
+    //myServices.add(DeadlinesController.class);
+    //myServices.add(GroupsController.class);
     myServices.add(HomePageController.class);
     myServices.add(RavenTestController.class);    
     

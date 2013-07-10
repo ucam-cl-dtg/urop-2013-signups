@@ -17,7 +17,7 @@ public class User {
 	@Id
 	private String crsid;
 	
-	private Set<Deadline> deadlines = new HashSet<Deadline>(0);
+	// private Set<Deadline> deadlines = new HashSet<Deadline>(0);
 	
 	public User() {}
 	
@@ -28,6 +28,7 @@ public class User {
 	public String getCrsid() {return crsid;}
 	public void setCrsid(String crsid) {this.crsid = crsid;}
 	
+	/*
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "DEADLINES_STUDENTS", 
 						joinColumns = { @JoinColumn(name = "USER_CRSID")},
@@ -39,4 +40,5 @@ public class User {
 	public void setDeadlines(Set<Deadline> deadlines) {
 		this.deadlines = deadlines;
 	}
+	*/
 }
