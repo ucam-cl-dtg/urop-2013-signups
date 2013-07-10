@@ -9,11 +9,16 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name="EVENTS")
 public class Event {
 	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment", strategy = "increment")
 	private String id;
 	
 	private Set<Deadline> deadlines;
