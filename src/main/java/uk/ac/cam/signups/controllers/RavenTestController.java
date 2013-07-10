@@ -34,8 +34,8 @@ public class RavenTestController {
 	@Context
 	HttpServletRequest request;
 
-	// TODO: logging
-//	private static Logger log = LoggerFactory.getLogger(MainController.class);
+	// Create the logger
+	private static Logger log = LoggerFactory.getLogger(RavenTestController.class);
 	
 	
 	@GET
@@ -45,7 +45,8 @@ public class RavenTestController {
 		
 		// Get user's name and CRSID
 		ImmutableMap<String, ?> user = getUserDetails();
-
+		log.info("User: "  + user.get("name") + " " + user.get("crsid"));
+		
 		return ImmutableMap.of("user", user);
 	}
 
@@ -57,7 +58,9 @@ public class RavenTestController {
 		
 		// Get a session from hibernate using the current request
 		session = HibernateSessionRequestFilter.openSession(request);
-		
+		session.beginTransaction();
+		session.getTransaction().commit();
+		session.close();
 		
 		// Return a map of all the users data
 		return ImmutableMap.of("crsid", crsid, "name", name);

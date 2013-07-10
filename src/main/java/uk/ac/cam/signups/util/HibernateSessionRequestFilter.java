@@ -24,6 +24,7 @@ public class HibernateSessionRequestFilter implements Filter {
 	public static final String SESSION_FACTORY = HibernateSessionRequestFilter.class
 			.getName() + ".SessionFactory";
 
+	// Create logger
 	private static Logger log = LoggerFactory
 			.getLogger(HibernateSessionRequestFilter.class);
 
@@ -61,6 +62,7 @@ public class HibernateSessionRequestFilter implements Filter {
 	public static Session openSession(HttpServletRequest request) {
 		SessionFactory factory = (SessionFactory) request
 				.getAttribute(SESSION_FACTORY);
+		log.debug("Opening session...");
 		return factory.openSession();
 	}
 }
