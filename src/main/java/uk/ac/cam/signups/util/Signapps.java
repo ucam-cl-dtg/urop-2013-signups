@@ -1,7 +1,9 @@
 package uk.ac.cam.signups.util;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.ws.rs.core.Application;
+
 import com.googlecode.htmleasy.HtmleasyProviders;
 
 import uk.ac.cam.signups.controllers.*;
@@ -16,7 +18,8 @@ public class Signapps extends Application {
     myServices.add(DeadlinesController.class);
     myServices.add(GroupsController.class);
     myServices.add(HomePage.class);
-
+    myServices.add(RavenTestController.class);    
+    
     // Add Htmleasy Providers
     myServices.addAll(HtmleasyProviders.getClasses());
 
