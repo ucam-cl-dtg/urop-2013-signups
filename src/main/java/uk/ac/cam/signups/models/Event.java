@@ -19,7 +19,7 @@ public class Event {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
-	private String id;
+	private int id;
 	
 	// private Set<Deadline> deadlines;
 	
@@ -29,7 +29,7 @@ public class Event {
 		this.id = id;
 	}
 	
-	public String getId() {return id;}
+	public int getId() {return id;}
 	public void setId(int id) {this.id = id;}
 	
 	/*
