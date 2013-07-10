@@ -9,7 +9,7 @@
     <filter-class>com.googlecode.htmleasy.HtmleasyFilterDispatcher</filter-class>
     <init-param>
       <param-name>javax.ws.rs.Application</param-name>
-      <param-value>util.TimetableToy</param-value>
+      <param-value>uk.ac.cam.signups.Signapps</param-value>
     </init-param>
   </filter>
 
