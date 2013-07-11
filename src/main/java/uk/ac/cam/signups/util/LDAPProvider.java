@@ -15,9 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LDAPProvider {
-	
-	// For more complex examples see the SettingWork project. SettingWork also
-	// includes examples on how to retrieve photos and lists of values.
+
 	public static String getData(String crsid, String type) {
 		Logger log = LoggerFactory.getLogger(LDAPProvider.class);
 		
