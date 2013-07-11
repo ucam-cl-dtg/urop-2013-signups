@@ -9,7 +9,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 
 import com.google.common.collect.ImmutableMap;
+import com.googlecode.htmleasy.RedirectException;
 import com.googlecode.htmleasy.ViewWith;
+
 
 
 //Import models
@@ -20,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+
 //Import for hibernate requests
 import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
 
@@ -27,10 +30,11 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 
+
 //Import for cam lookup requests
 import uk.ac.cam.signups.util.LDAPProvider;
-
 import uk.ac.cam.signups.util.UserLookupManager;
+
 
 //Import the following for raven AND hibernate
 import javax.ws.rs.core.Context;
@@ -55,9 +59,13 @@ public class HomePageController {
 	// Index
 	@GET @Path("/") @ViewWith("/soy/home_page.index")
 	public Map indexHomePage() {
+		
+		// Initialise user
+		initialiseUser();
+		
 		// Get user details
 		log.debug("Index GET: Getting user details");
-		ImmutableMap<String, ?> user = getUserDetails();
+		ImmutableMap<String, ?> user = ulm.getAll();
 		
 		// Return data for template
 		return ImmutableMap.of("user", user);
@@ -66,6 +74,15 @@ public class HomePageController {
 	// DOS Index
 	@GET @Path("/DoS") @ViewWith("/soy/home_page.dos")
 	public Map dosHomePage() {
+		
+		// Initialise user
+		initialiseUser();
+		
+		// Does user have staff level access?
+		if(!isStaff()){
+			throw new RedirectException("/");
+		}
+		
 		return ImmutableMap.of();
 	}
 	
@@ -75,9 +92,18 @@ public class HomePageController {
 		return ImmutableMap.of();
 	}
 	
-	// Method to get details of current user. 
-	public ImmutableMap<String, ?> getUserDetails() {
+	// Authenticate staff
+	public boolean isStaff() {
+		try {
+			return (ulm.getStatus().equals("staff"));
+		} catch(NullPointerException e) {
+			log.error("User initialisation failed");
+			return false;
+		}
+	}
 	
+	// UserLookupManager setup
+	public void initialiseUser(){
 		// This will extract the CRSID of the current user and return it:
 		log.debug("Getting crsid from raven");	
 		String crsid = (String) request.getSession().getAttribute("RavenRemoteUser");
@@ -86,9 +112,7 @@ public class HomePageController {
 		ulm = UserLookupManager.getUserLookupManager(crsid);
 		// Add user to database if necessary
 		log.debug("Checking if user is in database");
-		registerUser(crsid);
-
-		return ulm.getAll();
+		registerUser(crsid);		
 	}
 	
 	// Add to User class later

@@ -2961,3 +2961,22 @@
 [2013-07-11 15:58:04] [INFO ] SchemaExport:343 - HHH000227: Running hbm2ddl schema export
 [2013-07-11 15:58:04] [INFO ] SchemaExport:405 - HHH000230: Schema export complete
 [2013-07-11 15:58:04] [INFO ] ResteasyDeployment:82 - Deploying javax.ws.rs.core.Application: class uk.ac.cam.signups.util.Signapps
+[2013-07-11 16:18:31] [INFO ] Version:37 - HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+[2013-07-11 16:18:31] [INFO ] Version:41 - HHH000412: Hibernate Core {4.2.2.Final}
+[2013-07-11 16:18:31] [INFO ] Environment:239 - HHH000206: hibernate.properties not found
+[2013-07-11 16:18:31] [INFO ] Environment:342 - HHH000021: Bytecode provider name : javassist
+[2013-07-11 16:18:31] [INFO ] Configuration:1985 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+[2013-07-11 16:18:31] [INFO ] Configuration:2004 - HHH000040: Configuration resource: /hibernate.cfg.xml
+[2013-07-11 16:18:31] [INFO ] Configuration:2126 - HHH000041: Configured SessionFactory: null
+[2013-07-11 16:18:31] [INFO ] DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+[2013-07-11 16:18:31] [INFO ] DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 1
+[2013-07-11 16:18:31] [INFO ] DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+[2013-07-11 16:18:31] [INFO ] DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/signups]
+[2013-07-11 16:18:31] [INFO ] DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=signups, password=****}
+[2013-07-11 16:18:32] [INFO ] Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+[2013-07-11 16:18:32] [INFO ] LobCreatorBuilder:120 - HHH000424: Disabling contextual LOB creation as createClob() method threw error : java.lang.reflect.InvocationTargetException
+[2013-07-11 16:18:32] [INFO ] TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+[2013-07-11 16:18:32] [INFO ] ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+[2013-07-11 16:18:32] [INFO ] SchemaExport:343 - HHH000227: Running hbm2ddl schema export
+[2013-07-11 16:18:32] [INFO ] SchemaExport:405 - HHH000230: Schema export complete
+[2013-07-11 16:18:32] [INFO ] ResteasyDeployment:82 - Deploying javax.ws.rs.core.Application: class uk.ac.cam.signups.util.Signapps
