@@ -1,8 +1,11 @@
 package uk.ac.cam.signups.util;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.naming.Context;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
@@ -16,8 +19,11 @@ import org.slf4j.LoggerFactory;
 
 public class LDAPProvider {
 
-	public static String getData(String crsid, String type) {
-		Logger log = LoggerFactory.getLogger(LDAPProvider.class);
+	//Logger
+	private static Logger log = LoggerFactory.getLogger(LDAPProvider.class);
+	
+	// Query LDAP people
+	public static Attributes queryPeople(String crsid, String type) {
 		
 		Hashtable env = new Hashtable();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -37,6 +43,16 @@ public class LDAPProvider {
 			return null;
 		}
 		
+		return a;
+	}
+	
+	//TODO: query LDAP groups and institutions
+	
+	// Get a single result
+	public static String getUniqueResult(String crsid, String type) {
+		
+		Attributes a = queryPeople(crsid, type);
+		
 		try {
         	return a.get(type).get().toString();
         } catch (NamingException e) {
@@ -45,4 +61,58 @@ public class LDAPProvider {
 		}
 		
 	}
+	
+	//Get a list of results as strings
+	public static List<String> getStringListResult(String crsid, String type){
+		
+		Attributes a = queryPeople(crsid, type);
+		
+		try {
+			List<String> listResults = new ArrayList<String>();
+			
+			//Initialise enumResults
+			NamingEnumeration enumResults;
+			
+			//If no results return an empty list
+			try {
+			 enumResults = a.get(type).getAll();
+			} catch (NullPointerException e){
+				log.debug("User has no photo");
+				return null;
+			}
+			
+			// Convert enumeration type results to string
+				while(enumResults.hasMore()){
+				listResults.add(enumResults.next().toString());
+				
+				return listResults;
+				}
+					
+        } catch (NamingException e) {
+			log.error(e.getMessage());
+			return null;
+		}
+		return new ArrayList<String>();
+	}
+	
+	// Get LDAP data in unchanged enumeration type form
+	public static NamingEnumeration getEnumListResult(String crsid, String type){
+		
+		Attributes a = queryPeople(crsid, type);
+		
+		try {
+			try {
+			 return a.get(type).getAll();
+			} catch (NullPointerException e){
+				log.debug("No data of type " + " for this user");
+				return null;
+			}	
+					
+        } catch (NamingException e) {
+			log.error(e.getMessage());
+			return null;
+		}
+	}	
+	
+
 }

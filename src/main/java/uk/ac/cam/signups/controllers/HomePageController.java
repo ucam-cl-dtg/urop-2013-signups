@@ -56,6 +56,7 @@ public class HomePageController {
 	@GET @Path("/") @ViewWith("/soy/home_page.index")
 	public Map indexHomePage() {
 		// Get user details
+		log.debug("Index GET: Getting user details");
 		ImmutableMap<String, ?> user = getUserDetails();
 		
 		// Return data for template
@@ -76,21 +77,24 @@ public class HomePageController {
 	
 	// Method to get details of current user. 
 	public ImmutableMap<String, ?> getUserDetails() {
-		
+	
 		// This will extract the CRSID of the current user and return it:
+		log.debug("Getting crsid from raven");	
 		String crsid = (String) request.getSession().getAttribute("RavenRemoteUser");
 		// Create UserLookupManager for this user
+		log.debug("Creating userLookupManager");	
 		ulm = UserLookupManager.getUserLookupManager(crsid);
 		// Add user to database if necessary
+		log.debug("Checking if user is in database");
 		registerUser(crsid);
-		
-		// Return all data of current user
+
 		return ulm.getAll();
 	}
 	
 	// Add to User class later
 	public void registerUser(String crsid) {
 		// Begin hibernate session
+		log.debug("begin hibernate session");
 		session = HibernateSessionRequestFilter.openSession(request);
 		session.beginTransaction();
 		// Does the user already exist?
@@ -105,6 +109,7 @@ public class HomePageController {
 	  		log.info("User " + crsid + " added to USERS table");
 	  	}
 	  	// Close hibernate session
+	  	log.debug("closing hibernate session");
 		session.getTransaction().commit();
 		session.close();		
 	}
