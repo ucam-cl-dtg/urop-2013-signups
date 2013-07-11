@@ -1,18 +1,18 @@
 # signups
 =================
 System to create and signup for events such as supervisions, ticking sessions<br/>
-Features:
+###Features:
 * Event creation page
 * Event signup page
 * Deadlines
 * Groups
------------------
-Database structure:
+
+###Database structure:
 * Table USERS
 * Table DEADLINES
 * Table EVENTS
 (TODO)
------------------
+
 ## models (uk.ac.cam.signups.models)
 
 ## controllers (uk.ac.cam.signups.controllers)
