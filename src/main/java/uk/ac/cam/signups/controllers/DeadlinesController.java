@@ -12,6 +12,8 @@ import javax.ws.rs.FormParam;
 
 import org.jboss.resteasy.annotations.Form;
 
+import uk.ac.cam.signups.models.Deadline;
+
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.htmleasy.RedirectException;
 import com.googlecode.htmleasy.ViewWith;
@@ -29,7 +31,7 @@ public class DeadlinesController {
 	// New
 	@GET @Path("/new") @ViewWith("deadlines.new")
 	public Map newDeadline() {
-		return ImmutableMap.of()
+		return ImmutableMap.of();
 	}
 	
 	// Create 

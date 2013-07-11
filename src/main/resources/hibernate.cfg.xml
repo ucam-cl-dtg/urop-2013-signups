@@ -52,7 +52,13 @@
         <property name="hbm2ddl.auto">create</property>
 
         <mapping class="uk.ac.cam.signups.models.User" />
-
+        <mapping class="uk.ac.cam.signups.models.Event" />
+        <mapping class="uk.ac.cam.signups.models.Group" />
+        <mapping class="uk.ac.cam.signups.models.Row" />
+        <mapping class="uk.ac.cam.signups.models.Slot" />
+        <mapping class="uk.ac.cam.signups.models.Type" />
+        <mapping class="uk.ac.cam.signups.models.HistoryItem" />
+        <mapping class="uk.ac.cam.signups.models.Deadline" />
 
     </session-factory>
 
