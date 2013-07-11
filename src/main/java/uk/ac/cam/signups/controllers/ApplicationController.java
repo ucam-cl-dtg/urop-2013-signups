@@ -26,11 +26,14 @@ public class ApplicationController {
 	@Context
 	HttpServletRequest request;
 	
+	// Store CRSID since often used
+	protected String crsid;
+	
 	//UserLookupManager setup
 	protected void initialiseUser(){
 		// This will extract the CRSID of the current user and return it:
 		log.debug("Getting crsid from raven");	
-		String crsid = (String) request.getSession().getAttribute("RavenRemoteUser");
+		crsid = (String) request.getSession().getAttribute("RavenRemoteUser");
 		// Create UserLookupManager for this user
 		log.debug("Creating userLookupManager");	
 		ulm = UserLookupManager.getUserLookupManager(crsid);
