@@ -19,7 +19,7 @@ import com.googlecode.htmleasy.RedirectException;
 import com.googlecode.htmleasy.ViewWith;
 
 @Path("/events/{id}/deadlines")
-public class DeadlinesController {
+public class DeadlinesController extends ApplicationController {
 	@PathParam("id") int id;
 	
 	// Index 

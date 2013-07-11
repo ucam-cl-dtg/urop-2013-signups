@@ -3032,3 +3032,130 @@
 [2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "slots" does not exist
 [2013-07-11 16:28:45] [INFO ] SchemaExport:405 - HHH000230: Schema export complete
 [2013-07-11 16:28:45] [INFO ] ResteasyDeployment:82 - Deploying javax.ws.rs.core.Application: class uk.ac.cam.signups.util.Signapps
+[2013-07-11 16:47:33] [INFO ] Version:37 - HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+[2013-07-11 16:47:33] [INFO ] Version:41 - HHH000412: Hibernate Core {4.2.2.Final}
+[2013-07-11 16:47:33] [INFO ] Environment:239 - HHH000206: hibernate.properties not found
+[2013-07-11 16:47:33] [INFO ] Environment:342 - HHH000021: Bytecode provider name : javassist
+[2013-07-11 16:47:33] [INFO ] Configuration:1985 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+[2013-07-11 16:47:33] [INFO ] Configuration:2004 - HHH000040: Configuration resource: /hibernate.cfg.xml
+[2013-07-11 16:47:33] [INFO ] Configuration:2126 - HHH000041: Configured SessionFactory: null
+[2013-07-11 16:47:33] [INFO ] DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+[2013-07-11 16:47:33] [INFO ] DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 1
+[2013-07-11 16:47:33] [INFO ] DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+[2013-07-11 16:47:33] [INFO ] DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/signups]
+[2013-07-11 16:47:33] [INFO ] DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=signups, password=****}
+[2013-07-11 16:47:33] [WARN ] JdbcServicesImpl:169 - HHH000342: Could not obtain connection to query metadata : Connection refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+[2013-07-11 16:47:33] [INFO ] Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+[2013-07-11 16:47:33] [INFO ] LobCreatorBuilder:85 - HHH000422: Disabling contextual LOB creation as connection was null
+[2013-07-11 16:47:33] [INFO ] TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+[2013-07-11 16:47:33] [INFO ] ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+[2013-07-11 16:47:33] [INFO ] PojoInstantiator:85 - HHH000182: No default (no-argument) constructor for class: uk.ac.cam.signups.models.Group (class must be instantiated by Interceptor)
+[2013-07-11 16:47:33] [INFO ] SchemaExport:343 - HHH000227: Running hbm2ddl schema export
+[2013-07-11 16:47:33] [ERROR] SchemaExport:385 - HHH000231: Schema export unsuccessful
+org.postgresql.util.PSQLException: Connection refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:138)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:66)
+	at org.postgresql.jdbc2.AbstractJdbc2Connection.<init>(AbstractJdbc2Connection.java:125)
+	at org.postgresql.jdbc3.AbstractJdbc3Connection.<init>(AbstractJdbc3Connection.java:30)
+	at org.postgresql.jdbc3g.AbstractJdbc3gConnection.<init>(AbstractJdbc3gConnection.java:22)
+	at org.postgresql.jdbc4.AbstractJdbc4Connection.<init>(AbstractJdbc4Connection.java:32)
+	at org.postgresql.jdbc4.Jdbc4Connection.<init>(Jdbc4Connection.java:24)
+	at org.postgresql.Driver.makeConnection(Driver.java:393)
+	at org.postgresql.Driver.connect(Driver.java:267)
+	at org.hibernate.service.jdbc.connections.internal.DriverManagerConnectionProviderImpl.getConnection(DriverManagerConnectionProviderImpl.java:204)
+	at org.hibernate.tool.hbm2ddl.SuppliedConnectionProviderConnectionHelper.prepare(SuppliedConnectionProviderConnectionHelper.java:51)
+	at org.hibernate.tool.hbm2ddl.DatabaseExporter.<init>(DatabaseExporter.java:52)
+	at org.hibernate.tool.hbm2ddl.SchemaExport.execute(SchemaExport.java:367)
+	at org.hibernate.tool.hbm2ddl.SchemaExport.create(SchemaExport.java:304)
+	at org.hibernate.tool.hbm2ddl.SchemaExport.create(SchemaExport.java:293)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:500)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:1769)
+	at uk.ac.cam.signups.util.HibernateSessionRequestFilter.configureSessionFactory(HibernateSessionRequestFilter.java:47)
+	at uk.ac.cam.signups.util.HibernateSessionRequestFilter.init(HibernateSessionRequestFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doStart(FilterHolder.java:97)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:55)
+	at org.eclipse.jetty.servlet.ServletHandler.initialize(ServletHandler.java:739)
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:244)
+	at org.eclipse.jetty.webapp.WebAppContext.startContext(WebAppContext.java:1132)
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:577)
+	at org.eclipse.jetty.webapp.WebAppContext.doStart(WebAppContext.java:491)
+	at org.mortbay.jetty.plugin.JettyWebAppContext.doStart(JettyWebAppContext.java:160)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:55)
+	at org.eclipse.jetty.server.handler.HandlerCollection$1.run(HandlerCollection.java:200)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:450)
+	at java.lang.Thread.run(Thread.java:680)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.PlainSocketImpl.doConnect(PlainSocketImpl.java:382)
+	at java.net.PlainSocketImpl.connectToAddress(PlainSocketImpl.java:241)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:228)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:431)
+	at java.net.Socket.connect(Socket.java:527)
+	at java.net.Socket.connect(Socket.java:476)
+	at java.net.Socket.<init>(Socket.java:373)
+	at java.net.Socket.<init>(Socket.java:187)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:62)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:76)
+	... 30 more
+[2013-07-11 16:47:33] [INFO ] SchemaExport:405 - HHH000230: Schema export complete
+[2013-07-11 16:47:33] [INFO ] ResteasyDeployment:82 - Deploying javax.ws.rs.core.Application: class uk.ac.cam.signups.util.Signapps
+[2013-07-11 16:49:39] [INFO ] Version:37 - HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+[2013-07-11 16:49:39] [INFO ] Version:41 - HHH000412: Hibernate Core {4.2.2.Final}
+[2013-07-11 16:49:39] [INFO ] Environment:239 - HHH000206: hibernate.properties not found
+[2013-07-11 16:49:39] [INFO ] Environment:342 - HHH000021: Bytecode provider name : javassist
+[2013-07-11 16:49:39] [INFO ] Configuration:1985 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+[2013-07-11 16:49:39] [INFO ] Configuration:2004 - HHH000040: Configuration resource: /hibernate.cfg.xml
+[2013-07-11 16:49:39] [INFO ] Configuration:2126 - HHH000041: Configured SessionFactory: null
+[2013-07-11 16:49:39] [INFO ] DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+[2013-07-11 16:49:39] [INFO ] DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 1
+[2013-07-11 16:49:39] [INFO ] DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+[2013-07-11 16:49:39] [INFO ] DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/signups]
+[2013-07-11 16:49:39] [INFO ] DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=signups, password=****}
+[2013-07-11 16:49:41] [INFO ] Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+[2013-07-11 16:49:41] [INFO ] LobCreatorBuilder:120 - HHH000424: Disabling contextual LOB creation as createClob() method threw error : java.lang.reflect.InvocationTargetException
+[2013-07-11 16:49:41] [INFO ] TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+[2013-07-11 16:49:41] [INFO ] ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+[2013-07-11 16:49:41] [INFO ] PojoInstantiator:85 - HHH000182: No default (no-argument) constructor for class: uk.ac.cam.signups.models.Group (class must be instantiated by Interceptor)
+[2013-07-11 16:49:41] [INFO ] SchemaExport:343 - HHH000227: Running hbm2ddl schema export
+[2013-07-11 16:49:41] [INFO ] SchemaExport:405 - HHH000230: Schema export complete
+[2013-07-11 16:49:42] [INFO ] ResteasyDeployment:82 - Deploying javax.ws.rs.core.Application: class uk.ac.cam.signups.util.Signapps
+[2013-07-11 16:57:14] [INFO ] Version:37 - HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+[2013-07-11 16:57:14] [INFO ] Version:41 - HHH000412: Hibernate Core {4.2.2.Final}
+[2013-07-11 16:57:14] [INFO ] Environment:239 - HHH000206: hibernate.properties not found
+[2013-07-11 16:57:14] [INFO ] Environment:342 - HHH000021: Bytecode provider name : javassist
+[2013-07-11 16:57:14] [INFO ] Configuration:1985 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+[2013-07-11 16:57:14] [INFO ] Configuration:2004 - HHH000040: Configuration resource: /hibernate.cfg.xml
+[2013-07-11 16:57:14] [INFO ] Configuration:2126 - HHH000041: Configured SessionFactory: null
+[2013-07-11 16:57:14] [INFO ] DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+[2013-07-11 16:57:14] [INFO ] DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 1
+[2013-07-11 16:57:14] [INFO ] DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+[2013-07-11 16:57:14] [INFO ] DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/signups]
+[2013-07-11 16:57:14] [INFO ] DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=signups, password=****}
+[2013-07-11 16:57:16] [INFO ] Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+[2013-07-11 16:57:16] [INFO ] LobCreatorBuilder:120 - HHH000424: Disabling contextual LOB creation as createClob() method threw error : java.lang.reflect.InvocationTargetException
+[2013-07-11 16:57:16] [INFO ] TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+[2013-07-11 16:57:16] [INFO ] ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+[2013-07-11 16:57:17] [INFO ] PojoInstantiator:85 - HHH000182: No default (no-argument) constructor for class: uk.ac.cam.signups.models.Group (class must be instantiated by Interceptor)
+[2013-07-11 16:57:17] [INFO ] SchemaExport:343 - HHH000227: Running hbm2ddl schema export
+[2013-07-11 16:57:17] [INFO ] SchemaExport:405 - HHH000230: Schema export complete
+[2013-07-11 16:57:17] [INFO ] ResteasyDeployment:82 - Deploying javax.ws.rs.core.Application: class uk.ac.cam.signups.util.Signapps
+[2013-07-11 17:00:03] [INFO ] Version:37 - HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+[2013-07-11 17:00:03] [INFO ] Version:41 - HHH000412: Hibernate Core {4.2.2.Final}
+[2013-07-11 17:00:03] [INFO ] Environment:239 - HHH000206: hibernate.properties not found
+[2013-07-11 17:00:03] [INFO ] Environment:342 - HHH000021: Bytecode provider name : javassist
+[2013-07-11 17:00:03] [INFO ] Configuration:1985 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+[2013-07-11 17:00:03] [INFO ] Configuration:2004 - HHH000040: Configuration resource: /hibernate.cfg.xml
+[2013-07-11 17:00:03] [INFO ] Configuration:2126 - HHH000041: Configured SessionFactory: null
+[2013-07-11 17:00:03] [INFO ] DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+[2013-07-11 17:00:03] [INFO ] DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 1
+[2013-07-11 17:00:03] [INFO ] DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+[2013-07-11 17:00:03] [INFO ] DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/signups]
+[2013-07-11 17:00:03] [INFO ] DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=signups, password=****}
+[2013-07-11 17:00:05] [INFO ] Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+[2013-07-11 17:00:05] [INFO ] LobCreatorBuilder:120 - HHH000424: Disabling contextual LOB creation as createClob() method threw error : java.lang.reflect.InvocationTargetException
+[2013-07-11 17:00:05] [INFO ] TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+[2013-07-11 17:00:05] [INFO ] ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+[2013-07-11 17:00:05] [INFO ] PojoInstantiator:85 - HHH000182: No default (no-argument) constructor for class: uk.ac.cam.signups.models.Group (class must be instantiated by Interceptor)
+[2013-07-11 17:00:05] [INFO ] SchemaExport:343 - HHH000227: Running hbm2ddl schema export
+[2013-07-11 17:00:05] [INFO ] SchemaExport:405 - HHH000230: Schema export complete
+[2013-07-11 17:00:05] [INFO ] ResteasyDeployment:82 - Deploying javax.ws.rs.core.Application: class uk.ac.cam.signups.util.Signapps

@@ -19,7 +19,7 @@ import com.googlecode.htmleasy.RedirectException;
 import com.googlecode.htmleasy.ViewWith;
 
 @Path("/groups")
-public class GroupsController {
+public class GroupsController extends ApplicationController {
 	
 	// Index
 	@GET @Path("/") @ViewWith("/soy/groups.index")

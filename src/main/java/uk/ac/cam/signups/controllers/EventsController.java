@@ -18,7 +18,7 @@ import com.googlecode.htmleasy.RedirectException;
 import com.googlecode.htmleasy.ViewWith;
 
 @Path("/events")
-public class EventsController {
+public class EventsController extends ApplicationController {
 	
 	// New
 	@GET @Path("/new") @ViewWith("/soy/events.new")

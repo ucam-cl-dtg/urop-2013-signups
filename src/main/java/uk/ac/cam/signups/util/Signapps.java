@@ -17,7 +17,6 @@ public class Signapps extends Application {
     //myServices.add(DeadlinesController.class);
     //myServices.add(GroupsController.class);
     myServices.add(HomePageController.class);
-    myServices.add(RavenTestController.class);    
     
     // Add Htmleasy Providers
     myServices.addAll(HtmleasyProviders.getClasses());
