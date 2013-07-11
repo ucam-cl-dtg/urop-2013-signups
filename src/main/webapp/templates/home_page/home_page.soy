@@ -1,0 +1,23 @@
+{namespace home_page}
+
+/**
+ * Home Page for timetables
+ * @param user
+ * 
+ */
+{template .index autoescape="false"}
+<html>
+<head>
+<title>Home Page</title>
+</head>
+<body>
+<h1>Signups home page</h1>
+<h2>Welcome {$user.fullname} ({$user.crsid})</h2>
+ Your status is {$user.status}. Your email is {$user.email}<br/>
+ {if $user.photo == 'none'}<img src="/images/nophoto.jpeg" />{else}<img src="data:image/jpeg;base64,{$user.photo}" />{/if}<br/>
+ You are a member of {$user.institution}
+ 
+</body>
+</html>
+
+{/template}

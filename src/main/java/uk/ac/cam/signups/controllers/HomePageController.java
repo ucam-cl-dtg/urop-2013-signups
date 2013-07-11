@@ -11,6 +11,7 @@ import javax.ws.rs.core.Context;
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.htmleasy.ViewWith;
 
+
 //Import models
 import uk.ac.cam.signups.models.*;
 
@@ -18,14 +19,18 @@ import uk.ac.cam.signups.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 //Import for hibernate requests
 import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+
 //Import for cam lookup requests
 import uk.ac.cam.signups.util.LDAPProvider;
+
+import uk.ac.cam.signups.util.UserLookupManager;
 
 //Import the following for raven AND hibernate
 import javax.ws.rs.core.Context;
@@ -37,6 +42,9 @@ public class HomePageController {
 	// Database session
 	private Session session;
 	
+	// UserLookupManager for this user
+	private UserLookupManager ulm;
+	
 	// Raven current request
 	@Context
 	HttpServletRequest request;
@@ -47,7 +55,11 @@ public class HomePageController {
 	// Index
 	@GET @Path("/") @ViewWith("/soy/home_page.index")
 	public Map indexHomePage() {
+		// Get user details
+		log.debug("Index GET: Getting user details");
 		ImmutableMap<String, ?> user = getUserDetails();
+		
+		// Return data for template
 		return ImmutableMap.of("user", user);
 	}
 	
@@ -63,18 +75,30 @@ public class HomePageController {
 		return ImmutableMap.of();
 	}
 	
-	// Method to get details of current user. Possibly add to user model as a static method?
+	// Method to get details of current user. 
 	public ImmutableMap<String, ?> getUserDetails() {
+	
 		// This will extract the CRSID of the current user and return it:
+		log.debug("Getting crsid from raven");	
 		String crsid = (String) request.getSession().getAttribute("RavenRemoteUser");
-		// This will get the user's name from LDAP
-		String name = LDAPProvider.getData(crsid, "cn");
-		
+		// Create UserLookupManager for this user
+		log.debug("Creating userLookupManager");	
+		ulm = UserLookupManager.getUserLookupManager(crsid);
+		// Add user to database if necessary
+		log.debug("Checking if user is in database");
+		registerUser(crsid);
+
+		return ulm.getAll();
+	}
+	
+	// Add to User class later
+	public void registerUser(String crsid) {
 		// Begin hibernate session
+		log.debug("begin hibernate session");
 		session = HibernateSessionRequestFilter.openSession(request);
 		session.beginTransaction();
 		// Does the user already exist?
-		Query userQuery = session.createQuery("from USERS where id = :id").setParameter("id", crsid);
+		Query userQuery = session.createQuery("from User where id = :id").setParameter("id", crsid);
 	  	User user = (User) userQuery.uniqueResult();
 	  	
 	  	// If no, create them
@@ -85,10 +109,8 @@ public class HomePageController {
 	  		log.info("User " + crsid + " added to USERS table");
 	  	}
 	  	// Close hibernate session
+	  	log.debug("closing hibernate session");
 		session.getTransaction().commit();
-		session.close();
-		
-		// Return a map of all the users data
-		return ImmutableMap.of("crsid", crsid, "name", name);
+		session.close();		
 	}
 }
