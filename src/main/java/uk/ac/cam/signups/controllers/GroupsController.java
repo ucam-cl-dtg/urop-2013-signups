@@ -77,7 +77,8 @@ public class GroupsController extends ApplicationController {
 			// Are there any groups for this user?
 			Query userQuery = session.createQuery("from User where id = :id").setParameter("id", crsid);
 		  	User user = (User) userQuery.uniqueResult();
-		  	Set<Group> groups = user.getGroups();
+		  	Set<Group> groups = user.getGroupsMap();
+			
 		  	// Close hibernate session
 		  	log.debug("closing hibernate session");
 			session.getTransaction().commit();
