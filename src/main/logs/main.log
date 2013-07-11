@@ -2980,3 +2980,55 @@
 [2013-07-11 16:18:32] [INFO ] SchemaExport:343 - HHH000227: Running hbm2ddl schema export
 [2013-07-11 16:18:32] [INFO ] SchemaExport:405 - HHH000230: Schema export complete
 [2013-07-11 16:18:32] [INFO ] ResteasyDeployment:82 - Deploying javax.ws.rs.core.Application: class uk.ac.cam.signups.util.Signapps
+[2013-07-11 16:28:43] [INFO ] Version:37 - HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+[2013-07-11 16:28:43] [INFO ] Version:41 - HHH000412: Hibernate Core {4.2.2.Final}
+[2013-07-11 16:28:43] [INFO ] Environment:239 - HHH000206: hibernate.properties not found
+[2013-07-11 16:28:43] [INFO ] Environment:342 - HHH000021: Bytecode provider name : javassist
+[2013-07-11 16:28:44] [INFO ] Configuration:1985 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+[2013-07-11 16:28:44] [INFO ] Configuration:2004 - HHH000040: Configuration resource: /hibernate.cfg.xml
+[2013-07-11 16:28:44] [INFO ] Configuration:2126 - HHH000041: Configured SessionFactory: null
+[2013-07-11 16:28:44] [INFO ] DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+[2013-07-11 16:28:44] [INFO ] DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 1
+[2013-07-11 16:28:44] [INFO ] DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+[2013-07-11 16:28:44] [INFO ] DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/signups]
+[2013-07-11 16:28:44] [INFO ] DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=signups, password=****}
+[2013-07-11 16:28:44] [INFO ] Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+[2013-07-11 16:28:44] [INFO ] LobCreatorBuilder:120 - HHH000424: Disabling contextual LOB creation as createClob() method threw error : java.lang.reflect.InvocationTargetException
+[2013-07-11 16:28:44] [INFO ] TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+[2013-07-11 16:28:44] [INFO ] ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+[2013-07-11 16:28:44] [INFO ] PojoInstantiator:85 - HHH000182: No default (no-argument) constructor for class: uk.ac.cam.signups.models.Group (class must be instantiated by Interceptor)
+[2013-07-11 16:28:45] [INFO ] SchemaExport:343 - HHH000227: Running hbm2ddl schema export
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table DEADLINES_USERS drop constraint FK_ryju7evqvsley6csf6ipbb4ie
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "deadlines_users" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table DEADLINES_USERS drop constraint FK_mo5vr7gv19nim5kjrkemw18te
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "deadlines_users" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table EVENTS drop constraint FK_38dmanfo1y5htipd5laxpwmbj
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "events" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table EVENTS_TYPES drop constraint FK_k3s1p0eia396512julat5sjmu
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "events_types" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table EVENTS_TYPES drop constraint FK_bqxu3nampumxdo09tx5tfqdkv
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "events_types" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table GROUPS_USERS drop constraint FK_oo46tfe9opu8112mgbh8f1dec
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "groups_users" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table GROUPS_USERS drop constraint FK_1srwmnguoiq8074iw6kis62kw
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "groups_users" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table HISTORY_ITEMS drop constraint FK_s596gjgr7unctuxbgdj46ik9m
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "history_items" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table HISTORY_ITEMS drop constraint FK_bv8fcpif65twgpqed4ab7cdbp
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "history_items" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table HISTORY_ITEMS_EVENTS drop constraint FK_naipmlv3omaxtkkgp35l7rp4v
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "history_items_events" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table HISTORY_ITEMS_EVENTS drop constraint FK_n0s9er8yp9e5n261xps99ngrf
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "history_items_events" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table ROWS drop constraint FK_dubejr7i9tpx1lkqgub1l161v
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "rows" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table ROWS drop constraint FK_a0vvjvlr2atxhs2lu9x4xl4k1
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "rows" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table ROWS drop constraint FK_15ouur37ikhs71va3t50yi4jo
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "rows" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table SLOTS drop constraint FK_grbm73cr67k89hl6c8op1htvd
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "slots" does not exist
+[2013-07-11 16:28:45] [ERROR] SchemaExport:425 - HHH000389: Unsuccessful: alter table SLOTS drop constraint FK_bwlxgwt5yce20cyk98s7i5bwq
+[2013-07-11 16:28:45] [ERROR] SchemaExport:426 - ERROR: relation "slots" does not exist
+[2013-07-11 16:28:45] [INFO ] SchemaExport:405 - HHH000230: Schema export complete
+[2013-07-11 16:28:45] [INFO ] ResteasyDeployment:82 - Deploying javax.ws.rs.core.Application: class uk.ac.cam.signups.util.Signapps
