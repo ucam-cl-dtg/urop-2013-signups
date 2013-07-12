@@ -24,7 +24,7 @@ public class HomePageController extends ApplicationController{
 	private static Logger log = LoggerFactory.getLogger(HomePageController.class);
 	
 	// Index
-	@GET @Path("/") @ViewWith("/soy/home_page.index")
+	@GET @Path("/") @ViewWith("/soy/signups.home_page.index")
 	public Map indexHomePage() {
 		
 		// Initialise user
@@ -39,7 +39,7 @@ public class HomePageController extends ApplicationController{
 	}
 	
 	// DOS Index
-	@GET @Path("/DoS") @ViewWith("/soy/home_page.dos")
+	@GET @Path("/DoS") @ViewWith("/soy/signups.home_page.dos")
 	public Map dosHomePage() {
 		
 		// Initialise user

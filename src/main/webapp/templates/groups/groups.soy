@@ -2,22 +2,30 @@
 
 /**
  * Group page for timetables
- * @param user
  * 
  */
-{template .index autoescape="false"}
-<html>
-<head>
-<title>Groups</title>
-</head>
-<body>
-<h1>Groups</h1>
-<h2>Current groups</h2>
+{template .index }
+{call shared.html_boilerplate}
+{param body}
+<h2>Groups</h2>
+<h3>Current groups</h3>
 
-<h2>Create new group</h2>
-
-</body>
-</html>
-
+<h3>Create new group</h3>
+	<table>
+	<tr>
+		<td>Group name: </td><td><input type="text" id="group_name" /></td>
+	</tr>
+	<tr>
+		<td>
+		Add members: 
+		</td>
+		<td>
+		<input type="text" id="group_name" value="Add User"/><input type="button" id="add_member" value="+"/>
+		</td>
+	</tr>
+	<tr>
+		<td></td><td><input type="submit" id="submit" value="Save Group"/></td>
+	</tr>
+{/param}
+{/call}
 {/template}
-

@@ -37,10 +37,10 @@ public class GroupsController extends ApplicationController {
 		}
 		
 		// New
-		@GET @Path("/new") @ViewWith("/soy/groups.new")
-		public Map newGroup() {
-			return ImmutableMap.of();
-		}
+//		@GET @Path("/new") @ViewWith("/soy/groups.new")
+//		public Map newGroup() {
+//			return ImmutableMap.of();
+//		}
 		
 		// Create
 //		@POST @Path("/") 
@@ -50,25 +50,25 @@ public class GroupsController extends ApplicationController {
 //		}
 		
 		// Edit
-		@GET @Path("/{id}/edit") @ViewWith("/soy/groups.edit")
-		public Map editGroup(@PathParam("id") int id) {
-			return ImmutableMap.of();
-		}
+//		@GET @Path("/{id}/edit") @ViewWith("/soy/groups.edit")
+//		public Map editGroup(@PathParam("id") int id) {
+//			return ImmutableMap.of();
+//		}
 		
 		// Update
-		@PUT @Path("/{id}")
-		public void updateGroup(@PathParam("id") int id,
-				@Form Group group) {
-			
-			throw new RedirectException("/");
-		}
+//		@PUT @Path("/{id}")
+//		public void updateGroup(@PathParam("id") int id,
+//				@Form Group group) {
+//			
+//			throw new RedirectException("/");
+//		}
 		
 		// Destroy 
-		@DELETE @Path("/{id}")
-		public void deleteGroup(@PathParam("id") int id) {
-			
-			throw new RedirectException("/");
-		}
+//		@DELETE @Path("/{id}")
+//		public void deleteGroup(@PathParam("id") int id) {
+//			
+//			throw new RedirectException("/");
+//		}
 		
 		// Query database for groups
 		public ImmutableMap<String, ?> getUserGroups(){
