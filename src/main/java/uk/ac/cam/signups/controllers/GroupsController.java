@@ -33,7 +33,7 @@ public class GroupsController extends ApplicationController {
 		@GET @Path("/") @ViewWith("/soy/groups.index")
 		public Map indexGroups() {
 			initialiseUser();
-			return ImmutableMap.of("groups", getUserGroups());
+			return ImmutableMap.of();
 		}
 		
 		// New
@@ -71,19 +71,19 @@ public class GroupsController extends ApplicationController {
 //		}
 		
 		// Query database for groups
-		public ImmutableMap<String, ?> getUserGroups(){
-			log.debug("begin hibernate session");
-			session = HibernateSessionRequestFilter.openSession(request);
-			session.beginTransaction();	
-			// Are there any groups for this user?
-			Query userQuery = session.createQuery("from User where id = :id").setParameter("id", crsid);
-		  	User user = (User) userQuery.uniqueResult();
-		  	ImmutableMap<String, ?> groups = user.getGroupsMap();
-			
-		  	// Close hibernate session
-		  	log.debug("closing hibernate session");
-			session.getTransaction().commit();
-			session.close();	
-			return groups;
-		}
+//		public ImmutableMap<String, ?> getUserGroups(){
+//			log.debug("begin hibernate session");
+//			session = HibernateSessionRequestFilter.openSession(request);
+//			session.beginTransaction();	
+//			// Are there any groups for this user?
+//			Query userQuery = session.createQuery("from User where id = :id").setParameter("id", crsid);
+//		  	User user = (User) userQuery.uniqueResult();
+////		  	ImmutableMap<String, ?> groups = user.getGroupsMap();
+//			
+//		  	// Close hibernate session
+//		  	log.debug("closing hibernate session");
+//			session.getTransaction().commit();
+//			session.close();	
+//			return groups;
+//		}
 }
