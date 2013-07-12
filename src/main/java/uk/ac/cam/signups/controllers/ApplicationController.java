@@ -55,7 +55,7 @@ public class ApplicationController {
 	  	// If no, create them
 	  	if(user==null){
 	  		log.debug("User " + crsid + "does not exist");
-	  		User newUser = new User(crsid, null, null, null, null, null);
+	  		User newUser = new User(crsid, null, null, null, null, null, null);
 	  		session.save(newUser);
 	  		log.info("User " + crsid + " added to USERS table");
 	  	}
