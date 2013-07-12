@@ -1,5 +1,6 @@
 package uk.ac.cam.signups.controllers;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,25 +30,26 @@ public class GroupsController extends ApplicationController {
 		// Create the logger
 		private static Logger log = LoggerFactory.getLogger(GroupsController.class);
 		
+		private User user;
+		
 		// Index
 		@GET @Path("/") @ViewWith("/soy/groups.index")
 		public Map indexGroups() {
-			initialiseUser();
-			return ImmutableMap.of("groups", getUserGroups());
+			user = initialiseUser();
+			
+			
+			
+			return ImmutableMap.of("groups", user.getGroupsMap());
 		}
 		
-		// New
-//		@GET @Path("/new") @ViewWith("/soy/groups.new")
-//		public Map newGroup() {
-//			return ImmutableMap.of();
-//		}
-		
 		// Create
-//		@POST @Path("/") 
-//		public void createGroup(@Form Group group) {
-//			
-//			throw new RedirectException("/groups");
-//		}
+		@POST @Path("/") 
+		public void createGroup(@Form Group group, @FormParam("users[]") String[] users) throws Exception {
+			System.out.println(group.getTitle());
+			
+
+			throw new RedirectException("/groups");
+		}
 		
 		// Edit
 //		@GET @Path("/{id}/edit") @ViewWith("/soy/groups.edit")
@@ -70,20 +72,4 @@ public class GroupsController extends ApplicationController {
 //			throw new RedirectException("/");
 //		}
 		
-		// Query database for groups
-		public ImmutableMap<String, ?> getUserGroups(){
-			log.debug("begin hibernate session");
-			session = HibernateSessionRequestFilter.openSession(request);
-			session.beginTransaction();	
-			// Are there any groups for this user?
-			Query userQuery = session.createQuery("from User where id = :id").setParameter("id", crsid);
-		  	User user = (User) userQuery.uniqueResult();
-		  	ImmutableMap<String, ?> groups = user.getGroupsMap();
-			
-		  	// Close hibernate session
-		  	log.debug("closing hibernate session");
-			session.getTransaction().commit();
-			session.close();	
-			return groups;
-		}
 }

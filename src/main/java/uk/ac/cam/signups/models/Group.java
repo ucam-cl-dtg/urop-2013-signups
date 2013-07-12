@@ -12,18 +12,28 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.ManyToMany;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.core.Context;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.annotations.GenericGenerator;
+
+import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
+
+import com.google.common.collect.ImmutableMap;
 
 @Entity
 @Table(name="GROUPS")
 public class Group {
+
     @Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
 	private int id;
 
-	private String title;
+	@FormParam("title") private String title;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name="GROUPS_USERS",
@@ -34,6 +44,8 @@ public class Group {
 	@ManyToOne
 	@JoinTable(name="USER_CRSID")
 	private User owner;
+	
+	public Group() { }
 	
 	public Group(int id, 
 				String title, 
@@ -53,4 +65,13 @@ public class Group {
 	
 	public Set<User> getUsers() { return this.users; }
 	public void setUsers(Set<User> users) { this.users = users; }
+	
+	// Soy friendly get methods
+	public HashSet getUsersMap() {
+		HashSet<ImmutableMap<String,?>> groupUsers = new HashSet<ImmutableMap<String,?>>();
+		for(User u : users){
+			groupUsers.add(ImmutableMap.of("crsid",u.getCrsid()));
+		}
+		return groupUsers;
+	}
 }

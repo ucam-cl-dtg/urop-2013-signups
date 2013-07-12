@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.google.common.collect.ImmutableMap;
+
 @Entity
 @Table(name="USERS")
 public class User {
@@ -70,4 +72,18 @@ public class User {
 
 	public Set<Group> getSubscriptions() { return this.subscriptions; }
 	public void setSubscriptions(Set<Group> subscriptions) { this.subscriptions = subscriptions; }
+	
+	// Soy friendly get methods
+	public HashSet getGroupsMap() {
+		HashSet<ImmutableMap<String, ?>> userGroups = new HashSet<ImmutableMap<String, ?>>(0);
+		
+		if(groups==null){
+			return new HashSet<ImmutableMap<String, ?>>(0);
+		}
+		
+		for(Group g : groups)  {
+			userGroups.add(ImmutableMap.of("id", g.getId(), "name", g.getTitle(), "users", g.getUsersMap()));
+		}
+		return userGroups;
+	}
 }
