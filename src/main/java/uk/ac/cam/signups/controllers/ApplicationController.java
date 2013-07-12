@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.signups.models.User;
+import uk.ac.cam.signups.util.HibernateSessionManager;
 import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
 import uk.ac.cam.signups.util.UserLookupManager;
 
@@ -29,7 +30,6 @@ public class ApplicationController {
 	// Store CRSID since often used
 	protected String crsid;
 	
-	//UserLookupManager setup
 	protected User initialiseUser() {
 		
 		// This will extract the CRSID of the current user and return it:
@@ -68,5 +68,5 @@ public class ApplicationController {
 		
 		return user;
 	}
-
+	
 }

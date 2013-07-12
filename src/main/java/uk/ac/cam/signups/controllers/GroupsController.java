@@ -37,6 +37,8 @@ public class GroupsController extends ApplicationController {
 		public Map indexGroups() {
 			user = initialiseUser();
 			
+			
+			
 			return ImmutableMap.of("groups", user.getGroupsMap());
 		}
 		
