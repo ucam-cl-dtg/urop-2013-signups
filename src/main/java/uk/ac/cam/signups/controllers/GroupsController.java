@@ -32,7 +32,8 @@ public class GroupsController extends ApplicationController {
 		// Index
 		@GET @Path("/") @ViewWith("/soy/groups.index")
 		public Map indexGroups() {
-			return ImmutableMap.of();
+			initialiseUser();
+			return ImmutableMap.of("groups", getUserGroups());
 		}
 		
 		// New
@@ -42,11 +43,11 @@ public class GroupsController extends ApplicationController {
 		}
 		
 		// Create
-		@POST @Path("/") 
-		public void createGroup(@Form Group group) {
-			
-			throw new RedirectException("/groups");
-		}
+//		@POST @Path("/") 
+//		public void createGroup(@Form Group group) {
+//			
+//			throw new RedirectException("/groups");
+//		}
 		
 		// Edit
 		@GET @Path("/{id}/edit") @ViewWith("/soy/groups.edit")
@@ -70,14 +71,15 @@ public class GroupsController extends ApplicationController {
 		}
 		
 		// Query database for groups
-		public Set<Group> getUserGroups(){
+		public ImmutableMap<String, ?> getUserGroups(){
 			log.debug("begin hibernate session");
 			session = HibernateSessionRequestFilter.openSession(request);
 			session.beginTransaction();	
 			// Are there any groups for this user?
 			Query userQuery = session.createQuery("from User where id = :id").setParameter("id", crsid);
 		  	User user = (User) userQuery.uniqueResult();
-		  	Set<Group> groups = user.getGroups();
+		  	ImmutableMap<String, ?> groups = user.getGroupsMap();
+			
 		  	// Close hibernate session
 		  	log.debug("closing hibernate session");
 			session.getTransaction().commit();
