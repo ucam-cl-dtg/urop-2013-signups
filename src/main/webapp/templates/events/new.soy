@@ -1,0 +1,59 @@
+{namespace events}
+
+/**
+ * Template for new action in EventsController
+ * 
+ */
+{template .new}
+  {call shared.html_boilerplate}
+    {param className: 'events' /}
+    {param body}
+    <h2>Create New Event</h2>
+    <form id="form" action="/supervisions/" method="post">
+      <table>
+        <tr>
+          <td>Title</td>
+          <td><input type="text" name="title"/></td>
+        </tr>
+        <tr>
+          <td>Location</td>
+          <td><input type="text" name="location"/></td>
+        </tr>
+        <tr>
+          <td>Types</td>
+          <td>
+            <input type="text" name="types[]"> 
+            <div><a href="#" id="new_type">+ Add another type</a></div>
+          </td>
+        <tr>
+          <td>Number of columns</td>
+          <td><input type="number" name="group_size"/></td>
+        </tr>
+        <tr>
+          <td>Available slots</td>
+          <td>
+            <div>
+              <input type="text" class="datepicker" name="available_dates[]" />
+              <select name="available_hours[]">
+                {for $i in range(6,23)}
+                  <option>{$i}</option> 
+                {/for}
+              </select>:
+                <select name="available_minutes[]">
+                {for $i in range(60)}
+                  <option>{$i}</option> 
+                {/for}
+              </select>
+            </div>
+            <div><a href="#" id="new_slot">+ Add a new slot</a></div>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="submit" name="submit" value="Create new supervision"/></td>
+        </tr>
+      </table>
+    </form>
+    {/param}
+  {/call}
+{/template}

@@ -22,20 +22,22 @@ public class EventsController extends ApplicationController {
 	
 	// New
 	@GET @Path("/new") @ViewWith("/soy/events.new")
-	public Map newEvent() { 
+	public Map<String, Object> newEvent() { 
 		return ImmutableMap.of();
 	}
 	
 	// Create
+	/*
 	@POST @Path("/")
 	public void createEvent(@Form Event event) {
 		
 		throw new RedirectException("/events/" + event.getId());
 	}
+	*/
 	
 	// Show
 	@GET @Path("/{id}") @ViewWith("/soy/events.show")
-	public Map showEvent(@PathParam("id") int id){
+	public Map<String, Object> showEvent(@PathParam("id") int id){
 		return ImmutableMap.of();
 	}
 	

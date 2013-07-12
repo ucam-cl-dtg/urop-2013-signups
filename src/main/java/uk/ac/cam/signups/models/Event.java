@@ -24,6 +24,7 @@ public class Event {
 	private int id;
 	
 	private String location;
+	private String title;
 	
 	@ManyToOne
 	@JoinColumn(name = "USER_CRSID")
@@ -41,7 +42,8 @@ public class Event {
 	public Event() {}
 	
 	public Event(int id, 
-							String location, 
+							String location,
+							String title,
 							User owner, 
 							Set<Row> rows, 
 							Set<Type> types, 
@@ -52,6 +54,7 @@ public class Event {
 		this.types = types;
 		this.rows = rows;
 		this.historyItems = historyItems;
+		this.title = title;
 	}
 	
 	public int getId() {return id;}
@@ -59,6 +62,9 @@ public class Event {
 
 	public String getLocation() {return location;}
 	public void setLocation(String location) {this.location = location;}
+
+	public String getTitle() { return this.title; }
+	public void setTitle(String title) { this.title = title; }
 	
 	public User getOwner() { return this.owner; }
 	public void setOwner(User owner) { this.owner = owner; }
