@@ -9,8 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.google.common.collect.ImmutableMap;
-
 @Entity
 @Table(name="USERS")
 public class User {
@@ -23,10 +21,13 @@ public class User {
 	@OneToMany(mappedBy = "owner")
 	private Set<Event> events = new HashSet<Event>(0);
 
-	@OneToMany(mappedBy = "users")
+	@ManyToMany(mappedBy = "users")
 	private Set<HistoryItem> historyItems = new HashSet<HistoryItem>(0);
 
 	@ManyToMany(mappedBy = "users")
+	private Set<Group> subscriptions = new HashSet<Group>(0);
+	
+	@OneToMany(mappedBy = "owner")
 	private Set<Group> groups = new HashSet<Group>(0);
 
 	@OneToMany(mappedBy = "owner")
@@ -38,6 +39,7 @@ public class User {
 							Set<Event> events, 
 							Set<HistoryItem> historyItems, 
 							Set<Group> groups,
+							Set<Group> subscriptions,
 							Set<Slot> slots) {
 		this.crsid = crsid;
 		this.historyItems = historyItems;
@@ -45,6 +47,7 @@ public class User {
 		this.deadlines = deadlines;
 		this.groups = groups;
 		this.slots = slots;
+		this.subscriptions = subscriptions;
 	}
 	
 	public String getCrsid() {return crsid;}
@@ -64,12 +67,7 @@ public class User {
 	
 	public Set<Group> getGroups() { return this.groups; }
 	public void setGroups(Set<Group> groups) { this.groups = groups; }
-	
-	public ImmutableMap<String, ?> getGroupsMap() {
-		ImmutableMap.Builder<String, Object> groupsMap = new ImmutableMap.Builder<String, Object>();
-		for(Group g: groups){
-			groupsMap.put("g.getId()", ImmutableMap.of("id", g.getId(), "title", g.getTitle()));
-		}
-		return groupsMap.build();
-	}
+
+	public Set<Group> getSubscriptions() { return this.subscriptions; }
+	public void setSubscriptions(Set<Group> subscriptions) { this.subscriptions = subscriptions; }
 }

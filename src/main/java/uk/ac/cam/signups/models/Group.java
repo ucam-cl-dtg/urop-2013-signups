@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name="GROUPS")
 public class Group {
-	@Id
+    @Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
 	private int id;
@@ -30,12 +31,18 @@ public class Group {
 						inverseJoinColumns = {@JoinColumn(name = "USER_CRSID")})
 	private Set<User> users = new HashSet<User>(0);
 	
+	@ManyToOne
+	@JoinTable(name="USER_CRSID")
+	private User owner;
+	
 	public Group(int id, 
-							String title, 
-							Set<User> users) {
+				String title, 
+				Set<User> users,
+				User owner) {
 		this.id = id;
 		this.title = title;
 		this.users = users;
+		this.owner = owner;
 	}
 	
 	public int getId() { return this.id; }
