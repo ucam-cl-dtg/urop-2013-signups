@@ -30,20 +30,18 @@ public class ApplicationController {
 	protected String crsid;
 	
 	//UserLookupManager setup
-	protected void initialiseUser(){
+	protected User initialiseUser() {
+		
 		// This will extract the CRSID of the current user and return it:
 		log.debug("Getting crsid from raven");	
 		crsid = (String) request.getSession().getAttribute("RavenRemoteUser");
+		
 		// Create UserLookupManager for this user
 		log.debug("Creating userLookupManager");	
 		ulm = UserLookupManager.getUserLookupManager(crsid);
+		
 		// Add user to database if necessary
 		log.debug("Checking if user is in database");
-		registerUser(crsid);		
-	}
-	
-	// Add to User class later
-	protected void registerUser(String crsid) {
 		// Begin hibernate session
 		log.debug("begin hibernate session");
 		session = HibernateSessionRequestFilter.openSession(request);
@@ -58,10 +56,17 @@ public class ApplicationController {
 	  		User newUser = new User(crsid, null, null, null, null, null, null);
 	  		session.save(newUser);
 	  		log.info("User " + crsid + " added to USERS table");
+		  	log.debug("closing hibernate session");
+			session.getTransaction().commit();
+			session.close(); 
+	  		return newUser;
 	  	}
 	  	// Close hibernate session
 	  	log.debug("closing hibernate session");
 		session.getTransaction().commit();
-		session.close();		
+		session.close();
+		
+		return user;
 	}
+
 }
