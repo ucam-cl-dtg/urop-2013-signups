@@ -5,32 +5,42 @@
  * @param groups
  */
 {template .index }
-{call shared.html_boilerplate}
-{param body}
-<h2>Groups</h2>
-<h3>Current groups</h3>
-{foreach $group in $groups}
-{$group.id} | {$group.name}
-{ifempty}
-You haven't created any groups
-{/foreach}
-<h3>Create new group</h3>
-	<table>
-	<form id="group" name="group action="/" method="post">
-	<tr>
-		<td>Group name: </td><td><input type="text" id="title" name="title"/></td>
-	</tr>
-	<tr>
-		<td>
-		Add members: 
-		</td>
-		<td>
-		<input type="hidden" name="users[]"/><input type="button" id="add_member" value="+"/>
-		</td>
-	</tr>
-	<tr>
-		<td></td><td><input type="submit" id="submit" value="Save Group"/></td>
-	</tr>
-{/param}
-{/call}
+	{call shared.html_boilerplate}
+		{param className: 'groups' /}
+		{param body}
+		
+		<!-- List current groups -->
+		
+		<h2>Groups</h2>
+		<h3>Current groups</h3>
+		{foreach $group in $groups}
+			{$group.id} | {$group.name}
+			{ifempty}
+			You haven't created any groups
+		{/foreach}
+		
+		<!-- Create new group -->
+		
+		<h3>Create new group</h3>
+			<table>
+			<form id="group" name="group action="/" method="post">
+			<tr>
+				<td>Group name: </td><td><input type="text" id="title" name="title"/></td>
+			</tr>
+			<tr>
+				<td>
+				Add members: 
+				</td>
+				<td>
+				<input type="text" name="users[]"/><input type="button" id="add_member" value="+"/>
+				<input type="text" name="users[]"/><input type="button" id="add_member" value="+"/>
+				<input type="text" name="users[]"/><input type="button" id="add_member" value="+"/>
+
+				</td>
+			</tr>
+			<tr>
+				<td></td><td><input type="submit" id="submit" value="Save Group"/></td>
+			</tr>
+		{/param}
+	{/call}
 {/template}

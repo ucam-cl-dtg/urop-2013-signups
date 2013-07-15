@@ -41,6 +41,9 @@
 
         <!-- SQL dialect -->
 		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+		
+		<!-- Raven HTTP context -->
+		<property name="current_session_context_class">thread</property>
 
         <!-- Disable the second-level cache -->
         <property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
