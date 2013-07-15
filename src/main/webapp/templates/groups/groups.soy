@@ -51,27 +51,7 @@
 			<tr>
 				<td></td><td><input type="submit" id="submit" value="Save Group"/></td>
 			</tr>
-			
-{literal}	<script>
-	function sendInput()
-	{
-	var testInput = document.getElementById("asd").val
-	var xmlhttp;
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	  
-	  xmlhttp.open("POST", "groups/queryCRSID", true);
-	  xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-	  xmlhttp.send(JSON.stringify({test:testInput}));
-	    }
-	</script>
-{/literal}
+
 			
 		{/param}
 	{/call}
