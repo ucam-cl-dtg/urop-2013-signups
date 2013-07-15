@@ -31,20 +31,15 @@ public class Deadline {
 						joinColumns = { @JoinColumn(name = "DEADLINE_ID")},
 						inverseJoinColumns = { @JoinColumn(name = "USER_CRSID")})
 	private Set<User> users = new HashSet<User>(0);
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "deadline")
-	private Set<Row> rows = new HashSet<Row>(0);
 	
 	public Deadline() {}
 	public Deadline(int id, 
 									String title, 
 									String message, 
-									Set<User> users, 
-									Set<Row> rows) {
+									Set<User> users) {
 		this.id = id;
 		this.title = title;
 		this.message = message;
-		this.rows = rows;
 		this.users = users;
 	}
 	
@@ -59,7 +54,4 @@ public class Deadline {
 	
 	public Set<User> getUsers() { return this.users; }
 	public void setUsers(Set<User> users) { this.users = users; }
-	
-	public Set<Row> getRows() { return this.rows; } 
-	public void setRows(Set<Row> rows) { this.rows = rows; }
 }

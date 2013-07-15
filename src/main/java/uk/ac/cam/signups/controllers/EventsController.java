@@ -1,5 +1,6 @@
 package uk.ac.cam.signups.controllers;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -59,6 +60,7 @@ public class EventsController extends ApplicationController {
 				rows.add(row);
 			}
 		} else if (rowType == "datetime") {
+			Set<Calendar> dates = new HashSet<Calendar>(0);
 		} else { 
 			
 		}

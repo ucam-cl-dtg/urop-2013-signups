@@ -37,9 +37,6 @@ public class Event {
 	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "events")
 	private Set<Type> types = new HashSet<Type>(0);
 
-	@OneToMany(mappedBy = "event")
-	private Set<HistoryItem> historyItems = new HashSet<HistoryItem>(0);
-	
 	public Event() {}
 	
 	public Event(int id, 
@@ -47,14 +44,12 @@ public class Event {
 							String title,
 							User owner, 
 							Set<Row> rows, 
-							Set<Type> types, 
-							Set<HistoryItem> historyItems){
+							Set<Type> types) {
 		this.id = id;
 		this.location = location;
 		this.owner = owner;
 		this.types = types;
 		this.rows = rows;
-		this.historyItems = historyItems;
 		this.title = title;
 	}
 	
@@ -72,9 +67,6 @@ public class Event {
 	
 	public Set<Row> getRows() { return this.rows; }
 	public void setRows(Set<Row> rows) { this.rows = rows; }
-	
-	public Set<HistoryItem> getHistoryItems() { return this.historyItems; }
-	public void setHistoryItems(Set<HistoryItem> historyItems) { this.historyItems = historyItems; }
 	
 	public Set<Type> getTypes() { return this.types; }
 	public void setTypes(Set<Type> types) { this.types = types; }

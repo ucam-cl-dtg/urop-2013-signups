@@ -64,9 +64,6 @@ public class Row {
 	public int getId() { return this.id; }
 	public void setId(int id) { this.id = id; }
 	
-	public Deadline getDeadline() { return this.deadline; }
-	public void setDeadline(Deadline deadline) { this.deadline = deadline; }
-	
 	public Calendar getCalendar() { return this.calendar; }
 	public void setCalendar(Calendar calendar) { this.calendar = calendar; }
 	
