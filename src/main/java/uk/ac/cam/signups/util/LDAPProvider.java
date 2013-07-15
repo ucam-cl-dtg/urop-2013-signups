@@ -1,6 +1,7 @@
 package uk.ac.cam.signups.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -113,6 +114,45 @@ public class LDAPProvider {
 			return null;
 		}
 	}	
+	
+	public static ArrayList<String> testPartialQuery(String x){
+		
+		Hashtable env = new Hashtable();
+		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+		env.put(Context.PROVIDER_URL, "ldap://ldap.lookup.cam.ac.uk:389");
+
+		NamingEnumeration<SearchResult> enumResults;
+		
+		Attributes a = null;
+		try {
+			DirContext ctx = new InitialDirContext(env);
+			SearchControls controls = new SearchControls();
+			controls.setReturningAttributes(new String[]{"uid"});
+			controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+			enumResults = ctx.search(
+					"ou=people,o=University of Cambridge,dc=cam,dc=ac,dc=uk",
+					"(uid=" + x + "*)", controls);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return null;
+		}
+		
+		try {
+			List<String> listResults = new ArrayList<String>(0);
+			
+			// Convert enumeration type results to string
+				while(enumResults.hasMore()){
+					listResults.add(enumResults.next().getAttributes().get("uid").get().toString());
+				}
+				
+			return (ArrayList<String>) listResults;
+					
+        } catch (NamingException e) {
+			log.error(e.getMessage());
+			return null;
+		} 
+		
+	}
 	
 
 }

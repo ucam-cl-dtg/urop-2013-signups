@@ -5,6 +5,7 @@
  * @param groups
  */
 {template .index }
+
 	{call shared.html_boilerplate}
 		{param className: 'groups' /}
 		{param body}
@@ -17,7 +18,7 @@
 			{$group.id} | {$group.name} | {$group.owner} </br>
 			Members: 
 				{foreach $user in $group.users}
-				{$user.crsid}
+				{$user.crsid} | 
 				{ifempty}
 				No users in this group
 				{/foreach}
@@ -25,6 +26,9 @@
 			You haven't created any groups
 		{/foreach}
 		
+		<!--Test-->
+		<input type="text" value="test" id="asd" readonly/>
+		<input type="button" value="x" onclick="sendInput()"/>
 		<!-- Create new group -->
 		
 		<h3>Create new group</h3>
@@ -47,6 +51,8 @@
 			<tr>
 				<td></td><td><input type="submit" id="submit" value="Save Group"/></td>
 			</tr>
+
+			
 		{/param}
 	{/call}
 {/template}

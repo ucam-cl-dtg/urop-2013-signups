@@ -6,6 +6,13 @@ $(document).ready(function() {
 	toggle_rows();	// Toggle between row types
 	
 	// GROUPS CONTROLLER
+	var testData = {crsid:"hp343",name:"holly"};
+	request = $.ajax({
+		url: "/groups/queryCRSID",
+		type: "post",
+		dataType: 'json',
+		success: function() { alert("test response"); }, data: testData});
+	
 	
 	// DEADLINES CONTROLLER
 

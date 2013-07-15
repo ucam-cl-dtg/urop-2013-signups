@@ -2,6 +2,7 @@ package uk.ac.cam.signups.controllers;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.Produces;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,6 +25,7 @@ import uk.ac.cam.signups.models.Group;
 import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
 import uk.ac.cam.signups.util.HibernateUtil;
+import uk.ac.cam.signups.util.LDAPProvider;
 
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.htmleasy.RedirectException;
@@ -41,6 +44,12 @@ public class GroupsController extends ApplicationController {
 		public Map indexGroups() {
 			// Initialise user
 			user = initialiseUser();
+			
+			// Test get all users matching string:
+//			List<String> matches = LDAPProvider.testPartialQuery("hp");
+//			for(String s : matches){
+//				System.out.println(s);
+//			}
 			
 			return ImmutableMap.of("groups", user.getGroupsMap());
 		}
@@ -80,6 +89,13 @@ public class GroupsController extends ApplicationController {
 			session.getTransaction().commit();
 			
 			throw new RedirectException("/groups");
+		}
+		
+		// Find users
+		@POST @Path("/queryCRSID")
+		@Produces("application/json")
+		public void queryCRSId(@FormParam("inputVal") String x) {
+			System.out.println("x");
 		}
 		
 		// Edit
