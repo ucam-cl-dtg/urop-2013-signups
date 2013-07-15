@@ -1,8 +1,11 @@
 .events {
-  color: white;
 
-  h2 {
-    font-size: 36px;
-    color: red;
+  td {
+	  padding: 10px 0 0 10px;
+	  vertical-align: top;
+	}
+
+  .manual_rows {
+    display: none;
   }
 }
