@@ -94,6 +94,20 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.jasig.maven</groupId>
+				<artifactId>sass-maven-plugin</artifactId>
+				<version>1.1.1</version>
+				<configuration>
+				  <sassSourceDirectory>${basedir}/src/main/webapp/sass</sassSourceDirectory>
+				  <destination>${basedir}/src/main/webapp/css</destination>
+				  <sassOptions>
+				      <cache>false</cache>
+				      <style>:compressed</style>
+				      <syntax>:scss</syntax>
+				  </sassOptions>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>
