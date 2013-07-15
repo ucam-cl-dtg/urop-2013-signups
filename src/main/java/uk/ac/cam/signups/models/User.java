@@ -94,7 +94,6 @@ public class User {
 	  		User newUser = new User(crsid, null, null, null, null, null, null);
 	  		session.save(newUser);
 			session.getTransaction().commit();
-			session.close(); 
 	  		return newUser;
 	  	}
 
@@ -113,7 +112,7 @@ public class User {
 		}
 		
 		for(Group g : groups)  {
-			userGroups.add(ImmutableMap.of("id", g.getId(), "name", g.getTitle(), "users", g.getUsersMap()));
+			userGroups.add(ImmutableMap.of("id", g.getId(), "name", g.getTitle(), "users", g.getUsersMap(), "owner", g.getOwner().getCrsid()));
 		}
 		return userGroups;
 	}

@@ -66,6 +66,11 @@ public class Group {
 	public Set<User> getUsers() { return this.users; }
 	public void setUsers(Set<User> users) { this.users = users; }
 	
+	public User getOwner() { return this.owner; }
+	public void setOwner(User owner) { this.owner = owner; }
+	
+	// Create group 
+	
 	// Soy friendly get methods
 	public HashSet getUsersMap() {
 		HashSet<ImmutableMap<String,?>> groupUsers = new HashSet<ImmutableMap<String,?>>();

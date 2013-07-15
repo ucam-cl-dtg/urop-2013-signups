@@ -20,7 +20,7 @@ public class ApplicationController {
 	// UserLookupManager for this user
 	protected UserLookupManager ulm;
 	
-	//Raven session
+	// Raven session
 	@Context
 	HttpServletRequest sRequest;
 	

@@ -14,7 +14,11 @@
 		<h2>Groups</h2>
 		<h3>Current groups</h3>
 		{foreach $group in $groups}
-			{$group.id} | {$group.name}
+			{$group.id} | {$group.name} | {$group.owner} </br>
+			Members: 
+				{foreach $user in $group.users}
+				{$user.crsid}
+				{ifempty}
 			{ifempty}
 			You haven't created any groups
 		{/foreach}
