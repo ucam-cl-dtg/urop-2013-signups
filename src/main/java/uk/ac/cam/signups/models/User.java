@@ -9,6 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
+
+import uk.ac.cam.signups.util.HibernateUtil;
+
 import com.google.common.collect.ImmutableMap;
 
 @Entity
@@ -72,6 +77,32 @@ public class User {
 
 	public Set<Group> getSubscriptions() { return this.subscriptions; }
 	public void setSubscriptions(Set<Group> subscriptions) { this.subscriptions = subscriptions; }
+	
+	// Register user from CRSID
+	public static User registerUser(String crsid){
+		// Add user to database if necessary
+
+		// Begin hibernate session
+		Session session = HibernateUtil.getTransaction();
+		
+		// Does the user already exist?
+		Query userQuery = session.createQuery("from User where id = :id").setParameter("id", crsid);
+	  	User user = (User) userQuery.uniqueResult();
+	  	
+	  	// If no, create them
+	  	if(user==null){
+	  		User newUser = new User(crsid, null, null, null, null, null, null);
+	  		session.save(newUser);
+			session.getTransaction().commit();
+			session.close(); 
+	  		return newUser;
+	  	}
+
+	  	// Close hibernate session
+		session.getTransaction().commit();
+		
+		return user;
+	}
 	
 	// Soy friendly get methods
 	public HashSet getGroupsMap() {

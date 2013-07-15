@@ -46,8 +46,9 @@ public class GroupsController extends ApplicationController {
 		@POST @Path("/") 
 		public void createGroup(@Form Group group, @FormParam("users[]") String[] users) throws Exception {
 			System.out.println(group.getTitle());
-			
-
+			for(int i=0; i<users.length; i++){
+				System.out.println(users[i]);
+			}
 			throw new RedirectException("/groups");
 		}
 		
