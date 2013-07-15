@@ -21,6 +21,7 @@ import org.hibernate.Session;
 import org.hibernate.annotations.GenericGenerator;
 
 import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
+import uk.ac.cam.signups.util.UserLookupManager;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -74,8 +75,10 @@ public class Group {
 	// Soy friendly get methods
 	public HashSet getUsersMap() {
 		HashSet<ImmutableMap<String,?>> groupUsers = new HashSet<ImmutableMap<String,?>>();
+		String crsid;
 		for(User u : users){
-			groupUsers.add(ImmutableMap.of("crsid",u.getCrsid()));
+			crsid = u.getCrsid();
+			groupUsers.add(ImmutableMap.of("crsid",crsid));
 		}
 		return groupUsers;
 	}
