@@ -29,9 +29,6 @@ public class User {
 	private Set<Event> events = new HashSet<Event>(0);
 
 	@ManyToMany(mappedBy = "users")
-	private Set<HistoryItem> historyItems = new HashSet<HistoryItem>(0);
-
-	@ManyToMany(mappedBy = "users")
 	private Set<Group> subscriptions = new HashSet<Group>(0);
 	
 	@OneToMany(mappedBy = "owner")
@@ -44,12 +41,10 @@ public class User {
 	public User(String crsid, 
 							Set<Deadline> deadlines, 
 							Set<Event> events, 
-							Set<HistoryItem> historyItems, 
 							Set<Group> groups,
 							Set<Group> subscriptions,
 							Set<Slot> slots) {
 		this.crsid = crsid;
-		this.historyItems = historyItems;
 		this.events = events;
 		this.deadlines = deadlines;
 		this.groups = groups;
@@ -68,9 +63,6 @@ public class User {
 	
 	public Set<Slot> getSlots() { return slots; }
 	public void setSlots(Set<Slot> slots) { this.slots = slots; }
-	
-	public Set<HistoryItem> getHistoryItems() { return this.historyItems; }
-	public void setHistoryItems(Set<HistoryItem> historyItems) { this.historyItems = historyItems; }
 	
 	public Set<Group> getGroups() { return this.groups; }
 	public void setGroups(Set<Group> groups) { this.groups = groups; }
@@ -91,7 +83,7 @@ public class User {
 	  	
 	  	// If no, create them
 	  	if(user==null){
-	  		User newUser = new User(crsid, null, null, null, null, null, null);
+	  		User newUser = new User(crsid, null, null, null, null, null);
 	  		session.save(newUser);
 			session.getTransaction().commit();
 	  		return newUser;
