@@ -19,6 +19,8 @@
 				{foreach $user in $group.users}
 				{$user.crsid}
 				{ifempty}
+				No users in this group
+				{/foreach}
 			{ifempty}
 			You haven't created any groups
 		{/foreach}
