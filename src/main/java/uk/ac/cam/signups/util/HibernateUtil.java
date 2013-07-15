@@ -8,7 +8,7 @@ import org.hibernate.cfg.DefaultComponentSafeNamingStrategy;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
-public class HibernateSessionManager {
+public class HibernateUtil {
     private static SessionFactory sf = configureSessionFactory();
     
     private static SessionFactory configureSessionFactory()
