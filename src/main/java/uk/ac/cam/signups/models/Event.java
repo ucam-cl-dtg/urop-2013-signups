@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.OneToMany;
 import javax.persistence.ManyToMany;
+import javax.ws.rs.FormParam;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -23,8 +24,8 @@ public class Event {
 	@GenericGenerator(name="increment", strategy = "increment")
 	private int id;
 	
-	private String location;
-	private String title;
+	@FormParam("location") private String location;
+	@FormParam("title") private String title;
 	
 	@ManyToOne
 	@JoinColumn(name = "USER_CRSID")

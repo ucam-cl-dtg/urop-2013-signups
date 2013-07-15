@@ -1,9 +1,22 @@
 $(document).ready(function() {
-	slot_id = 0;
+	// EVENTS CONTROLLER
+	
+	type_adder(); 	// Add new type 
+	date_adder(); 	// Add new date field
+	toggle_rows();	// Toggle between row types
+	
+	// GROUPS CONTROLLER
+	
+	// DEADLINES CONTROLLER
+
+	// EVENTS CONTROLLER
+});
+
+// Add new date field 
+function date_adder() {
 	$(".datepicker").datepicker({ dateFormat: "dd/mm/yy"});
 	$("#new_slot").click(function(e) {
 		e.preventDefault();
-		slot_id += 1;
 
 		// Create date time picker
 		datetimepicker = "<div>";
@@ -24,4 +37,28 @@ $(document).ready(function() {
 		$(datetimepicker).insertBefore($(this).parent());
 		$(".datepicker").datepicker({ dateFormat: "dd/mm/yy"});
 	});
-});
+}
+
+// Add new type
+function type_adder() {
+	$("#new_type").click(function(e) {
+		e.preventDefault();
+		
+		$("<div><input type='text' name='types[]'></div>").insertBefore($(this).parent());
+	});
+}
+
+// Toggle between row types
+function toggle_rows() {
+	$("input[type='radio']#datetime").click(function() {
+		$(".manual_rows").slideUp("fast", function() {
+			$(".datetime_rows").slideDown("fast");
+		});
+	});
+
+	$("input[type='radio']#manual").click(function() {
+		$(".datetime_rows").slideUp("fast", function() {
+			$(".manual_rows").slideDown("fast");
+		});
+	});
+}
