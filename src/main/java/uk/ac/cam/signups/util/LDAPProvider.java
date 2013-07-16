@@ -115,7 +115,7 @@ public class LDAPProvider {
 		}
 	}	
 	
-	public static ArrayList<String> testPartialQuery(String x){
+	public static List testPartialQuery(String x){
 		
 		Hashtable env = new Hashtable();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");

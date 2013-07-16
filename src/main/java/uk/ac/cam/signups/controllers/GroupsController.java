@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -93,9 +95,17 @@ public class GroupsController extends ApplicationController {
 		
 		// Find users
 		@POST @Path("/queryCRSID")
-		@Produces("application/json")
-		public void queryCRSId(@FormParam("inputVal") String x) {
-			System.out.println("x");
+		@Produces(MediaType.APPLICATION_JSON)
+		public ImmutableMap<String, ?> queryCRSId(String x) {
+			System.out.println(x);
+			// Perform LDAP search
+			ArrayList<String> matches = (ArrayList<String>) LDAPProvider.testPartialQuery(x);
+			// Return results
+			for(String m : matches){
+				System.out.println(m);
+			}
+			
+			return ImmutableMap.of("crsid", matches);
 		}
 		
 		// Edit
