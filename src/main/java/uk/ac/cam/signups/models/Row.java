@@ -47,6 +47,10 @@ public class Row {
 
 	public Row() {}
 	
+	public Row(Calendar calendar) {
+		this.calendar = calendar;
+	}
+	
 	public Row(int id, 
 						Calendar calendar, 
 						Deadline deadline, 
