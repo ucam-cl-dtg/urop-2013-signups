@@ -6,12 +6,25 @@ $(document).ready(function() {
 	toggle_rows();	// Toggle between row types
 	
 	// GROUPS CONTROLLER
-	var testData = {crsid:"hp343",name:"holly"};
-	request = $.ajax({
-		url: "/groups/queryCRSID",
-		type: "post",
-		dataType: 'json',
-		success: function() { alert("test response"); }, data: testData});
+	$("#group_users").keyup(function() {  
+    	var myData = $("#group_users").val();
+    	// Only execute if more than 2 letters typed..
+    	if(myData.length>1) {
+    	    alert(myData);
+    		var saveData = $.ajax({
+    		      type: 'POST',
+    		      url: "groups/queryCRSID",
+    		      data: myData,
+    		      dataType: "json",
+    		      success: function(resultData) {  
+                  alert(resultData.crsid[0]);
+                  var matches = jQuery.makeArray(resultData.crsid);
+                  alert(matches[0]);
+    		      }
+    		});
+    	}
+	});
+
 	
 	
 	// DEADLINES CONTROLLER
