@@ -12,8 +12,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.ManyToMany;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
+import javax.persistence.Column;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.annotations.GenericGenerator;
+
+import uk.ac.cam.signups.util.HibernateUtil;
 
 @Entity
 @Table(name="TYPES")
@@ -23,6 +28,7 @@ public class Type {
 	@GenericGenerator(name="increment", strategy="increment")
 	private int id;
 	
+	@Column(name="name", unique = true)
 	private String name;
 
 	@ManyToMany(cascade = CascadeType.ALL)
@@ -56,4 +62,12 @@ public class Type {
 	
 	public Set<Event> getEvents() { return this.events; }
 	public void setEvents(Set<Event> events) { this.events = events; }
+	
+	public Set<Type> findSimilar(String param, User user) {
+		Session session = HibernateUtil.getTransaction();
+		Query similars = session.createQuery("SELECT DISTINCT name FROM Type as type WHERE type.event.owner = :user AND lower(type.name) like :name");
+		Set<Type> types = similars.setParameter();
+		session.getTransaction().commit();
+	}
+	}
 }

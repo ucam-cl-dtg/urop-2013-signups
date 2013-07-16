@@ -96,7 +96,7 @@ public class User {
 	}
 	
 	// Soy friendly get methods
-	public HashSet getGroupsMap() {
+	public Set<ImmutableMap<String, ?>> getGroupsMap() {
 		HashSet<ImmutableMap<String, ?>> userGroups = new HashSet<ImmutableMap<String, ?>>(0);
 		
 		if(groups==null){
