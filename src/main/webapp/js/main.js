@@ -6,7 +6,7 @@ $(document).ready(function() {
 	toggle_rows();	// Toggle between row types
 	
 	// GROUPS CONTROLLER
-	$("#group_users").keyup(function() {  
+/*	$("#group_users").keyup(function() {  
     	var myData = $("#group_users").val();
     	// Only execute if more than 2 letters typed..
     	if(myData.length>1) {
@@ -23,7 +23,8 @@ $(document).ready(function() {
     		      }
     		});
     	}
-	});
+*/	});
+  $("#group_users").tokenInput("groups/queryCRSID");
 
 	
 	
