@@ -1,9 +1,11 @@
 package uk.ac.cam.signups.models;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -31,23 +33,22 @@ public class Type {
 	@Column(name="name", unique = true)
 	private String name;
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name="EVENTS_TYPES",
-						joinColumns = {@JoinColumn(name = "TYPE_ID")},
-						inverseJoinColumns = {@JoinColumn(name = "EVENT_ID")})
-	private Set<Event> events = new HashSet<Event>(0);
+	@ManyToOne
+	@JoinColumn(name="EVENT_ID")
+	private Event event;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "type")
 	private Set<Row> rows = new HashSet<Row>(0);
 	
 	public Type() {}
+	public Type(String name) {this.name = name;}
 	public Type(int id, 
 							String name, 
-							Set<Event> events, 
+							Event event, 
 							Set<Row> rows) {
 		this.id = id;
 		this.name = name;
-		this.events = events;
+		this.event = event;
 		this.rows = rows;
 	}
 	
@@ -60,14 +61,20 @@ public class Type {
 	public Set<Row> getRows() {return this.rows;}
 	public void setRows(Set<Row> rows) {this.rows = rows;}
 	
-	public Set<Event> getEvents() { return this.events; }
-	public void setEvents(Set<Event> events) { this.events = events; }
+	public Event getEvent() { return this.event; }
+	public void setEvent(Event event) { this.event = event; }
 	
-	public Set<Type> findSimilar(String param, User user) {
+	public List<Type> findSimilar(String name, User user, String mode) {
 		Session session = HibernateUtil.getTransaction();
-		Query similars = session.createQuery("SELECT DISTINCT name FROM Type as type WHERE type.event.owner = :user AND lower(type.name) like :name");
-		Set<Type> types = similars.setParameter();
+		List<Type> types = null; 
+		if(mode.equals("local")) {
+			Query similars = session.createQuery("SELECT DISTINCT name FROM Type as type WHERE type.event.owner = :user AND lower(type.name) like :name");
+			types = (List<Type>) similars.setParameter("user", user).setParameter("name", name.toLowerCase()).list();
+		} else if(mode.equals("global")){
+			Query similars = session.createQuery("SELECT DISTINCT name FROM Type as type WHERE lower(type.name) like :name");
+			types = (List<Type>) similars.setParameter("name", name.toLowerCase()).list();
+		}
 		session.getTransaction().commit();
-	}
+		return types;
 	}
 }
