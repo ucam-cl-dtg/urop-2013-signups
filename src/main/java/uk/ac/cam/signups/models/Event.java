@@ -1,6 +1,9 @@
 package uk.ac.cam.signups.models;
 
+import com.google.common.collect.ImmutableMap;
+
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.OneToMany;
-import javax.persistence.ManyToMany;
 import javax.ws.rs.FormParam;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -24,8 +26,8 @@ public class Event {
 	@GenericGenerator(name="increment", strategy = "increment")
 	private int id;
 	
-	@FormParam("location") private String location;
-	@FormParam("title") private String title;
+	private String location;
+	private String title;
 	
 	@ManyToOne
 	@JoinColumn(name = "USER_CRSID")
@@ -34,7 +36,7 @@ public class Event {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
 	private Set<Row> rows = new HashSet<Row>(0);
 	
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "events")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
 	private Set<Type> types = new HashSet<Type>(0);
 
 	public Event() {}
@@ -70,4 +72,20 @@ public class Event {
 	
 	public Set<Type> getTypes() { return this.types; }
 	public void setTypes(Set<Type> types) { this.types = types; }
+	
+	public Map<String, ?> toImmutableMap() {
+		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
+		builder = builder.put("title",title);
+		builder = builder.put("location",location);
+		builder = builder.put("owner",owner.toImmutableMap());
+		builder = builder.put("rows", getImmutableRows(rows));
+		builder = builder.put("rows", getImmutableTypes(types));
+		return builder.build();
+	}
+	
+	public Set<ImmutableMap<String, ?>> getImmutableRows(Set<Row> rawRows) {
+		Set<Row> immutalizedRows = new HashSet<Row>(0);
+		for(Row row: rawRows)
+			immutalizedRows.
+	}
 }
