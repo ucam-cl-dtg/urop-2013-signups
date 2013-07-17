@@ -109,10 +109,18 @@ public class GroupsController extends ApplicationController {
 		}
 		
 		// Edit
-//		@GET @Path("/{id}/edit") @ViewWith("/soy/groups.edit")
-//		public Map editGroup(@PathParam("id") int id) {
-//			return ImmutableMap.of();
-//		}
+		@GET @Path("/{id}/edit") @ViewWith("/soy/groups.edit")
+		public Map editGroup(@PathParam("id") int id) {
+			
+			// Get the group to edit
+			Session session = HibernateUtil.getTransaction();
+			Query editGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
+		  	Group group = (Group) editGroup.uniqueResult();	
+			session.getTransaction().commit();
+		  	
+			// Create group map method in group model later
+			return ImmutableMap.of("id", group.getId(), "name", group.getTitle(), "users", group.getUsersMap());
+		}
 		
 		// Update
 //		@PUT @Path("/{id}")
@@ -122,11 +130,13 @@ public class GroupsController extends ApplicationController {
 //			throw new RedirectException("/");
 //		}
 		
-		// Destroy 
-//		@DELETE @Path("/{id}")
-//		public void deleteGroup(@PathParam("id") int id) {
-//			
-//			throw new RedirectException("/");
-//		}
+		//Destroy 
+		@DELETE @Path("/{id}")
+		public void deleteGroup(@PathParam("id") int id) {
+			
+			// Put this into group model as a static method later
+
+			throw new RedirectException("/");
+		}
 		
 }
