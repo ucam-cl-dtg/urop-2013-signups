@@ -1,6 +1,7 @@
 package uk.ac.cam.signups.models;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.ManyToMany;
@@ -107,5 +108,9 @@ public class User {
 			userGroups.add(ImmutableMap.of("id", g.getId(), "name", g.getTitle(), "users", g.getUsersMap(), "owner", g.getOwner().getCrsid()));
 		}
 		return userGroups;
+	}
+	
+	public Map<String, ?> toMap() {
+		return ImmutableMap.of("crsid", crsid);
 	}
 }

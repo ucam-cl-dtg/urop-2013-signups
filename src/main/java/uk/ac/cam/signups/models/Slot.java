@@ -1,5 +1,7 @@
 package uk.ac.cam.signups.models;
 
+import com.google.common.collect.ImmutableMap;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,9 +12,11 @@ import javax.persistence.JoinColumn;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.Map;
+
 @Entity
 @Table(name="SLOTS")
-public class Slot {
+public class Slot implements Mappable {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
@@ -41,4 +45,8 @@ public class Slot {
 	
 	public User getOwner() { return this.owner; }
 	public void setOwner(User owner) { this.owner = owner; }
+
+  public Map<String, ?> toMap() {
+	  return ImmutableMap.of("id",id);
+  }
 }

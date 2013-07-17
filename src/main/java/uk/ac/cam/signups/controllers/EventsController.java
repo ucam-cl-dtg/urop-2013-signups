@@ -1,12 +1,5 @@
 package uk.ac.cam.signups.controllers;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,6 +8,8 @@ import javax.ws.rs.PathParam;
 
 import org.hibernate.Session;
 import org.jboss.resteasy.annotations.Form;
+
+import java.util.Map;
 
 import uk.ac.cam.signups.forms.EventForm;
 import uk.ac.cam.signups.models.*;
@@ -45,12 +40,12 @@ public class EventsController extends ApplicationController {
 	
 	// Show
 	@GET @Path("/{id}") @ViewWith("/soy/events.show")
-	public Map<String, Object> showEvent(@PathParam("id") int id){
+	public Map<String, ?> showEvent(@PathParam("id") int id){
 		Session session = HibernateUtil.getTransaction();
 		Event event = (Event) session.createQuery("FROM Event WHERE id = :id").setParameter("id", id).uniqueResult();
 		session.getTransaction().commit();
 		
-		return event.toImmutableMap();
+		return event.toMap();
 	}
 	
 	// Fill Slot

@@ -1,7 +1,10 @@
 package uk.ac.cam.signups.models;
 
+import com.google.common.collect.ImmutableMap;
+
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -11,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.Column;
 
@@ -24,7 +25,7 @@ import uk.ac.cam.signups.util.HibernateUtil;
 
 @Entity
 @Table(name="TYPES")
-public class Type {
+public class Type implements Mappable {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
@@ -64,7 +65,12 @@ public class Type {
 	public Event getEvent() { return this.event; }
 	public void setEvent(Event event) { this.event = event; }
 	
-	public List<Type> findSimilar(String name, User user, String mode) {
+	public Map<String, ?> toMap() {
+		return ImmutableMap.of("name", name);
+	}
+	
+	@SuppressWarnings("unchecked")
+  public List<Type> findSimilar(String name, User user, String mode) {
 		Session session = HibernateUtil.getTransaction();
 		List<Type> types = null; 
 		if(mode.equals("local")) {

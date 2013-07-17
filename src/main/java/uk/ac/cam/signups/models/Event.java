@@ -2,6 +2,8 @@ package uk.ac.cam.signups.models;
 
 import com.google.common.collect.ImmutableMap;
 
+import uk.ac.cam.signups.util.Util;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -14,13 +16,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.OneToMany;
-import javax.ws.rs.FormParam;
 
 import org.hibernate.annotations.GenericGenerator;
 
+
 @Entity
 @Table(name="EVENTS")
-public class Event {
+public class Event implements Mappable {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
@@ -73,19 +75,14 @@ public class Event {
 	public Set<Type> getTypes() { return this.types; }
 	public void setTypes(Set<Type> types) { this.types = types; }
 	
-	public Map<String, ?> toImmutableMap() {
+	public Map<String, ?> toMap() {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
 		builder = builder.put("title",title);
 		builder = builder.put("location",location);
-		builder = builder.put("owner",owner.toImmutableMap());
-		builder = builder.put("rows", getImmutableRows(rows));
-		builder = builder.put("rows", getImmutableTypes(types));
+		builder = builder.put("owner",owner.toMap());
+		Set<Map<String,?>> immutableRows = Util.getImmutableCollection(rows);
+		//builder = builder.put("rows", Util.getImmutableCollection(rows));
+		builder = builder.put("types", Util.getImmutableCollection(types));
 		return builder.build();
-	}
-	
-	public Set<ImmutableMap<String, ?>> getImmutableRows(Set<Row> rawRows) {
-		Set<Row> immutalizedRows = new HashSet<Row>(0);
-		for(Row row: rawRows)
-			immutalizedRows.
 	}
 }

@@ -1,7 +1,12 @@
 package uk.ac.cam.signups.models;
 
+import com.google.common.collect.ImmutableMap;
+
+import uk.ac.cam.signups.util.Util;
+
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -20,7 +25,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name="ROWS")
-public class Row {
+public class Row implements Mappable {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
@@ -79,4 +84,16 @@ public class Row {
 	
 	public Type getType() { return this.type; }
 	public void setType(Type type) { this.type = type; }
+	
+	public Map<String, ?> toMap() {
+		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
+		builder = builder.put("date", ImmutableMap.of("day", calendar.get(Calendar.DAY_OF_MONTH),
+																									"month", calendar.get(Calendar.MONTH),
+																									"year", calendar.get(Calendar.YEAR),
+																									"minute", calendar.get(Calendar.MINUTE),
+																									"second", calendar.get(Calendar.SECOND)));
+		builder = builder.put("slots", Util.getImmutableCollection(slots));
+		builder = builder.put("type", type.toMap());
+		return ImmutableMap.of("slots", slots, "type", type);
+	}
 }
