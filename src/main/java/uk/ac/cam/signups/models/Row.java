@@ -25,7 +25,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name="ROWS")
-public class Row implements Mappable {
+public class Row implements Mappable, Comparable<Row> {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
@@ -94,6 +94,10 @@ public class Row implements Mappable {
 																									"second", calendar.get(Calendar.SECOND)));
 		builder = builder.put("slots", Util.getImmutableCollection(slots));
 		builder = builder.put("type", type.toMap());
-		return ImmutableMap.of("slots", slots, "type", type);
+		return builder.build();
+	}
+	
+	public int compareTo(Row row) {
+		return this.calendar.compareTo(row.calendar);
 	}
 }

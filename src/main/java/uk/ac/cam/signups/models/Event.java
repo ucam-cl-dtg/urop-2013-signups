@@ -4,9 +4,13 @@ import com.google.common.collect.ImmutableMap;
 
 import uk.ac.cam.signups.util.Util;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
@@ -80,9 +84,31 @@ public class Event implements Mappable {
 		builder = builder.put("title",title);
 		builder = builder.put("location",location);
 		builder = builder.put("owner",owner.toMap());
-		Set<Map<String,?>> immutableRows = Util.getImmutableCollection(rows);
-		//builder = builder.put("rows", Util.getImmutableCollection(rows));
 		builder = builder.put("types", Util.getImmutableCollection(types));
+		
+		// Make row hierarchy with dates
+		SortedMap<String, Set<Row>> temp = new TreeMap<String, Set<Row>>();
+		for(Row row: rows) {
+			Calendar cal = row.getCalendar();
+			String key = "" + cal.get(Calendar.YEAR) + ":" + cal.get(Calendar.MONTH) + ":" + cal.get(Calendar.DAY_OF_MONTH);
+			if (temp.containsKey(row.toMap())) {
+				temp.get(key).add(row);
+			} else {
+				temp.put(key, new TreeSet<Row>());
+			}
+		}
+		
+		Set<ImmutableMap<String, ?>> dates = new HashSet<ImmutableMap<String, ?>>(0);
+		for(String key: temp.keySet()) {
+			String[] dateArray = key.split(":");
+			int year = Integer.parseInt(dateArray[0]);
+			int month = Integer.parseInt(dateArray[1]);
+			int day = Integer.parseInt(dateArray[2]);
+			dates.add(ImmutableMap.of("date", ImmutableMap.of("year", year, "month", month, "day", day), "rows", Util.getImmutableCollection(temp.get(key))));
+		}
+		
+		builder = builder.put("dates", dates);
+
 		return builder.build();
 	}
 }
