@@ -1,0 +1,36 @@
+@font-face {
+	font-family: "WebSymbols-Regular";
+	src: url("font/websymbols/WebSymbols-Regular.eot?") format("eot"),
+		 url("font/websymbols/WebSymbols-Regular.woff") format("woff"),
+		 url("font/websymbols/WebSymbols-Regular.ttf") format("truetype"),
+		 url("font/websymbols/WebSymbols-Regular.svg#WebSymbols-Regular") format("svg");
+	font-weight: normal;
+	font-style: normal;
+}
+
+.websymbols-icon {
+	font-family: "WebSymbols-Regular";
+	padding-right: 5px;
+	line-height: 1em;
+}
+
+.fixed-width-icon {
+	float: left;
+	width: 30px;
+	height: inherit;
+	line-height: inherit;
+	text-align: center;
+}
+
+.icon-button-wrapper {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.icon-button {
+	padding: 6px;
+}
+
+.icon-button-array {
+	margin-right: 6px;
+}

@@ -1,0 +1,35 @@
+<h3>Upload answers</h3>
+<table class="form_table">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Link</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td> 4 </td>
+			<td> <a href="/answers/4"> bla_bla1610899018473365672 </a> </td>
+		</tr>
+		<tr>
+			<td> 5 </td>
+			<td> <a href="/answers/5"> bla_bla8798623625737961648 </a> </td>
+		</tr>
+		<tr>
+			<td> 6 </td>
+			<td> <a href="/answers/6"> bla_128914881100523049 </a> </td>
+		</tr>
+	</tbody>
+</table>
+<form class="file-upload" method="post" action="/answers/upload" enctype="multipart/form-data">
+	<fieldset>
+		<legend> Upload a new answer </legend>
+		<input type="file" name="file"><input type="submit" class="btn btn-primary" name="submit" value="Upload">
+	</fieldset>
+</form>
+<form class="getFragments form" action="/fragments/" method="post" _lpchecked="1">
+	<fieldset>
+		<legend> Get a page  </legend>
+		<input type="text" name="page"><input type="submit" class="btn btn-info">
+	</fieldset>
+</form>

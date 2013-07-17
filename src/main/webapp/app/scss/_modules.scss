@@ -1,0 +1,169 @@
+//
+// Universal module content
+//
+
+// List panel
+
+.panels {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.panel-wrapper {
+	margin-bottom: 15px;
+}
+
+.list-panel {
+	background-color: $secondary-color;
+	border: 1px solid #d9d9d9;
+	padding: 15px;
+}
+
+.list-inner-panel {
+	line-height: 16px;
+}
+
+.sub-panel {
+	display: none;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.list-sub-panel {
+	background-color: #f2f2f2;
+	border: 1px solid #ccc;
+	border-top: none;
+	padding: 15px;
+}
+
+.list-inner-sub-panel {
+	line-height: 16px;
+}
+
+.panel-icon-button {
+	font-weight: normal;
+	background-color: #f2f2f2;
+	border: 1px solid #d9d9d9;
+	font-size: 16px;
+	color: #525252;
+}
+
+.list-panel.success {
+	background-color: #B6D08F;
+	border: 1px solid #75B370;
+}
+
+.list-sub-panel.success {
+	background-color: #BEE18E;
+	border-color: #75B370;
+}
+
+// Tabs
+
+.section-container.tabs > section > .title a, .section-container.tabs > .section > .title a {
+	font-size: 1em;
+	padding: 0.65em 0.85em 0.65em 0.85em;
+}
+
+// Tags
+
+.tags {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.tag {
+	@extend .button;
+	@include split-button;
+}
+
+.tag span {
+	line-height: 32px;
+}
+
+.tag span::before {
+	border: none;
+}
+
+// Forms
+
+.custom.dropdown, form.custom .custom.dropdown ul li {
+	font-size: 13px !important;
+}
+
+input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], textarea {
+	height: 34px;
+	font-size: 13px;
+}
+
+.field-label {
+	height: 34px;
+	line-height: 34px;
+}
+
+.form-button {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+//
+// Notification feed
+//
+
+.notification-feed {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.notification-feed-item {
+	padding: 15px;
+	border-top: 1px solid #ccc;
+}
+
+//
+// Create new supervision
+//
+
+.form_table {
+	width: 100%;
+}
+
+.form_table td, .form_table th {
+	font-size: 13px;
+}
+
+//
+// Mark answers
+//
+
+.input-search {
+	height: 34px !important;
+}
+
+.upload-marked-work-form {
+	display: none;
+}
+
+//
+// Specific question
+//
+
+.star-question-button {
+	color: $primary-color;
+	cursor: pointer;
+    &:hover, &:focus { 
+		color: darken($primary-color, $button-function-factor);
+	}
+}
+
+//
+// Specific question set
+//
+
+.question-to-add-to-set {
+	cursor: pointer;
+}

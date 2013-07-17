@@ -43,8 +43,7 @@ public class GroupsController extends ApplicationController {
 		
 		// Index
 		@GET @Path("/") 
-		//@Produces(MediaType.APPLICATION_JSON)
-		@ViewWith("/soy/groups.index")
+		@Produces(MediaType.APPLICATION_JSON)
 		public Map indexGroups() {
 			// Initialise user
 			user = initialiseUser();
