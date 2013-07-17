@@ -1,0 +1,77 @@
+<h3>Create new event</h3>
+<form>
+	<div class="row">
+		<div class="columns large-2 small-4 field-label">Event type</div>
+		<div class="columns large-10 small-8">
+			<input type="text" class="event-type-input" />
+			<script type="text/javascript">
+			$(document).ready(function() {
+				$(".event-type-input").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+					theme: "facebook",
+					prePopulate: [
+						{id: 123, name: "Slurms MacKenzie"},
+						{id: 555, name: "Bob Hoskins"},
+						{id: 9000, name: "Kriss Akabusi"}
+				]
+				});
+			});
+			</script>
+		</div>
+	</div>
+	<div class="row">
+		<div class="columns large-2 small-4 field-label">Location</div>
+		<div class="columns large-10 small-8">
+			<input type="text" placeholder="Location" />
+			<iframe width="100%" height="300px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.co.uk/?ie=UTF8&amp;ll=52.202557,0.094757&amp;spn=0.055128,0.154324&amp;t=m&amp;z=13&amp;output=embed"></iframe><br /><br />
+		</div>
+	</div>
+	<div class="row">
+		<div class="columns large-2 small-4 field-label">Times</div>
+		<div class="columns large-10 small-8">
+			<div class="time-controls-wrapper row">
+				<div class="single-slot-controls columns large-12 small-12 hide">
+					<div class="row">
+						<div class="columns large-6 small-6">
+							<input type="text" placeholder="Date" />
+						</div>
+						<div class="columns large-6 small-6">
+							<input type="text" placeholder="Time" />
+						</div>
+					</div>
+				</div>
+				<div class="range-controls columns large-12 small-12 hide">
+					<div class="row">
+						<div class="columns large-4 small-4">
+							<input type="text" placeholder="Date" />
+						</div>
+						<div class="columns large-4 small-4">
+							<input type="text" placeholder="Time" />
+						</div>
+						<div class="columns large-4 small-4">
+							<input type="text" placeholder="Range" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="columns large-6 small-6">
+					<a class="button medium full-width form-button form-control-option-button" data-element-to-clone="single-slot-controls" data-target="time-controls-wrapper">Single slot</a>
+				</div>
+				<div class="columns large-6 small-6">
+					<a class="button medium full-width form-button form-control-option-button" data-element-to-clone="range-controls" data-target="time-controls-wrapper">Range</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="columns large-2 small-4 field-label">Group size</div>
+		<div class="columns large-10 small-8">
+			<input type="number" placeholder="Group size" min="0" />
+		</div>
+	</div>
+	<div class="row">
+		<div class="columns large-12 small-12">
+			<input type="submit" value="Create event" />
+		</div>
+	</div>
+</form>

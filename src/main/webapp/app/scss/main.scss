@@ -1,0 +1,178 @@
+// Import libraries
+
+@import "foundation",
+		"font",
+		"modules";
+
+//
+// Variables
+//
+
+$header-height: 40px;
+
+//
+// Global styles
+//
+
+html, body {
+	height: 100%;
+}
+
+.module-loader {
+	cursor: pointer;
+}
+
+.large-button-wrapper {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+//
+// Header
+//
+
+.header {
+	background-color: $primary-color;
+	height: $header-height;
+	line-height: $header-height;
+	color: #fff;
+	font-size: 14px;
+}
+
+.header-logo {
+	background-color: darken($primary-color, 10%);
+	font-size: 19px;
+	font-weight: bold;
+}
+
+.header-logo-inner {
+}
+
+.header-icon-button {
+	color: #fff;
+}
+
+.header-icon-button:hover {
+	color: #246190;
+}
+
+//
+// Mobile navigation
+//
+
+.mobile-nav-wrapper {
+	display: none;
+}
+
+.mobile-nav-wrapper-inner {
+	padding: 0 17px 17px 17px;
+	border-bottom: $header-height solid #ccc;
+}
+
+.mobile-nav {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	line-height: 40px;
+	font-size: 14px;
+}
+
+.mobile-nav-header {
+	font-weight: bold;
+	border-bottom: 8px solid #ddd;
+	margin-top: 17px;
+}
+
+.mobile-nav-item {
+	border-bottom: 1px solid #ddd;
+}
+
+@media only screen and (min-width: 768px) {
+	.mobile-nav-wrapper {
+		display: none !important;
+	}
+}
+
+//
+// Central content
+//
+
+.central-content {
+	min-height: 100%;
+	color: #525252;
+	font-size: 13px;
+	margin-top: -$header-height;
+	padding-top: $header-height;
+}
+
+//
+// Sidebar
+//
+
+.sidebar {
+	background-color: #F6F6F6;
+	padding: 0;
+	min-height: 100%;
+	border-right: 1px solid #ccc;
+}
+
+.sidebar .columns {
+	padding: 0;
+}
+
+.sidebar-navigation {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.sidebar-navigation-item {
+	padding: 10px 25px 10px 25px;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #ccc;
+}
+
+.sidebar-navigation-item-header {
+	color: #525252;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.sidebar-sub-navigation {
+	display: none;
+	list-style-type: none;
+	margin: 0;
+	padding: 6px 0 0 0;
+}
+
+.expanded {
+	display: block;
+}
+
+.sidebar-sub-navigation-item {
+	padding: 8px 0 5px 23px;
+}
+
+.sidebar-sub-navigation-item-header {
+	color: #525252;
+}
+
+.notifications {
+}
+
+//
+// Main content
+//
+
+.main {
+	padding: 10px 17px 10px 17px;
+}
+
+//
+// Grid extensions
+//
+
+.full-width {
+	width: 100%;
+	max-width: 100%;
+}
