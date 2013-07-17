@@ -110,24 +110,26 @@ public class GroupsController extends ApplicationController {
 			return ImmutableMap.of("crsid", matches);
 		}
 		
-		// Edit
-//		@GET @Path("/{id}/edit") @ViewWith("/soy/groups.edit")
-//		public Map editGroup(@PathParam("id") int id) {
-//			
-//			// Get the group to edit
-//			Session session = HibernateUtil.getTransaction();
-//			Query editGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
-//		  	Group group = (Group) editGroup.uniqueResult();	
-//			session.getTransaction().commit();
-//		  	
-//			// Create group map method in group model later
-//			return ImmutableMap.of("id", group.getId(), "name", group.getTitle(), "users", group.getUsersMap());
-//		}
+		//Edit
+		@GET @Path("/{id}/edit") @ViewWith("/soy/groups.edit")
+		public Map editGroup(@PathParam("id") int id) {
+			
+			// Get the group to edit
+			Session session = HibernateUtil.getTransaction();
+			Query editGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
+		  	Group group = (Group) editGroup.uniqueResult();	
+			session.getTransaction().commit();
+		  	
+			// Create group map method in group model later
+			return ImmutableMap.of("id", group.getId(), "name", group.getTitle(), "users", group.getUsersMap());
+		}
 		
-		// Update
-//		@PUT @Path("/{id}")
+//		// Update
+//		@POST @Path("/{id}")
 //		public void updateGroup(@PathParam("id") int id,
 //				@Form Group group) {
+//			
+//			// Check that current user is the e
 //			
 //			throw new RedirectException("/");
 //		}

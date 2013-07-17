@@ -35,6 +35,7 @@ $(document).ready(function() {
                   url: "groups/" + group_id,
                   success: function(resultData) {  
                   alert("Group deleted");
+                  location.reload();
                   }
             });
     });
@@ -42,7 +43,13 @@ $(document).ready(function() {
     $("body").on("click", ".group_edit", function() {  
         var group_id = $(this).parents("form").attr("id");
         alert("Edit " + group_id);
-        window.location = "/groups/" + group_id + "/edit";
+        window.location = "/groups/" + group_id + "/edit/";
+    });
+    //Update a group
+    $("body").on("click", ".group_update", function() {  
+        var group_id = $(this).parents("form").attr("id");
+        alert("Edit " + group_id);
+        window.location = "/groups/" + group_id + "/edit/";
     });
 	
 	
