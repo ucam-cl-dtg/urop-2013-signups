@@ -6,7 +6,8 @@ $(document).ready(function() {
 	toggle_rows();	// Toggle between row types
 	
 	// GROUPS CONTROLLER
-/*	$("#group_users").keyup(function() {  
+	//Ajax autocomplete lookup user
+	$("#group_users").keyup(function() {  
     	var myData = $("#group_users").val();
     	// Only execute if more than 2 letters typed..
     	if(myData.length>1) {
@@ -23,9 +24,26 @@ $(document).ready(function() {
     		      }
     		});
     	}
-*/	});
-  $("#group_users").tokenInput("groups/queryCRSID");
-
+	});
+	//Delete a group
+    $(".group_delete").click(function() {  
+        var group_id = $(this).parents("form").attr("id");
+        alert("Delete " + group_id);
+        // Ajax delete request
+            var deleteData = $.ajax({
+                  type: 'DELETE',
+                  url: "groups/" + group_id,
+                  success: function(resultData) {  
+                  alert("Group deleted");
+                  }
+            });
+    });
+    //Edit a group
+    $(".group_edit").click(function() {  
+        var group_id = $(this).parents("form").attr("id");
+        alert("Edit " + group_id);
+        window.location = "/groups/" + group_id + "/edit";
+    });
 	
 	
 	// DEADLINES CONTROLLER

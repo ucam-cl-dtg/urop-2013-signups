@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.naming.NamingEnumeration;
@@ -16,6 +17,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.eclipse.jetty.util.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import uk.ac.cam.signups.helpers.LDAPQueryHelper;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -42,6 +45,7 @@ public class UserLookupManager {
 	private String status;
 	private String photo;
 	private String institution;
+	private ImmutableMap<String, ?> userData;
 	
 	private UserLookupManager(String crsid){
 		this.crsid = crsid;
@@ -53,8 +57,7 @@ public class UserLookupManager {
 	 */
 	public String getDisplayName(){
 		if(displayName==null){
-			log.debug("Retrieving display name from LDAP");
-			displayName = LDAPProvider.getUniqueResult(crsid, "displayName");	
+			displayName = LDAPQueryHelper.getDisplayName(crsid);
 		} 
 		return displayName;
 	}
@@ -65,8 +68,7 @@ public class UserLookupManager {
 	 */
 	public String getSurname(){
 		if(surname==null){
-			log.debug("Retrieving surname from LDAP");
-			surname = LDAPProvider.getUniqueResult(crsid, "sn");	
+			surname = LDAPQueryHelper.getSurname(crsid);	
 		} 
 		return surname;
 	}
@@ -78,8 +80,7 @@ public class UserLookupManager {
 	 */
 	public String getEmail(){
 		if(email==null){
-			log.debug("Retrieving email from LDAP");
-			email = LDAPProvider.getUniqueResult(crsid, "mail");	
+			email = LDAPQueryHelper.getEmail(crsid);	
 		} 
 		return email;
 	}
@@ -92,17 +93,7 @@ public class UserLookupManager {
 	 */
 	public String getStatus(){
 		if(status==null){
-			log.debug("Retrieving misAffiliation from LDAP");
-			// Default status is student
-			status = "student";
-			List<String> statusList = LDAPProvider.getStringListResult(crsid, "misAffiliation");
-			for(String s : statusList){
-				// If the user has staff misAffiliation, set staff status
-				if(s.toString().equals("staff")){
-					log.debug("staff misAffiliation detected for user");
-					status = "staff";
-				}
-			}
+			status = LDAPQueryHelper.getStatus(crsid);
 		} 
 		return status;
 	}
@@ -114,43 +105,18 @@ public class UserLookupManager {
 	 */
 	public String getPhoto(){
 		if(photo==null){
-			Log.debug("Retrieving photo from LDAP");
-			
-			// Set default as "none" to convert to no photo image in soy
-			photo = "none";
-
-			// See if there is a photo on LDAP
-			NamingEnumeration<?> photoEnum = LDAPProvider.getEnumListResult(crsid, "jpegPhoto");
-			// Convert to byte arrays
-			List<byte[]> photoList = new ArrayList<byte[]>();
-			try {
-				while(photoEnum.hasMore()){
-					photoList.add((byte[])photoEnum.next());		
-				}
-				byte[] p = (byte[])photoList.get(0);
-				photo = new String(Base64.encodeBase64(p));
-			} catch (NamingException e){
-				log.error(e.getMessage());
-			} catch (NullPointerException e){
-				log.debug("User has no photo");
-			}
+			photo = LDAPQueryHelper.getPhoto(crsid);
 		} 
 		return photo;
 	}
 	
 	/**
-	 * Gets a list of misAffiliations associated with user
-	 * If 'staff' misAffiliations user is present sets status as staff, otherwise student
+	 * Gets a list of institutions associated with user
 	 * @return String status
 	 */
 	public String getInstitution(){
 		if(institution==null){
-			log.debug("Retrieving institution from LDAP");
-			institution = "none";
-			List<String> inList = LDAPProvider.getStringListResult(crsid, "ou");
-			if(inList!=null&&!inList.isEmpty()){
-				institution = inList.get(0);
-			}
+			institution = LDAPQueryHelper.getInstitution(crsid);
 		} 
 		return institution;
 	}
@@ -160,17 +126,15 @@ public class UserLookupManager {
 	 * @return ImmutableMap userData
 	 */
 	public ImmutableMap<String, ?> getAll(){
-		// Create a map of all the users data using builder
-		Log.debug("Building map of user data");
-		ImmutableMap<String, ?> userData = new ImmutableMap.Builder<String, String>()
-				.put("crsid", crsid)
-				.put("fullname", getDisplayName())
-				.put("surname", getSurname())
-				.put("email", getEmail())
-				.put("status", getStatus())
-				.put("photo", getPhoto())
-				.put("institution", getInstitution())
-				.build();
+		if(userData==null){
+			getDisplayName();
+			getSurname();
+			getEmail();
+			getStatus();
+			getPhoto();
+			getInstitution();
+			userData = LDAPQueryHelper.getAll(crsid);
+		}
 		return userData;
 	}
 	
