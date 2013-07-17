@@ -7,7 +7,7 @@ $(document).ready(function() {
 	
 	// GROUPS CONTROLLER
 	//Ajax autocomplete lookup user
-	$(".main").on("keyup", "#group_users", function() {  
+	$("body").on("keyup", "#group_users", function() {  
     	var myData = $("#group_users").val();
     	// Only execute if more than 2 letters typed..
     	if(myData.length>1) {
@@ -26,7 +26,7 @@ $(document).ready(function() {
     	}
 	});
 	//Delete a group
-    $(".main").on("click", "group_delete", (function() {  
+    $("body").on("click", ".group_delete", function() {  
         var group_id = $(this).parents("form").attr("id");
         alert("Delete " + group_id);
         // Ajax delete request
@@ -39,7 +39,7 @@ $(document).ready(function() {
             });
     });
     //Edit a group
-    $(".main").on("click", "group_edit", (function() {  
+    $("body").on("click", ".group_edit", function() {  
         var group_id = $(this).parents("form").attr("id");
         alert("Edit " + group_id);
         window.location = "/groups/" + group_id + "/edit";

@@ -5,6 +5,9 @@
  * @param groups
  */
 {template .index }
+  {call shared.html_boilerplate}
+    {param className: 'groups' /}
+    {param body}
 		<h2>Groups</h2>
 		<h3>Current groups</h3>
 		{foreach $group in $groups}
@@ -39,6 +42,8 @@
 			</tr>
 			</table>
 			</form>
+    {/param}
+  {/call}
 {/template}
 
 /**

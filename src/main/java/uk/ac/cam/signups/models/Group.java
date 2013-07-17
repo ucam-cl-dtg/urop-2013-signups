@@ -36,7 +36,7 @@ public class Group {
 
 	@FormParam("title") private String title;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany
 	@JoinTable(name="GROUPS_USERS",
 						joinColumns = {@JoinColumn(name = "GROUP_ID")},
 						inverseJoinColumns = {@JoinColumn(name = "USER_CRSID")})

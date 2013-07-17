@@ -42,7 +42,9 @@ public class GroupsController extends ApplicationController {
 		private User user;
 		
 		// Index
-		@GET @Path("/") @Produces(MediaType.APPLICATION_JSON)
+		@GET @Path("/") 
+		//@Produces(MediaType.APPLICATION_JSON)
+		@ViewWith("/soy/groups.index")
 		public Map indexGroups() {
 			// Initialise user
 			user = initialiseUser();
@@ -134,7 +136,13 @@ public class GroupsController extends ApplicationController {
 		@DELETE @Path("/{id}")
 		public void deleteGroup(@PathParam("id") int id) {
 			
-			// Put this into group model as a static method later
+			// Delete the group object
+			Session session = HibernateUtil.getTransaction();
+			Query groupQuery = session.createQuery("from Group where id = :id");
+			groupQuery.setParameter("id", id);
+			Group group = (Group)groupQuery.uniqueResult();
+			session.delete(group);
+			session.getTransaction().commit();
 
 			throw new RedirectException("/");
 		}
