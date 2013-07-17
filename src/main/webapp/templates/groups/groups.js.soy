@@ -1,78 +1,57 @@
-{namespace groups}
-
-/**
- * Group page for timetables
- * @param groups
- */
+{namespace groups} /** * Group page for timetables * @param groups */
 {template .index }
-  {call shared.html_boilerplate}
-    {param className: 'groups' /}
-    {param body}
-		<h2>Groups</h2>
-		<h3>Current groups</h3>
-		{foreach $group in $groups}
-			<form id="{$group.id}">{$group.id} | {$group.name} | {$group.owner} | <input type="button" class="group_edit" value="EDIT"/> | <input type="button" class="group_delete" value="DELETE"/></form> 
-			Members: 
-				{foreach $user in $group.users}
-				{$user.crsid} | 
-				{ifempty}
-				No users in this group
+<h2>Groups</h2>
+<h3>Current groups</h3>
+{foreach $group in $groups}
+<form id="{$group.id}">
+	{$group.id} | {$group.name} | {$group.owner} | <input type="button"
+		class="group_edit" value="EDIT" /> | <input type="button"
+		class="group_delete" value="DELETE" />
+</form>
+Members: {foreach $user in $group.users} {$user.crsid} | {ifempty} No
+users in this group {/foreach}
+<br />
+{ifempty} You haven't created any groups {/foreach}
+
+<h3>Create new group</h3>
+<form id="group" name="group" action="/groups/" method="post">
+	<table>
+		<tr>
+			<td>Group name:</td>
+			<td><input type="text" id="title" name="title" /></td>
+		</tr>
+		<tr>
+			<td>Add members:</td>
+			<td><input type="text" name="users[]" id="group_users" /><input
+				type="button" id="add_member" value="+" /></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" id="group_submit" value="Save Group" /></td>
+		</tr>
+	</table>
+</form>
+{/template} /** * Edit group * @param name * @param users */ {template
+.edit }
+
+<h3>Edit group</h3>
+<table>
+	<form id="edit_group" name="group">
+		<tr>
+			<td>Group name:</td>
+			<td><input type="text" id="title" name="title" value="{$name}" /></td>
+		</tr>
+		<tr>
+			<td>Members:</td>
+			<td>{foreach $user in $users} <input type="text" name="users[]"
+				id="group_users" value="{$user.crsid}" /><input type="button"
+				id="add_member" value="+" /> {ifempty} No users in this group
 				{/foreach}
-			<br/>
-			{ifempty}
-			You haven't created any groups
-		{/foreach}
-		
-		<h3>Create new group</h3>
-		    <form id="group" name="group" action="/groups/" method="post">
-			<table>
-			<tr>
-				<td>Group name: </td><td><input type="text" id="title" name="title"/></td>
-			</tr>
-			<tr>
-				<td>
-				Add members: 
-				</td>
-				<td>
-				<input type="text" name="users[]" id="group_users"/><input type="button" id="add_member" value="+"/>
-				</td>
-			</tr>
-			<tr>
-				<td></td><td><input type="submit" id="group_submit" value="Save Group"/></td>
-			</tr>
-			</table>
-			</form>
-    {/param}
-  {/call}
-{/template}
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" id="submit" value="Save Group" /></td>
+		</tr>
 
-/**
- * Edit group
- * @param name
- * @param users
- */
-{template .edit }
-
-        <h3>Edit group</h3>
-            <table>
-            <form id="edit_group" name="group">
-            <tr>
-                <td>Group name: </td><td><input type="text" id="title" name="title" value="{$name}"/></td>
-            </tr>
-            <tr>
-                <td>
-                Members: 
-                </td>
-                <td>
-                {foreach $user in $users}
-                <input type="text" name="users[]" id="group_users" value="{$user.crsid}"/><input type="button" id="add_member" value="+"/>
-                {ifempty}
-                No users in this group
-                {/foreach}
-                </td>
-            </tr>
-            <tr>
-                <td></td><td><input type="submit" id="submit" value="Save Group"/></td>
-            </tr>
-
-{/template}
+		{/template}

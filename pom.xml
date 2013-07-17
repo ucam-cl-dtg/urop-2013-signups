@@ -20,10 +20,10 @@
 			<id>codedance on Github</id>
 			<url>https://github.com/codedance/maven-repository/raw/master</url>
 		</repository>
-    <repository>
-       <id>jboss</id>
-       <url>http://repository.jboss.org/nexus/content/groups/public/</url>
-    </repository>
+		<repository>
+			<id>jboss</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -81,11 +81,11 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-    <dependency>
-       <groupId>org.jboss.resteasy</groupId>
-       <artifactId>resteasy-jackson-provider</artifactId>
-       <version>2.3.1.GA</version>
-    </dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson-provider</artifactId>
+			<version>2.3.1.GA</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -108,14 +108,41 @@
 				<artifactId>sass-maven-plugin</artifactId>
 				<version>1.1.1</version>
 				<configuration>
-				  <sassSourceDirectory>${basedir}/src/main/webapp/sass</sassSourceDirectory>
-				  <destination>${basedir}/src/main/webapp/css</destination>
-				  <sassOptions>
-				      <cache>false</cache>
-				      <style>:compressed</style>
-				      <syntax>:scss</syntax>
-				  </sassOptions>
+					<sassSourceDirectory>${basedir}/src/main/webapp/sass</sassSourceDirectory>
+					<destination>${basedir}/src/main/webapp/css</destination>
+					<sassOptions>
+						<cache>false</cache>
+						<style>:compressed</style>
+						<syntax>:scss</syntax>
+					</sassOptions>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/src/main/webapp/app</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/../urop-frontend</directory>
+									<filtering>true</filtering>
+								</resource>
+								<resource>
+									<directory>${basedir}/src/main/webapp/app-index</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
