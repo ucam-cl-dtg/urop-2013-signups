@@ -42,7 +42,7 @@ public class GroupsController extends ApplicationController {
 		private User user;
 		
 		// Index
-		@GET @Path("/") @ViewWith("/soy/groups.index")
+		@GET @Path("/") @Produces(MediaType.APPLICATION_JSON)
 		public Map indexGroups() {
 			// Initialise user
 			user = initialiseUser();
@@ -109,18 +109,18 @@ public class GroupsController extends ApplicationController {
 		}
 		
 		// Edit
-		@GET @Path("/{id}/edit") @ViewWith("/soy/groups.edit")
-		public Map editGroup(@PathParam("id") int id) {
-			
-			// Get the group to edit
-			Session session = HibernateUtil.getTransaction();
-			Query editGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
-		  	Group group = (Group) editGroup.uniqueResult();	
-			session.getTransaction().commit();
-		  	
-			// Create group map method in group model later
-			return ImmutableMap.of("id", group.getId(), "name", group.getTitle(), "users", group.getUsersMap());
-		}
+//		@GET @Path("/{id}/edit") @ViewWith("/soy/groups.edit")
+//		public Map editGroup(@PathParam("id") int id) {
+//			
+//			// Get the group to edit
+//			Session session = HibernateUtil.getTransaction();
+//			Query editGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
+//		  	Group group = (Group) editGroup.uniqueResult();	
+//			session.getTransaction().commit();
+//		  	
+//			// Create group map method in group model later
+//			return ImmutableMap.of("id", group.getId(), "name", group.getTitle(), "users", group.getUsersMap());
+//		}
 		
 		// Update
 //		@PUT @Path("/{id}")
