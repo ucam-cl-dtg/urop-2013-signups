@@ -43,7 +43,7 @@ public class Group {
 	private Set<User> users = new HashSet<User>(0);
 	
 	@ManyToOne
-	@JoinTable(name="USER_CRSID")
+	@JoinColumn(name="USER_CRSID")
 	private User owner;
 	
 	public Group() { }
