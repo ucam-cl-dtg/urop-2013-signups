@@ -46,30 +46,30 @@ public class User {
 							Set<Group> subscriptions,
 							Set<Slot> slots) {
 		this.crsid = crsid;
-		this.events = events;
-		this.deadlines = deadlines;
-		this.groups = groups;
-		this.slots = slots;
-		this.subscriptions = subscriptions;
+		this.events.addAll(events);
+		this.deadlines.addAll(deadlines);
+		this.groups.addAll(groups);
+		this.slots.addAll(slots);
+		this.subscriptions.addAll(subscriptions);
 	}
 	
 	public String getCrsid() {return crsid;}
 	public void setCrsid(String crsid) {this.crsid = crsid;}
 	
 	public Set<Deadline> getDeadlines() { return deadlines; }
-	public void setDeadlines(Set<Deadline> deadlines) { this.deadlines = deadlines; }
+	public void addDeadlines(Set<Deadline> deadlines) { this.deadlines.addAll(deadlines); }
 	
 	public Set<Event> getEvents() { return events; }
-	public void setEvents(Set<Event> events) { this.events = events; }
+	public void addEvents(Set<Event> events) { this.events.addAll(events); }
 	
 	public Set<Slot> getSlots() { return slots; }
-	public void setSlots(Set<Slot> slots) { this.slots = slots; }
+	public void addSlots(Set<Slot> slots) { this.slots.addAll(slots); }
 	
 	public Set<Group> getGroups() { return this.groups; }
-	public void setGroups(Set<Group> groups) { this.groups = groups; }
+	public void addGroups(Set<Group> groups) { this.groups.addAll(groups); }
 
 	public Set<Group> getSubscriptions() { return this.subscriptions; }
-	public void setSubscriptions(Set<Group> subscriptions) { this.subscriptions = subscriptions; }
+	public void addSubscriptions(Set<Group> subscriptions) { this.subscriptions.addAll(subscriptions); }
 	
 	// Register user from CRSID
 	public static User registerUser(String crsid){

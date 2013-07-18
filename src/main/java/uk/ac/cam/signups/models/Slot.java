@@ -31,6 +31,9 @@ public class Slot implements Mappable {
 	private User owner;
 	
 	public Slot() {}
+	public Slot(Row row) {
+		this.row = row;
+	}
 	public Slot(int id, Row row, User owner) {
 		this.id = id;
 		this.row = row;
