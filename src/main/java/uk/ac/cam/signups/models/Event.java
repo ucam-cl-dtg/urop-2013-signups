@@ -93,7 +93,7 @@ public class Event implements Mappable {
 		for(Row row: rows) {
 			Calendar cal = row.getCalendar();
 			String key = "" + cal.get(Calendar.YEAR) + ":" + cal.get(Calendar.MONTH) + ":" + cal.get(Calendar.DAY_OF_MONTH);
-			if (temp.containsKey(row.toMap())) {
+			if (temp.containsKey(key)) {
 				temp.get(key).add(row);
 			} else {
 				temp.put(key, new TreeSet<Row>());
@@ -108,9 +108,9 @@ public class Event implements Mappable {
 			int month = Integer.parseInt(dateArray[1]);
 			int day = Integer.parseInt(dateArray[2]);
 			Calendar cal = new GregorianCalendar(year, month, day);
-			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, FF of MMMM");
+			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, FF 'of' MMMM");
 
-			dates.add(ImmutableMap.of("date", formatter.format(cal), "rows", Util.getImmutableCollection(temp.get(key))));
+			dates.add(ImmutableMap.of("date", formatter.format(cal.getTime()), "rows", Util.getImmutableCollection(temp.get(key))));
 		}
 		
 		builder = builder.put("dates", dates);

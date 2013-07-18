@@ -98,7 +98,11 @@ public class Row implements Mappable, Comparable<Row> {
 																									"minute", calendar.get(Calendar.MINUTE),
 																									"hour", calendar.get(Calendar.HOUR)));
 		builder = builder.put("slots", Util.getImmutableCollection(slots));
-		builder = builder.put("type", type.toMap());
+		if (type != null) {
+			builder = builder.put("type", type.toMap());
+		} else {
+			builder = builder.put("type", "no-type");
+		}
 		return builder.build();
 	}
 	

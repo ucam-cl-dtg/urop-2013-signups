@@ -31,7 +31,6 @@ public class Type implements Mappable {
 	@GenericGenerator(name="increment", strategy="increment")
 	private int id;
 	
-	@Column(name="name", unique = true)
 	private String name;
 
 	@ManyToOne

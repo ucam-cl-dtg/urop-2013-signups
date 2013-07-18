@@ -39,18 +39,8 @@ public class User {
 	private Set<Slot> slots = new HashSet<Slot>(0);
 	
 	public User() {}
-	public User(String crsid, 
-							Set<Deadline> deadlines, 
-							Set<Event> events, 
-							Set<Group> groups,
-							Set<Group> subscriptions,
-							Set<Slot> slots) {
+	public User(String crsid) {
 		this.crsid = crsid;
-		this.events.addAll(events);
-		this.deadlines.addAll(deadlines);
-		this.groups.addAll(groups);
-		this.slots.addAll(slots);
-		this.subscriptions.addAll(subscriptions);
 	}
 	
 	public String getCrsid() {return crsid;}
@@ -84,7 +74,7 @@ public class User {
 	  	
 	  	// If no, create them
 	  	if(user==null){
-	  		User newUser = new User(crsid, null, null, null, null, null);
+	  		User newUser = new User(crsid);
 	  		session.save(newUser);
 			session.getTransaction().commit();
 	  		return newUser;
