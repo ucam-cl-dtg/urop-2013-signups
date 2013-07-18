@@ -1,3 +1,5 @@
+var BASE_PATH = "/";
+
 function Router (routes) {
     var router = new Backbone.Router;
 
@@ -25,7 +27,7 @@ function config (router, route, value) {
         throw new Error("Unsupported type for route: " + route);
 
     return router.route(route, route, function(){
-        loadModule(window.location.hash, value);
+        loadModule($('.main'), window.location.hash, value);
     });
 }
 
@@ -47,7 +49,18 @@ function postModuleLoad () {
 function getLocation(location) {
     if (location[0] == "#")
         location = location.slice(1);
-    return window.location.protocol + "//" + window.location.host + "/" + location;
+    return window.location.protocol + "//" + window.location.host + BASE_PATH + location;
+}
+
+function getRouteParams() {
+    var fragment = Backbone.history.fragment,
+         routes = _.map(Backbone.history.handlers, function(x) { return x.route });
+    var matched = _.find(routes, function(handler) {
+        return handler.test(fragment);
+    });
+
+
+    return router._extractParameters(matched, Backbone.history.fragment);
 }
 
 function getTemplate(name) {
@@ -59,7 +72,21 @@ function getTemplate(name) {
     return res;
 }
 
-function applyTemplate(template, data) {
+function asyncLoad(elems) {
+    elems.each(function(i) {
+       var elem = $(elems[i]),
+           data_path = getLocation(elem.attr("data-path")),
+           template_name = elem.attr("template-name");
+       $.get(data_path, function(json) {
+            applyTemplate(elem, template_name, json);
+       }).fail(function(err) {
+            console.log(err);
+            applyTemplate(elem, template_name, {});
+       })
+    });
+}
+
+function applyTemplate(elem, template, data) {
     var templateFunc;
     if (typeof template == "string") {
         templateFunc = getTemplate(template);
@@ -67,21 +94,22 @@ function applyTemplate(template, data) {
         templateFunc = getTemplate(template(data));
     }
 
-    $(".main").html(templateFunc(data));
+    elem.html(templateFunc(data));
+    asyncLoad(elem.find(".async-loader"));
 }
 
 //
 // template can either be a string with the name of the template
 // or a function that returns the name of the template.
 
-function loadModule(location, template) {
+function loadModule(elem, location, template) {
    var location = getLocation(location);
-   $('.main').html('<h3>Loading...</h3>');
+
    $.get(location, function(data) {
-       applyTemplate(template, data);
+       applyTemplate(elem, template, data);
        postModuleLoad();
    }).fail(function() {
-       $('.main').html('<h3>Error: could not load ' + location + '</h3>');
+       elem.html('<h3>Error: could not load ' + location + '</h3>');
        postModuleLoad();
    });
 }
