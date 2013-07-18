@@ -1,13 +1,18 @@
 package uk.ac.cam.signups.models;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.template.soy.data.SoyListData;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import uk.ac.cam.signups.util.Util;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -15,15 +20,13 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.Table;
 
 
 @Entity
@@ -100,7 +103,7 @@ public class Event implements Mappable {
 			}
 		}
 		
-		Set<ImmutableMap<String, ?>> dates = new TreeSet<ImmutableMap<String, ?>>();
+		List<ImmutableMap<String, ?>> dates = new ArrayList<ImmutableMap<String, ?>>();
 		for(String key: temp.keySet()) {
 			// Parse date nicely
 			String[] dateArray = key.split(":");
@@ -109,8 +112,9 @@ public class Event implements Mappable {
 			int day = Integer.parseInt(dateArray[2]);
 			Calendar cal = new GregorianCalendar(year, month, day);
 			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, FF 'of' MMMM");
+			String date = formatter.format(cal.getTime());
 
-			dates.add(ImmutableMap.of("date", formatter.format(cal.getTime()), "rows", Util.getImmutableCollection(temp.get(key))));
+			dates.add(ImmutableMap.of("date", date, "rows", Util.getImmutableCollection(temp.get(key))));
 		}
 		
 		builder = builder.put("dates", dates);
