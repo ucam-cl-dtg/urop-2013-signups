@@ -184,10 +184,7 @@ public class LDAPProvider {
 			// Convert enumeration type results to string
 				while(enumResults.hasMore()){
 					Attributes result = enumResults.next().getAttributes();
-					System.out.println("crsid: " + result.get("uid").get().toString());
-					System.out.println("crsid: " + result.get("displayName").get().toString());
 					userMatches.add(ImmutableMap.of("crsid", result.get("uid").get().toString(), "name", result.get("displayName").get().toString()));
-					System.out.println("crsid: " + result.get("uid").get().toString() + " name: " + result.get("displayName").get().toString());
 				}
 				
 			return userMatches;

@@ -18,7 +18,7 @@
                 <li class="panel-wrapper columns large-12">
                     <div class="list-panel">
                         <div class="row list-inner-panel">
-                            <div class="columns large-7 small-7">Group name: {$group.name} (Owner {$group.owner})</div>
+                            <div class="columns large-7 small-7">Group name: {$group.name}</div>
                             <div class="columns large-5 small-5 text-right">
                                 <div class="icon-button-wrapper">
                                     <a class="icon-button panel-icon-button websymbols-icon icon-button-array expand-sub-panel">&#43;</a>
@@ -80,6 +80,7 @@
                     $(document).ready(function() {
                         $(".member_token_input").tokenInput("/groups/queryCRSID", {
                             method: "post",
+                            tokenValue: "crsid",
                             propertyToSearch: "crsid",
                             theme: "facebook",
                             minChars: 3,
