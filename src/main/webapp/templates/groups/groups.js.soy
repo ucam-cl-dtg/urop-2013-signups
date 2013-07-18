@@ -34,12 +34,15 @@
                             
                                 <!-- display members loop -->
                             
+                                
+                                <div class="columns large-7 small-7">
                                 {foreach $user in $group.users}
-                                <div class="columns large-7 small-7">{$user.crsid}</div>
+                                {$user.crsid}
                                 {ifempty}
                                 No users in this group
                                 {/foreach}
-                                
+
+                                </div>
                                 <!-- end display members loop -->
                                 <div class="columns large-5 small-5 text-right">
                                     <div class="icon-button-wrapper">
