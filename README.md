@@ -23,15 +23,19 @@ System to create and signup for events such as supervisions, ticking sessions<br
 ### Type
 
 ## controllers (uk.ac.cam.signups.controllers)
+
 ### Home page controller
 * Path: /
 * Shows users info
+
 ### Event controller
 * Path: 
+
 ### Group controller
 * Path: groups/
 * Gets users current groups and displays them 
 * Controls creation of, editing and deleting groups
+
 ### Deadline controller
 
 ## helpers (uk.ac.cam.signups.helpers)
