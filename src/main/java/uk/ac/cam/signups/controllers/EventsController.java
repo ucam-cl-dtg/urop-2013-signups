@@ -22,7 +22,7 @@ import com.googlecode.htmleasy.ViewWith;
 @Path("/events")
 public class EventsController extends ApplicationController {
 	
-	private User currentUser;
+	//private User currentUser;
 	
 	// New
 	@GET @Path("/new") @ViewWith("/soy/events.new")

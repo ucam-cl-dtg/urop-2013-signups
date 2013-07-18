@@ -2,12 +2,15 @@
 
 /**
  * Template for show action in EventsController
+ * @param title
+ * @param owner
  * 
  */
 {template .show}
   {call shared.html_boilerplate}
     {param className: 'events' /}
     {param body}
+    <h2>{$title} created by {$owner.crsid}</h2>
 
     {/param}
   {/call}

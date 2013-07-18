@@ -25,7 +25,7 @@ public class EventForm {
 	
 	public int handle(User currentUser) {		
 		Session session = HibernateUtil.getTransaction();
-		
+		System.exit(-1);
 		// Create event prototype
 		Event event = new Event();
 		event.setLocation(location);
