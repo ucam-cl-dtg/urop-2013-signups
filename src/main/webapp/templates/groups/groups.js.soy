@@ -7,38 +7,99 @@
 {template .index }
 		<h2>Groups</h2>
 		<h3>Current groups</h3>
-		{foreach $group in $groups}
-			<form id="{$group.id}">{$group.id} | {$group.name} | {$group.owner} | <input type="button" class="group_edit" value="EDIT"/> | <input type="button" class="group_delete" value="DELETE"/></form> 
-			Members: 
-				{foreach $user in $group.users}
-				{$user.crsid} | 
-				{ifempty}
-				No users in this group
-				{/foreach}
-			<br/>
-			{ifempty}
-			You haven't created any groups
-		{/foreach}
 		
-		<h3>Create new group</h3>
-		    <form id="group" name="group" action="/groups/" method="post">
-			<table>
-			<tr>
-				<td>Group name: </td><td><input type="text" id="title" name="title"/></td>
-			</tr>
-			<tr>
-				<td>
-				Add members: 
-				</td>
-				<td>
-				<input type="text" name="users[]" id="group_users"/><input type="button" id="add_member" value="+"/>
-				</td>
-			</tr>
-			<tr>
-				<td></td><td><input type="submit" id="group_submit" value="Save Group"/></td>
-			</tr>
-			</table>
-			</form>
+        <div class="row">
+            <ul class="panels">
+            
+            <!--display a row for each group-->
+            
+            {foreach $group in $groups}
+            <form id="{$group.id}"> 
+                <li class="panel-wrapper columns large-12">
+                    <div class="list-panel">
+                        <div class="row list-inner-panel">
+                            <div class="columns large-7 small-7">Group name: {$group.name} (Owner {$group.owner})</div>
+                            <div class="columns large-5 small-5 text-right">
+                                <div class="icon-button-wrapper">
+                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array expand-sub-panel">&#43;</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader group_edit">Edit</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon group_delete">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="sub-panel">
+                        <li class="list-sub-panel">
+                            <div class="row list-inner-sub-panel">
+                            
+                                <!-- display members loop -->
+                            
+                                {foreach $user in $group.users}
+                                <div class="columns large-7 small-7">{$user.crsid}</div>
+                                {ifempty}
+                                No users in this group
+                                {/foreach}
+                                
+                                <!-- end display members loop -->
+                                <div class="columns large-5 small-5 text-right">
+                                    <div class="icon-button-wrapper">
+                                        <!--edit members buttons?-->
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                </form>
+                {ifempty}
+                You have not created any groups
+                {/foreach}
+                
+                <!-- end groups display loop-->
+                
+            </ul>
+        </div>
+    
+        <h3>Create new group</h3>     	
+        <form id="group" name="group" action="/groups" method="post">
+            <div class="row">
+                <div class="columns large-2 small-4 field-label">Group name</div>
+                <div class="columns large-10 small-8">
+                    <input type="text" placeholder="Group name" name="title" id="title"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns large-2 small-4 field-label">Group members</div>
+                <div class="columns large-10 small-8">
+                    <input type="text" class="member_token_input" name="users[]"/>
+                    
+                    <!-- HORRIBLE WAY OF INCLUDING JS - try and get this working in main.js later-->
+                    
+                    {literal}
+                    <script type="text/javascript">
+                    $(document).ready(function() {
+                        $(".member_token_input").tokenInput("/groups/queryCRSID", {
+                            method: "post",
+                            propertyToSearch: "crsid",
+                            theme: "facebook",
+                            minChars: 3,
+                            
+                        });
+                    });
+                    </script>
+                    {/literal}
+                    
+                    <!-- HORRIBLE WAY OF INCLUDING JS - try and get this working in main.js later-->
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns large-12 small-12">
+                    <input type="submit" value="Save" id="group_submit" />
+                </div>
+            </div>
+        </form>
+				
 {/template}
 
 /**

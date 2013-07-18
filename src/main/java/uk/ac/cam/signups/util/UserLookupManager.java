@@ -147,7 +147,7 @@ public class UserLookupManager {
 	 */
 	// Create instance of UserLookupManager if it doesn't exist
 	public static UserLookupManager getUserLookupManager(String crsid){
-		Log.info("UserLookupManager created for " + crsid);
+		log.info("UserLookupManager created for " + crsid);
 		if(u==null){
 			u = new UserLookupManager(crsid);
 		} 

@@ -7,34 +7,18 @@ $(document).ready(function() {
 	
 	// GROUPS CONTROLLER
 	//Ajax autocomplete lookup user
-	$("body").on("keyup", "#group_users", function() {  
-    	var myData = $("#group_users").val();
-    	// Only execute if more than 2 letters typed..
-    	if(myData.length>1) {
-    	    alert(myData);
-    		var saveData = $.ajax({
-    		      type: 'POST',
-    		      url: "groups/queryCRSID",
-    		      data: myData,
-    		      dataType: "json",
-    		      success: function(resultData) {  
-                  alert(resultData.crsid[0]);
-                  var matches = jQuery.makeArray(resultData.crsid);
-                  alert(matches[0]);
-    		      }
-    		});
-    	}
-	});
+
+	//Lookup user token input
 	//Delete a group
-    $("body").on("click", ".group_delete", function() {  
+    $("body").on("click", ".group_delete", function() {
         var group_id = $(this).parents("form").attr("id");
         alert("Delete " + group_id);
         // Ajax delete request
             var deleteData = $.ajax({
                   type: 'DELETE',
-                  url: "groups/" + group_id,
+                  url: "/groups/" + group_id,
                   success: function(resultData) {  
-                  alert("Group deleted");
+                  // Reload the page for now.. can replace this with just redsiplaying div later?
                   location.reload();
                   }
             });

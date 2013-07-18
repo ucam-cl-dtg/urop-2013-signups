@@ -18,6 +18,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableMap;
+
 public class LDAPProvider {
 
 	//Logger
@@ -154,5 +156,47 @@ public class LDAPProvider {
 		
 	}
 	
+	public static List partialUserSearch(String x){
+		
+		Hashtable env = new Hashtable();
+		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+		env.put(Context.PROVIDER_URL, "ldap://ldap.lookup.cam.ac.uk:389");
 
+		NamingEnumeration<SearchResult> enumResults;
+		
+		Attributes a = null;
+		try {
+			DirContext ctx = new InitialDirContext(env);
+			SearchControls controls = new SearchControls();
+			controls.setReturningAttributes(new String[]{"uid", "displayName"});
+			controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+			enumResults = ctx.search(
+					"ou=people,o=University of Cambridge,dc=cam,dc=ac,dc=uk",
+					"(uid=" + x + "*)", controls);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return null;
+		}
+		
+		try {
+			ArrayList<ImmutableMap<String,?>> userMatches = new ArrayList<ImmutableMap<String,?>>();			
+			
+			// Convert enumeration type results to string
+				while(enumResults.hasMore()){
+					Attributes result = enumResults.next().getAttributes();
+					System.out.println("crsid: " + result.get("uid").get().toString());
+					System.out.println("crsid: " + result.get("displayName").get().toString());
+					userMatches.add(ImmutableMap.of("crsid", result.get("uid").get().toString(), "name", result.get("displayName").get().toString()));
+					System.out.println("crsid: " + result.get("uid").get().toString() + " name: " + result.get("displayName").get().toString());
+				}
+				
+			return userMatches;
+					
+        } catch (NamingException e) {
+			log.error(e.getMessage());
+			return null;
+		} 
+		
+	}
+	
 }

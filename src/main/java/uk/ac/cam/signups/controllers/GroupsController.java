@@ -1,6 +1,7 @@
 package uk.ac.cam.signups.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -92,22 +93,22 @@ public class GroupsController extends ApplicationController {
 			session.save(group);
 			session.getTransaction().commit();
 			
-			throw new RedirectException("/groups");
+			throw new RedirectException("/app/#groups");
 		}
 		
 		// Find users
 		@POST @Path("/queryCRSID")
 		@Produces(MediaType.APPLICATION_JSON)
-		public ImmutableMap<String, ?> queryCRSId(String x) {
-			System.out.println(x);
-			// Perform LDAP search
-			ArrayList<String> matches = (ArrayList<String>) LDAPProvider.testPartialQuery(x);
-			// Return results
-			for(String m : matches){
-				System.out.println(m);
-			}
+		public List queryCRSId(String q) {
 			
-			return ImmutableMap.of("crsid", matches);
+			//Remove query part
+			String x = q.substring(2);
+			System.out.println(x);
+			
+			// Perform LDAP search
+			ArrayList<ImmutableMap<String,?>> matches = (ArrayList<ImmutableMap<String, ?>>) LDAPProvider.partialUserSearch(x);;
+			
+			return matches;
 		}
 		
 		//Edit
