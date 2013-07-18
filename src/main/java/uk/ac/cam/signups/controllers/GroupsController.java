@@ -79,13 +79,6 @@ public class GroupsController extends ApplicationController {
 			// Set group owner as current user
 			group.setOwner(user);
 			
-			System.out.println("Created group:");
-			System.out.println("Group name = " + group.getTitle());
-			System.out.println("Owner = " + group.getOwner().getCrsid());
-			for(User u: group.getUsers()){
-				System.out.println(u.getCrsid());
-			}
-
 			
 			// Save group to database
 			log.info("Adding group to databse.");
@@ -112,7 +105,8 @@ public class GroupsController extends ApplicationController {
 		}
 		
 		//Edit
-		@GET @Path("/{id}/edit") @ViewWith("/soy/groups.edit")
+		@GET @Path("/{id}/edit") //@ViewWith("/soy/groups.edit")
+		@Produces(MediaType.APPLICATION_JSON)
 		public Map editGroup(@PathParam("id") int id) {
 			
 			// Get the group to edit

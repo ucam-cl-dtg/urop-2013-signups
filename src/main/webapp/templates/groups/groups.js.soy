@@ -18,7 +18,7 @@
                 <li class="panel-wrapper columns large-12">
                     <div class="list-panel">
                         <div class="row list-inner-panel">
-                            <div class="columns large-7 small-7">Group name: {$group.name} (Owner {$group.owner})</div>
+                            <div class="columns large-7 small-7">{$group.name}</div>
                             <div class="columns large-5 small-5 text-right">
                                 <div class="icon-button-wrapper">
                                     <a class="icon-button panel-icon-button websymbols-icon icon-button-array expand-sub-panel">&#43;</a>
@@ -80,10 +80,13 @@
                     $(document).ready(function() {
                         $(".member_token_input").tokenInput("/groups/queryCRSID", {
                             method: "post",
+                            tokenValue: "crsid",
                             propertyToSearch: "crsid",
                             theme: "facebook",
                             minChars: 3,
                             
+                            resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " (" + item.crsid + ")</div><div class='email'>" + item.crsid + "@cam.ac.uk</div></div></li>" },
+                            tokenFormatter: function(item) { return "<li><p>" + item.name + " (" + item.crsid + ")</p></li>" },                           
                         });
                     });
                     </script>
@@ -130,5 +133,7 @@
             <tr>
                 <td></td><td><input type="submit" id="submit" value="Save Group"/></td>
             </tr>
+
+
 
 {/template}

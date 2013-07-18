@@ -12,7 +12,6 @@ $(document).ready(function() {
 	//Delete a group
     $("body").on("click", ".group_delete", function() {
         var group_id = $(this).parents("form").attr("id");
-        alert("Delete " + group_id);
         // Ajax delete request
             var deleteData = $.ajax({
                   type: 'DELETE',
@@ -26,7 +25,6 @@ $(document).ready(function() {
     //Edit a group
     $("body").on("click", ".group_edit", function() {  
         var group_id = $(this).parents("form").attr("id");
-        alert("Edit " + group_id);
         window.location = "/groups/" + group_id + "/edit/";
     });
     //Update a group
