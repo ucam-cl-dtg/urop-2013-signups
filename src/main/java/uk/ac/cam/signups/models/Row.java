@@ -31,7 +31,7 @@ public class Row implements Mappable, Comparable<Row> {
 	@GenericGenerator(name="increment", strategy="increment")
 	private int id;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="ROW_DATE")
 	private Calendar calendar;
 
@@ -51,9 +51,14 @@ public class Row implements Mappable, Comparable<Row> {
 	private Type type;
 
 	public Row() {}
+
+	public Row(Event event) {
+		this.event = event;
+	}
 	
-	public Row(Calendar calendar) {
+	public Row(Calendar calendar, Event event) {
 		this.calendar = calendar;
+		this.event = event;
 	}
 	
 	public Row(int id, 
@@ -65,7 +70,7 @@ public class Row implements Mappable, Comparable<Row> {
 		this.id = id;
 		this.calendar = calendar;
 		this.deadline = deadline;
-		this.slots = slots;
+		this.slots.addAll(slots);
 		this.event = event;
 		this.type = type;
 	}
@@ -77,7 +82,7 @@ public class Row implements Mappable, Comparable<Row> {
 	public void setCalendar(Calendar calendar) { this.calendar = calendar; }
 	
 	public Set<Slot> getSlots() { return this.slots; }
-	public void setSlots(Set<Slot> slots) { this.slots = slots; }
+	public void addSlots(Set<Slot> slots) { this.slots.addAll(slots); }
 	
 	public Event getEvent() { return this.event; }
 	public void setEvent(Event event) { this.event = event; }
@@ -91,7 +96,7 @@ public class Row implements Mappable, Comparable<Row> {
 																									"month", calendar.get(Calendar.MONTH),
 																									"year", calendar.get(Calendar.YEAR),
 																									"minute", calendar.get(Calendar.MINUTE),
-																									"second", calendar.get(Calendar.SECOND)));
+																									"hour", calendar.get(Calendar.HOUR)));
 		builder = builder.put("slots", Util.getImmutableCollection(slots));
 		builder = builder.put("type", type.toMap());
 		return builder.build();

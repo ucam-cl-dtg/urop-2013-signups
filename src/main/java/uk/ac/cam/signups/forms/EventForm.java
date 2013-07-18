@@ -25,7 +25,6 @@ public class EventForm {
 	
 	public int handle(User currentUser) {		
 		Session session = HibernateUtil.getTransaction();
-		System.exit(-1);
 		// Create event prototype
 		Event event = new Event();
 		event.setLocation(location);
@@ -33,46 +32,37 @@ public class EventForm {
 
 		// Set owner of the user to current user
 		event.setOwner(currentUser);
+		session.save(event);
 		
 		// Create rows and associated slots
-		Set<Row> rows = new HashSet<Row>();
 		Row row;
 		if (rowType.equals("manual")) {
 			for(int i = 0; i < nOfRows; i++) {
-				row = new Row();
-				Set<Slot> slots = new HashSet<Slot>(0);
+				row = new Row(event);
+				session.save(row);
 				Slot slot;
 				for(int j = 0; j < nOfColumns; j++) {
-					slot = new Slot();
+					slot = new Slot(row);
 					session.save(slot);
-					slots.add(slot);
 				}
-				row.setSlots(slots);
-				session.save(row);
-				rows.add(row);
 			}
 		} else if (rowType.equals("datetime")) {
 			Calendar cal;
-			for(int i = 0; i > availableDates.length; i++) {
+			for(int i = 0; i < availableDates.length; i++) {
 				String[] splitDate = availableDates[i].split("/");
 				int year = Integer.parseInt(splitDate[2]);
 				int month = Integer.parseInt(splitDate[1]);
 				int day = Integer.parseInt(splitDate[0]);
 				cal = new GregorianCalendar(year, month, day, Integer.parseInt(availableHours[i]), Integer.parseInt(availableMinutes[i]));
-				row = new Row(cal);
-				Set<Slot> slots = new HashSet<Slot>(0);
+				row = new Row(cal, event);
+				session.save(row);
 				Slot slot;
 				for(int j = 0; j < nOfColumns; j++) {
-					slot = new Slot();
+					slot = new Slot(row);
 					session.save(slot);
-					slots.add(slot);
 				}
-				row.setSlots(slots);
-				session.save(row);
-				rows.add(row);
 			}		
 		}
-		event.setRows(rows);
 		
 		// Set types and create them if non-existent
 		Set<Type> types = new HashSet<Type>(0);
@@ -82,8 +72,7 @@ public class EventForm {
 			session.save(type);
 			types.add(type);
 		}
-		event.setTypes(types);
-		session.save(event);
+		event.addTypes(types);
 		
 		session.getTransaction().commit();
 		

@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableMap;
 
 import uk.ac.cam.signups.util.Util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -56,8 +58,8 @@ public class Event implements Mappable {
 		this.id = id;
 		this.location = location;
 		this.owner = owner;
-		this.types = types;
-		this.rows = rows;
+		this.types.addAll(types);
+		this.rows.addAll(rows);
 		this.title = title;
 	}
 	
@@ -74,10 +76,10 @@ public class Event implements Mappable {
 	public void setOwner(User owner) { this.owner = owner; }
 	
 	public Set<Row> getRows() { return this.rows; }
-	public void setRows(Set<Row> rows) { this.rows = rows; }
+	public void addRows(Set<Row> rows) { this.rows.addAll(rows); }
 	
 	public Set<Type> getTypes() { return this.types; }
-	public void setTypes(Set<Type> types) { this.types = types; }
+	public void addTypes(Set<Type> types) { this.types.addAll(types); }
 	
 	public Map<String, ?> toMap() {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
@@ -98,13 +100,17 @@ public class Event implements Mappable {
 			}
 		}
 		
-		Set<ImmutableMap<String, ?>> dates = new HashSet<ImmutableMap<String, ?>>(0);
+		Set<ImmutableMap<String, ?>> dates = new TreeSet<ImmutableMap<String, ?>>();
 		for(String key: temp.keySet()) {
+			// Parse date nicely
 			String[] dateArray = key.split(":");
 			int year = Integer.parseInt(dateArray[0]);
 			int month = Integer.parseInt(dateArray[1]);
 			int day = Integer.parseInt(dateArray[2]);
-			dates.add(ImmutableMap.of("date", ImmutableMap.of("year", year, "month", month, "day", day), "rows", Util.getImmutableCollection(temp.get(key))));
+			Calendar cal = new GregorianCalendar(year, month, day);
+			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, FF of MMMM");
+
+			dates.add(ImmutableMap.of("date", formatter.format(cal), "rows", Util.getImmutableCollection(temp.get(key))));
 		}
 		
 		builder = builder.put("dates", dates);
