@@ -5,10 +5,13 @@ import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.htmleasy.RedirectException;
 import com.googlecode.htmleasy.ViewWith;
+
 
 
 
@@ -31,7 +34,8 @@ public class HomePageController extends ApplicationController{
 	private User user;
 	
 	// Index
-	@GET @Path("/") @ViewWith("/soy/home_page.index")
+	@GET @Path("/") //@ViewWith("/soy/home_page.index")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Map indexHomePage() {
 		
 		// Initialise user
@@ -39,10 +43,10 @@ public class HomePageController extends ApplicationController{
 		
 		// Get user details
 		log.debug("Index GET: Getting user details");
-		ImmutableMap<String, ?> user = ulm.getAll();
+		ImmutableMap<String, ?> userMap = ulm.getAll();
 		
 		// Return data for template
-		return ImmutableMap.of("user", user);
+		return ImmutableMap.of("user", userMap);
 	}
 	
 	// DOS Index

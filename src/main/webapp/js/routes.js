@@ -21,6 +21,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     router = Router({
         "groups": "groups.index",
+        "": "home_page.index",
         //For getting params in get requests
         // Use the last line to redirect unmatched routes to an error page
         //"*undefined": "errors.notfound"

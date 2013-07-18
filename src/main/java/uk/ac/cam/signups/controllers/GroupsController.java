@@ -53,8 +53,8 @@ public class GroupsController extends ApplicationController {
 //			for(String s : matches){
 //				System.out.println(s);
 //			}
-			
-			return ImmutableMap.of("groups", user.getGroupsMap());
+
+			return ImmutableMap.of("crsid", user.getCrsid(), "groups", user.getGroupsMap());
 		}
 		
 		// Create
@@ -64,6 +64,7 @@ public class GroupsController extends ApplicationController {
 			user = initialiseUser();
 			
 			if(user==null){System.out.println("No user..");}
+			System.out.println("user crsid: " + user.getCrsid());
 
 			Set<User> groupMembers = new HashSet<User>();
 			// Register or retrieve all group members as User objects and add to set
