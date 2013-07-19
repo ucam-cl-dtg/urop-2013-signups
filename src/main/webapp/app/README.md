@@ -72,18 +72,19 @@ But you can also pass a function that given the data from the requests it gives 
 
 The following function might be usefull if you want to load templates directly from javascript.
 
-    loadModule(elem, location, template)  - This will load the template inside of the jquery element elem using the data
+`loadModule(elem, location, template)`  - This will load the template inside of the jquery element elem using the data
     from location.
-    elem - A JQUERY element in the page.
-    location - The location where to get the data from
-    template - This can be either a string or a function that takes the json as the first param
+    
+* elem - A JQUERY element in the page.
+* location - The location where to get the data from
+* template - This can be either a string or a function that takes the json as the first param
 
-    applyTemplate(elem, template, data) - This will load the template inside of the jquery element elem using.
-    elem - A JQUERY element in the page
-    template - This can be either a string or a function that takes the json as the first param.
-    data - The data that is to be passed to the template
+`applyTemplate(elem, template, data)` - This will load the template inside of the jquery element elem using.
+* elem - A JQUERY element in the page
+* template - This can be either a string or a function that takes the json as the first param.
+* data - The data that is to be passed to the template
 
-    getTemplate(templateName) - This converts a template name to the actual template function.
+`getTemplate(templateName) ` - This converts a template name to the actual template function.
 
 ## Tips and tricks
 

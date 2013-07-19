@@ -12,13 +12,14 @@
 		<jettyVersion>7.2.0.v20101020</jettyVersion>
 		<custom_scripts>
 			<![CDATA[<script src="/js/main.js"></script>]]>
-            <![CDATA[<link href="/css/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css">]]>
-            <![CDATA[<script src="/js/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>]]>
+      <![CDATA[<link href="/css/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css">]]>
+      <![CDATA[<script src="/js/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>]]>
 		</custom_scripts>
 		<custom_templates>
 			<![CDATA[<script src="/soy/js/3/groups.js"></script>]]>
-            <![CDATA[<script src="/soy/js/3/deadlines.js"></script>]]>
+      <![CDATA[<script src="/soy/js/3/deadlines.js"></script>]]>
 			<![CDATA[<script src="/soy/js/3/home_page.js"></script>]]>
+			<![CDATA[<script src="/soy/js/3/events.js"></script>]]>
 		</custom_templates>
 	</properties>
 	<repositories>
@@ -134,6 +135,12 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
+						  <nonFilteredFileExtensions>
+                <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+                <nonFilteredFileExtension>eot</nonFilteredFileExtension>
+                <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                <nonFilteredFileExtension>svg</nonFilteredFileExtension>
+              </nonFilteredFileExtensions>
 							<outputDirectory>${basedir}/src/main/webapp/app</outputDirectory>
 							<resources>
 								<resource>

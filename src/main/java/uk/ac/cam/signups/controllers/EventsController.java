@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import com.googlecode.htmleasy.RedirectException;
 import com.googlecode.htmleasy.ViewWith;
 
-@Path("/events")
+@Path("/timetable-signups/events")
 public class EventsController extends ApplicationController {
 	
 	//private User currentUser;
