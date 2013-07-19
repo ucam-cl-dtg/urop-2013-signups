@@ -65,7 +65,7 @@ public class Type implements Mappable {
 	public void setEvent(Event event) { this.event = event; }
 	
 	public Map<String, ?> toMap() {
-		return ImmutableMap.of("name", name);
+		return ImmutableMap.of("id", id, "name", name);
 	}
 	
 	@SuppressWarnings("unchecked")

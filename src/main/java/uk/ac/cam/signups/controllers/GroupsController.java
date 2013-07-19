@@ -1,17 +1,14 @@
 package uk.ac.cam.signups.controllers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.FormParam;
@@ -27,13 +24,11 @@ import org.slf4j.LoggerFactory;
 import uk.ac.cam.signups.forms.GroupForm;
 import uk.ac.cam.signups.models.Group;
 import uk.ac.cam.signups.models.User;
-import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
 import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.LDAPProvider;
 
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.htmleasy.RedirectException;
-import com.googlecode.htmleasy.ViewWith;
 
 @Path("timetable-signups/groups")
 public class GroupsController extends ApplicationController {
