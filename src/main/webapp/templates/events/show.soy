@@ -21,8 +21,8 @@
 	        <tr>
 	          <td>{$dateGroup.date}</td> 
 	          <td>
-	            {foreach $row in $dateGroup.dates}
-	              <div>{$row.hour}:{$row.minute}</div> 
+	            {foreach $row in $dateGroup.rows}
+	              <div>{$row.date.hour}:{$row.date.minute}</div> 
 	              <div>
 	                {foreach $slot in $row.slots}
 	                  <input type="text" name="slot_crsid[]">
