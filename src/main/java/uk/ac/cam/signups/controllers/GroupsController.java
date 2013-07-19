@@ -34,7 +34,7 @@ import com.google.common.collect.ImmutableMap;
 import com.googlecode.htmleasy.RedirectException;
 import com.googlecode.htmleasy.ViewWith;
 
-@Path("/groups")
+@Path("timetable-signups/groups")
 public class GroupsController extends ApplicationController {
 		// Create the logger
 		private static Logger log = LoggerFactory.getLogger(GroupsController.class);
@@ -48,29 +48,22 @@ public class GroupsController extends ApplicationController {
 		public Map indexGroups() {
 			// Initialise user
 			user = initialiseUser();
-			
-			// Test get all users matching string:
-//			List<String> matches = LDAPProvider.testPartialQuery("hp");
-//			for(String s : matches){
-//				System.out.println(s);
-//			}
 
 			return ImmutableMap.of("crsid", user.getCrsid(), "groups", user.getGroupsMap());
 		}
 		
 		// Create
 		@POST @Path("/") 
-		public void createGroup(@Form Group group, @FormParam("users[]") String[] users) throws Exception {
+		public void createGroup(@Form Group group, @FormParam("users[]") String users) throws Exception {
 			// Initialise user
 			user = initialiseUser();
-			
-			if(user==null){System.out.println("No user..");}
-			System.out.println("user crsid: " + user.getCrsid());
 
+			String[] groupUsers = users.split(",");
+			
 			Set<User> groupMembers = new HashSet<User>();
 			// Register or retrieve all group members as User objects and add to set
-			for(int i=0; i<users.length; i++){
-				groupMembers.add(User.registerUser(users[i]));
+			for(int i=0; i<groupUsers.length; i++){
+				groupMembers.add(User.registerUser(groupUsers[i]));
 			}
 			
 			// Add group members to group

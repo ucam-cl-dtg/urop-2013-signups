@@ -20,7 +20,8 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     router = Router({
-        "groups": "groups.index",
+        "timetable-signups/groups": "groups.index",
+        "timetable-signups/deadlines" : "deadlines.index",
         "": "home_page.index",
         "groups/:id/edit" : "groups.edit",
         //For getting params in get requests

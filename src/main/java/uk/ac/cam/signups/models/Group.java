@@ -78,8 +78,11 @@ public class Group {
 		HashSet<ImmutableMap<String,?>> groupUsers = new HashSet<ImmutableMap<String,?>>();
 		String crsid;
 		for(User u : users){
+			// Get users crsid
 			crsid = u.getCrsid();
-			groupUsers.add(ImmutableMap.of("crsid",crsid));
+			// Get users display name from LDAP
+			String name = LDAPQueryHelper.getDisplayName(crsid);
+			groupUsers.add(ImmutableMap.of("crsid",crsid, "name", name));
 		}
 		return groupUsers;
 	}

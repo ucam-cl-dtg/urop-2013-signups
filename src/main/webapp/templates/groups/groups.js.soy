@@ -35,14 +35,16 @@
                                 <!-- display members loop -->
                             
                                 
-                                <div class="columns large-7 small-7">
+                                
                                 {foreach $user in $group.users}
-                                {$user.crsid}
+                                <div class="columns large-7 small-7">
+                                {$user.name} ({$user.crsid})
+                                </div>
                                 {ifempty}
                                 No users in this group
                                 {/foreach}
 
-                                </div>
+                                
                                 <!-- end display members loop -->
                                 <div class="columns large-5 small-5 text-right">
                                     <div class="icon-button-wrapper">
@@ -55,7 +57,9 @@
                 </li>
                 </form>
                 {ifempty}
-                You have not created any groups
+                <div class="columns large-12 small-12">
+                    You have not created any groups
+                </div>
                 {/foreach}
                 
                 <!-- end groups display loop-->

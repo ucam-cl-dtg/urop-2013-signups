@@ -21,7 +21,7 @@ public class Signapps extends Application {
     // Add controllers    
     log.debug("Adding controllers to main application");
     myServices.add(EventsController.class);
-    //myServices.add(DeadlinesController.class);
+    myServices.add(DeadlinesController.class);
     myServices.add(GroupsController.class);
     myServices.add(HomePageController.class);
     
