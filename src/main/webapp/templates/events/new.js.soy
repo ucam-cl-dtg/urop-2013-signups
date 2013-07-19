@@ -6,34 +6,8 @@
  */
 {template .new}
   <div class="events" id="new">
-    <h2>Create New Event</h2>
-    <form id="form" action="/events/" method="post">
+    <form id="form" action="/signapp/events/" method="post">
       <table>
-        <tr>
-          <td>Title</td>
-          <td><input type="text" name="title"/></td>
-        </tr>
-        <tr>
-          <td>Location</td>
-          <td><input type="text" name="location"/></td>
-        </tr>
-        <tr>
-          <td>Types</td>
-          <td>
-            <div><input type="text" name="types[]"></div>
-            <div><a href="#" id="new_type">+ Add another type</a></div>
-          </td>
-        <tr>
-          <td>Number of columns</td>
-          <td><input type="number" name="n_of_columns"/></td>
-        </tr>
-        <tr>
-          <td>Type of rows</td>
-          <td>
-            <input type="radio" id="datetime" name="row_type" value="datetime" checked> Supply dates<br>
-            <input type="radio" id="manual" name="row_type" value="manual"> Supply number of rows
-          </td>
-        </tr>
         <tr>
           <td>
             <div class="datetime_rows">Available slots</div>
@@ -41,20 +15,20 @@
            </td>
           <td>
             <div class="datetime_rows">
-	            <div>
-	              <input type="text" class="datepicker" name="available_dates[]" />
-	              <select name="available_hours[]">
-	                {for $i in range(6,23)}
-	                  <option>{$i}</option> 
-	                {/for}
-	              </select>:
-	                <select name="available_minutes[]">
-	                {for $i in range(60)}
-	                  <option>{$i}</option> 
-	                {/for}
-	              </select>
-	            </div>
-	            <div><a href="#" id="new_slot">+ Add a new slot</a></div>
+              <div>
+                <input type="text" class="datepicker" name="available_dates[]" />
+                <select name="available_hours[]">
+                  {for $i in range(6,23)}
+                    <option>{$i}</option> 
+                  {/for}
+                </select>:
+                  <select name="available_minutes[]">
+                  {for $i in range(60)}
+                    <option>{$i}</option> 
+                  {/for}
+                </select>
+              </div>
+              <div><a href="#" id="new_slot">+ Add a new slot</a></div>
             </div>
             <div class="manual_rows">
               <input type="number" value="0" name="n_of_rows"> 
@@ -68,7 +42,86 @@
       </table>
     </form>
   </div>
-  {literal}
-    <script>$(".datepicker").datepicker({dateFormat : "dd/mm/yy"});</script>
-  {/literal}
+  <div class="events" id="new">
+	  <h3>Create new event</h3>
+		<form>
+		  <div class="row">
+		    <div class="columns large-2 small-4 field-label">Title</div>
+		    <div class="columns large-10 small-8">
+		      <input type="text" placeholder="Title" />
+		    </div>
+		  </div>
+		  <div class="row">
+		    <div class="columns large-2 small-4 field-label">Event type</div>
+		    <div class="columns large-10 small-8">
+		      <input type="text" class="event-type-input" />
+		      {literal}
+			      <script type="text/javascript">
+				      $(document).ready(function() {
+				        $(".event-type-input").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+				          theme: "facebook"
+				          });
+				      });
+			      </script>
+		      {/literal}
+		    </div>
+		  </div>
+		  <div class="row">
+		    <div class="columns large-2 small-4 field-label">Location</div>
+		    <div class="columns large-10 small-8">
+		      <input type="text" placeholder="Location" />
+		      <iframe width="100%" height="300px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.co.uk/?ie=UTF8&amp;ll=52.202557,0.094757&amp;spn=0.055128,0.154324&amp;t=m&amp;z=13&amp;output=embed"></iframe><br /><br />
+		    </div>
+		  </div>
+		  <div class="row">
+		    <div class="columns large-2 small-4 field-label">Group size</div>
+		    <div class="columns large-10 small-8">
+		      <input type="number" placeholder="Group size" min="0" />
+		    </div>
+		  </div>
+		  <div class="row">
+		    <div class="columns large-2 small-4 field-label">Times</div>
+		    <div class="columns large-10 small-8">
+		      <div class="time-controls-wrapper row">
+		        <div class="single-slot-controls columns large-12 small-12 hide">
+		          <div class="row">
+		            <div class="columns large-6 small-6">
+		              <input type="text" class="datepicker" placeholder="Date" />
+		            </div>
+		            <div class="columns large-6 small-6">
+		              <input type="text" placeholder="Time" />
+		            </div>
+		          </div>
+		        </div>
+		        <div class="range-controls columns large-12 small-12 hide">
+		          <div class="row">
+		            <div class="columns large-4 small-4">
+		              <input type="text" placeholder="Date" />
+		            </div>
+		            <div class="columns large-4 small-4">
+		              <input type="text" placeholder="Time" />
+		            </div>
+		            <div class="columns large-4 small-4">
+		              <input type="text" placeholder="Range" />
+		            </div>
+		          </div>
+		        </div>
+		      </div>
+		      <div class="row">
+		        <div class="columns large-6 small-6">
+		          <a class="button medium full-width form-button form-control-option-button" data-element-to-clone="single-slot-controls" data-target="time-controls-wrapper">Single slot</a>
+		        </div>
+		        <div class="columns large-6 small-6">
+		          <a class="button medium full-width form-button form-control-option-button" data-element-to-clone="range-controls" data-target="time-controls-wrapper">Range</a>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="row">
+		    <div class="columns large-12 small-12">
+		      <input type="submit" value="Create event" />
+		    </div>
+		  </div>
+		</form>
+  </div>
 {/template}

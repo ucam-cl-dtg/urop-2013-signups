@@ -35,7 +35,7 @@ function date_adder() {
 
 		// Create date time picker
 		datetimepicker = "<div>";
-		datetimepicker += "<input class='datepicker' name='available_dates[]'/>"; // Date
+		datetimepicker += "<input type='text' class='datepicker' name='available_dates[]'/>"; // Date
 		// Sensible hours
 		datetimepicker += "<select name='available_hours[]'>";
 		for ( var i = 6; i < 24; i++) {
@@ -57,8 +57,8 @@ function date_adder() {
 // Add new type
 function type_adder() {
 	$(".main").on(
-	    "#new_type",
 	    "click",
+	    "#new_type",
 	    function(e) {
 		    e.preventDefault();
 

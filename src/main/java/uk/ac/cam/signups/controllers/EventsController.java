@@ -39,7 +39,7 @@ public class EventsController extends ApplicationController {
 	public void createEvent(@Form EventForm eventForm) {
 		int id = eventForm.handle(initialiseUser());
 		
-		throw new RedirectException("app/#events/" + id);
+		throw new RedirectException("/app/#signapp/events/" + id);
 	}
 	
 	// Show
