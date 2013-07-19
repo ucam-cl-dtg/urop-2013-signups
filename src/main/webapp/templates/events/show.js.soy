@@ -10,6 +10,7 @@
  * 
  */
 {template .show}
+  <div class="events" id="show">
       <h2>{$title} at {$location} created by {$owner.crsid}</h2>
       
       <form action="fill_slots" method="post"></form>
@@ -45,4 +46,5 @@
 	      </table> 
 	      <div><input type="submit" value="Save"></div>
       </form>
+  </div>
 {/template}

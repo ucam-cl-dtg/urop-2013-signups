@@ -15,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
-import javax.persistence.Column;
 
 import org.hibernate.Query;
 import org.hibernate.Session;

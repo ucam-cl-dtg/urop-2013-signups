@@ -21,6 +21,12 @@
 			<![CDATA[<script src="/soy/js/3/home_page.js"></script>]]>
 			<![CDATA[<script src="/soy/js/3/events.js"></script>]]>
 		</custom_templates>
+		<custom_css>
+		  <![CDATA[<link href="/css/main.css" rel="stylesheet" type="text/css">]]>
+		</custom_css>
+		<css_namespace>
+		    <![CDATA[id="signapps"]]>
+		</css_namespace>
 	</properties>
 	<repositories>
 		<repository>
@@ -144,7 +150,7 @@
 							<outputDirectory>${basedir}/src/main/webapp/app</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/../urop-frontend</directory>
+									<directory>${basedir}/../urop-2013-frontend</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>

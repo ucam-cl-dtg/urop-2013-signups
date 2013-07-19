@@ -33,8 +33,13 @@ public class HomePageController extends ApplicationController{
 	
 	private User user;
 	
+	@GET @Path("/")
+	public void appRedirect() {
+		throw new RedirectException("/app/#signapp/");
+	}
+	
 	// Index
-	@GET @Path("/") //@ViewWith("/soy/home_page.index")
+	@GET @Path("/signapp/") 
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map indexHomePage() {
 		
@@ -50,7 +55,7 @@ public class HomePageController extends ApplicationController{
 	}
 	
 	// DOS Index
-	@GET @Path("/DoS") @ViewWith("/soy/home_page.dos")
+	@GET @Path("signapp/DoS") @ViewWith("/soy/home_page.dos")
 	public Map dosHomePage() {
 		
 		// Initialise user
@@ -65,7 +70,7 @@ public class HomePageController extends ApplicationController{
 	}
 	
 	// Admin Index
-	@GET @Path("/admin") @ViewWith("/soy/home_page.admin")
+	@GET @Path("signapp/admin") @ViewWith("/soy/home_page.admin")
 	public Map adminHomePage() {
 		return ImmutableMap.of();
 	}
