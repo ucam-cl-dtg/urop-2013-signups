@@ -1,5 +1,17 @@
 #signapps {
   .events {
-
+    &#new {
+      table { 
+        min-width: 600px; 
+        
+        select {
+          width: 60px;
+        }
+        
+        .manual_rows {
+          display:none;
+        }
+      }
+    }
   }
 }
