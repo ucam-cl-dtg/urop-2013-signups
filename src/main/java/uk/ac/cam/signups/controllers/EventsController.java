@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.List;
 
 import uk.ac.cam.signups.forms.EventForm;
 import uk.ac.cam.signups.models.*;
@@ -22,9 +21,8 @@ import uk.ac.cam.signups.util.HibernateUtil;
 
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.htmleasy.RedirectException;
-import com.googlecode.htmleasy.ViewWith;
 
-@Path("/timetable-signups/events")
+@Path("/signapp/events")
 public class EventsController extends ApplicationController {
 	
 	//private User currentUser;

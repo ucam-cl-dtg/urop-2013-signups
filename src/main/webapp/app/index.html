@@ -15,10 +15,11 @@
 		<!--  Stylesheets -->
 		<link rel="stylesheet" href="css/vendor/normalize.css">
 		<link rel="stylesheet" href="css/vendor/token-input-facebook.css" type="text/css" />
-		<link rel="stylesheet" href="css/main.css">
+		<link rel="stylesheet" href="css/main.css">		
+		<link href="/css/main.css" rel="stylesheet" type="text/css">
 		<!-- / Stylesheets -->
 	</head>
-	<body>
+	<body id="signapps">
 		<!--[if lt IE 7]>
 			<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
 		<![endif]-->
@@ -48,17 +49,17 @@
 					<li class="mobile-nav-header">
 						<div class="websymbols-icon fixed-width-icon">&#80;</div>Timetable/Signups
 					</li>
-					<li class="mobile-nav-item module-loader" data-target="timetable-signups/events"><div class="websymbols-icon fixed-width-icon">&#63;</div>Events
+					<li class="mobile-nav-item module-loader" data-target="signapp/events"><div class="websymbols-icon fixed-width-icon">&#63;</div>Events
 					</li>
-					<li class="mobile-nav-item module-loader" data-target="timetable-signups/specific-event"><div class="websymbols-icon fixed-width-icon">&#63;</div>Specific event
+					<li class="mobile-nav-item module-loader" data-target="signapp/events/new"><div class="websymbols-icon fixed-width-icon">&#63;</div>Create new event
 					</li>
-					<li class="mobile-nav-item module-loader" data-target="timetable-signups/groups">
+					<li class="mobile-nav-item module-loader" data-target="signapp/groups">
 						<div class="websymbols-icon fixed-width-icon">&#100;</div>Groups
 					</li>
-					<li class="mobile-nav-item module-loader" data-target="timetable-signups/deadlines">
+					<li class="mobile-nav-item module-loader" data-target="signapp/deadlines">
 						<div class="websymbols-icon fixed-width-icon">&#87;</div>Deadlines
 					</li>
-					<li class="mobile-nav-item module-loader" data-target="timetable-signups/dos-dashboard">
+					<li class="mobile-nav-item module-loader" data-target="signapp/dos-dashboard">
 						<div class="websymbols-icon fixed-width-icon">&#90;</div>DoS Dashboard
 					</li>
 
@@ -111,31 +112,31 @@
 						</div>
 						<ul class="sidebar-sub-navigation expanded">
 							<li class="sidebar-sub-navigation-item">
-								<div class="sidebar-sub-navigation-item-header row module-loader" data-target="timetable-signups/events">
+								<div class="sidebar-sub-navigation-item-header row module-loader" data-target="signapp/events">
 									<div class="columns large-10"><div class="websymbols-icon fixed-width-icon">&#63;</div>Events</div>
 									<div class="columns large-2 text-right notifications">8</div>
 								</div>
 							</li>
 							<li class="sidebar-sub-navigation-item">
-								<div class="sidebar-sub-navigation-item-header row module-loader" data-target="timetable-signups/specific-event">
-									<div class="columns large-10"><div class="websymbols-icon fixed-width-icon">&#63;</div>Specific event</div>
+								<div class="sidebar-sub-navigation-item-header row module-loader" data-target="signapp/events/new">
+									<div class="columns large-10"><div class="websymbols-icon fixed-width-icon">&#63;</div>Create new event</div>
 									<div class="columns large-2 text-right notifications">8</div>
 								</div>
 							</li>
 							<li class="sidebar-sub-navigation-item">
-								<div class="sidebar-sub-navigation-item-header row module-loader" data-target="timetable-signups/groups">
+								<div class="sidebar-sub-navigation-item-header row module-loader" data-target="signapp/groups">
 									<div class="columns large-10"><div class="websymbols-icon fixed-width-icon">&#100;</div>Groups</div>
 									<div class="columns large-2 text-right notifications">1</div>
 								</div>
 							</li>
 							<li class="sidebar-sub-navigation-item">
-								<div class="sidebar-sub-navigation-item-header row module-loader" data-target="timetable-signups/deadlines">
+								<div class="sidebar-sub-navigation-item-header row module-loader" data-target="signapp/deadlines">
 									<div class="columns large-10"><div class="websymbols-icon fixed-width-icon">&#87;</div>Deadlines</div>
 									<div class="columns large-2 text-right notifications">3</div>
 								</div>
 							</li>
 							<li class="sidebar-sub-navigation-item">
-								<div class="sidebar-sub-navigation-item-header row module-loader" data-target="timetable-signups/dos-dashboard">
+								<div class="sidebar-sub-navigation-item-header row module-loader" data-target="signapp/dos-dashboard">
 									<div class="columns large-10"><div class="websymbols-icon fixed-width-icon">&#90;</div>DoS Dashboard</div>
 									<div class="columns large-2 text-right notifications">3</div>
 								</div>
@@ -259,7 +260,7 @@
         <!-- The routes should be separate from this app so this app can be used
         as a separate git project -->
         <script src="/js/routes.js"></script>
-    <script src="/js/main.js"></script>
+   	 	<script src="/js/main.js"></script>
       <link href="/css/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css">
       <script src="/js/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
 
