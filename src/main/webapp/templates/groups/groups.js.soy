@@ -22,7 +22,7 @@
                             <div class="columns large-5 small-5 text-right">
                                 <div class="icon-button-wrapper">
                                     <a class="icon-button panel-icon-button websymbols-icon icon-button-array expand-sub-panel">&#43;</a>
-                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader group_edit">&#83;</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader group_edit" data-target="#signapp/groups/{$group.id}/edit">&#83;</a>
                                     <a class="icon-button panel-icon-button websymbols-icon group_delete">&#39;</a>
                                 </div>
                             </div>
@@ -68,7 +68,7 @@
         </div>
     
         <h3>Create new group</h3>     	
-        <form id="group" name="group" action="/timetable-signups/groups" method="post">
+        <form id="group" name="group" action="/signapp/groups" method="post">
             <div class="row">
                 <div class="columns large-2 small-4 field-label">Group name</div>
                 <div class="columns large-10 small-8">
@@ -85,7 +85,7 @@
                     {literal}
                     <script type="text/javascript">
                     $(document).ready(function() {
-                        $(".member_token_input").tokenInput("/timetable-signups/groups/queryCRSID", {
+                        $(".member_token_input").tokenInput("/signapp/groups/queryCRSID", {
                             method: "post",
                             tokenValue: "crsid",
                             propertyToSearch: "crsid",
@@ -121,7 +121,7 @@
 {template .edit }
 
         <h3>Edit group</h3>
-        <form name="group_edit" action="/timetable-signups/groups/{$id}/update" method="post">
+        <form name="group_edit" action="/signapp/groups/{$id}/update" method="post">
             <div class="row">
                 <div class="columns large-2 small-4 field-label">Group name</div>
                 <div class="columns large-10 small-8">
@@ -138,7 +138,7 @@
                     {literal}
                     <script type="text/javascript">
                     $(document).ready(function() {
-                        $(".member_token_input").tokenInput("/timetable-signups/groups/queryCRSID", {
+                        $(".member_token_input").tokenInput("/signapp/groups/queryCRSID", {
                             method: "post",
                             tokenValue: "crsid",
                             propertyToSearch: "crsid",

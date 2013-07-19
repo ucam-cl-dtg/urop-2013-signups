@@ -15,18 +15,12 @@ $(document).ready(function() {
         // Ajax delete request
             var deleteData = $.ajax({
                   type: 'DELETE',
-                  url: "/timetable-signups/groups/" + group_id,
+                  url: "/signapp/groups/" + group_id,
                   success: function(resultData) {  
                   // Reload the page for now.. can replace this with just redsiplaying div later?
                   location.reload();
                   }
             });
-    });
-    //Edit a group
-    $("body").on("click", ".group_edit", function() {  
-        var group_id = $(this).parents("form").attr("id");
-        alert(group_id);
-        window.location = "/app/#timetable-signups/groups/" + group_id + "/edit/";
     });
 	
 	

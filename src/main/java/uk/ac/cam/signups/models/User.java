@@ -1,6 +1,8 @@
 package uk.ac.cam.signups.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -84,6 +86,7 @@ public class User {
 	}
 	
 	// Soy friendly get methods
+	// Get users groups as a map
 	public Set<ImmutableMap<String, ?>> getGroupsMap() {
 		HashSet<ImmutableMap<String, ?>> userGroups = new HashSet<ImmutableMap<String, ?>>(0);
 		
@@ -96,7 +99,6 @@ public class User {
 		}
 		return userGroups;
 	}
-	
 	public Map<String, ?> toMap() {
 		return ImmutableMap.of("crsid", crsid);
 	}

@@ -30,7 +30,7 @@ import uk.ac.cam.signups.util.LDAPProvider;
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.htmleasy.RedirectException;
 
-@Path("timetable-signups/groups")
+@Path("signapp/groups")
 public class GroupsController extends ApplicationController {
 		// Create the logger
 		private static Logger log = LoggerFactory.getLogger(GroupsController.class);
@@ -55,29 +55,9 @@ public class GroupsController extends ApplicationController {
 			user = initialiseUser();
 
 			int id= groupForm.handle(user);
-			System.out.println(id);
-//			String[] groupUsers = users.split(",");
-//			
-//			Set<User> groupMembers = new HashSet<User>();
-//			// Register or retrieve all group members as User objects and add to set
-//			for(int i=0; i<groupUsers.length; i++){
-//				groupMembers.add(User.registerUser(groupUsers[i]));
-//			}
-//			
-//			// Add group members to group
-//			group.setUsers(groupMembers);
-//			
-//			// Set group owner as current user
-//			group.setOwner(user);
-//			
-//			
-//			// Save group to database
-//			log.info("Adding group to databse.");
-//			Session session = HibernateUtil.getTransaction();
-//			session.save(group);
-//			session.getTransaction().commit();
+
 			
-			throw new RedirectException("/app/#timetable-signups/groups");
+			throw new RedirectException("/app/#signapp/groups");
 		}
 		
 		// Find users
@@ -85,7 +65,7 @@ public class GroupsController extends ApplicationController {
 		@Produces(MediaType.APPLICATION_JSON)
 		public List queryCRSId(String q) {
 			
-			//Remove query part
+			//Remove q= prefix
 			String x = q.substring(2);
 			System.out.println(x);
 			
@@ -100,16 +80,17 @@ public class GroupsController extends ApplicationController {
 		@Produces(MediaType.APPLICATION_JSON)
 		public Map editGroup(@PathParam("id") int id) {
 			
-
-			
 			// Get the group to edit
 			Session session = HibernateUtil.getTransactionSession();
 			Query editGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
 		  	Group group = (Group) editGroup.uniqueResult();	
 		  	
+		  	// If group not found
 		  	if(group==null){
-		  		throw new RedirectException("/app/#timetable-signups/groups");
+		  		throw new RedirectException("/app/#signapp/groups");
 		  	}
+		  	
+			// Check that the current user owns the group, otherwise throw a redirect exception
 		  	
 			// Create group map method in group model later
 			return ImmutableMap.of("id", group.getId(), "name", group.getTitle(), "users", group.getUsersMap());
@@ -125,7 +106,7 @@ public class GroupsController extends ApplicationController {
 			// Update the group
 			
 			
-			throw new RedirectException("/app/#timetable-signups/groups/"+id+"/edit");
+			throw new RedirectException("/app/#signapp/groups/"+id+"/edit");
 		}
 		
 		//Destroy 
@@ -139,7 +120,7 @@ public class GroupsController extends ApplicationController {
 			Group group = (Group)groupQuery.uniqueResult();
 			session.delete(group);
 
-			throw new RedirectException("/app/#timetable-signups/groups");
+			throw new RedirectException("/app/#signapp/groups");
 		}
 		
 }

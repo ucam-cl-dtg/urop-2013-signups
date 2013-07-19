@@ -15,19 +15,23 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.resteasy.annotations.Form;
 
 import uk.ac.cam.signups.models.Deadline;
+import uk.ac.cam.signups.models.User;
 
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.htmleasy.RedirectException;
 import com.googlecode.htmleasy.ViewWith;
 
-@Path("/timetable-signups/deadlines")
+@Path("/signapp/deadlines")
 public class DeadlinesController extends ApplicationController {
 	
 	// Index 
 	@GET @Path("/") //@ViewWith("deadlines.index")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map indexDeadlines() {
-		return ImmutableMap.of();
+		// Initialise user
+		User currentUser = initialiseUser();
+
+		return ImmutableMap.of("crsid", currentUser.getCrsid());
 	}
 	
 //	// New

@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.JoinColumn;
@@ -32,15 +33,21 @@ public class Deadline {
 						inverseJoinColumns = { @JoinColumn(name = "USER_CRSID")})
 	private Set<User> users = new HashSet<User>(0);
 	
+	@ManyToOne
+	@JoinColumn(name="USER_CRSID")
+	private User owner;
+	
 	public Deadline() {}
 	public Deadline(int id, 
 									String title, 
 									String message, 
-									Set<User> users) {
+									Set<User> users, 
+									User owner) {
 		this.id = id;
 		this.title = title;
 		this.message = message;
 		this.users = users;
+		this.owner = owner;
 	}
 	
 	public int getId() { return this.id; }
