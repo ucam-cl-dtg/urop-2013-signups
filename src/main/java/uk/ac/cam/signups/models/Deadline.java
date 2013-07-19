@@ -24,6 +24,7 @@ public class Deadline {
 
 	private String title;
 	private String message;
+	private String url;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "DEADLINES_USERS", 

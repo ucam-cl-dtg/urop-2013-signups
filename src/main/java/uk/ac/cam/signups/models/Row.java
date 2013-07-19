@@ -58,7 +58,7 @@ public class Row implements Mappable, Comparable<Row> {
 	}
 	
 	public Row(int id, 
-						Calendar calendar, 
+						Calendar calendar,  
 						Set<Slot> slots, 
 						Event event, 
 						Type type) {
