@@ -15,5 +15,6 @@ dontaddme.txt
 */*/*/*/*/*/*/*/*/*/*/*/*/*~
 .DS_Store
 .metadata
+src/main/webapp/app
 *.log
 target
