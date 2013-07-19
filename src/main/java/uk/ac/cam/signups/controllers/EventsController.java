@@ -31,7 +31,7 @@ public class EventsController extends ApplicationController {
 	private static Logger log = LoggerFactory.getLogger(EventsController.class);
 	
 	// New
-	@GET @Path("/new") @Produces(MediaType.APPLICATION_JSON) //@ViewWith("/soy/events.new")
+	@GET @Path("/new") @Produces(MediaType.APPLICATION_JSON)
 	public Map<String, Object> newEvent() { 
 		return ImmutableMap.of();
 	}
@@ -45,11 +45,10 @@ public class EventsController extends ApplicationController {
 	}
 	
 	// Show
-	@GET @Path("/{id}") @Produces(MediaType.APPLICATION_JSON) //@ViewWith("/soy/events.show")
+	@GET @Path("/{id}") @Produces(MediaType.APPLICATION_JSON)
 	public Map<String, ?> showEvent(@PathParam("id") int id){
-		Session session = HibernateUtil.getTransaction();
+		Session session = HibernateUtil.getTransactionSession();
 		Event event = (Event) session.createQuery("FROM Event WHERE id = :id").setParameter("id", id).uniqueResult();
-		session.getTransaction().commit();
 		
 		return event.toMap();
 	}
