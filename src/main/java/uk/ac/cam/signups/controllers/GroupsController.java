@@ -24,6 +24,7 @@ import org.jboss.resteasy.annotations.Form;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.cam.signups.forms.GroupForm;
 import uk.ac.cam.signups.models.Group;
 import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
@@ -54,30 +55,32 @@ public class GroupsController extends ApplicationController {
 		
 		// Create
 		@POST @Path("/") 
-		public void createGroup(@Form Group group, @FormParam("users[]") String users) throws Exception {
+		public void createGroup(@Form GroupForm groupForm) throws Exception {
 			// Initialise user
 			user = initialiseUser();
 
-			String[] groupUsers = users.split(",");
-			
-			Set<User> groupMembers = new HashSet<User>();
-			// Register or retrieve all group members as User objects and add to set
-			for(int i=0; i<groupUsers.length; i++){
-				groupMembers.add(User.registerUser(groupUsers[i]));
-			}
-			
-			// Add group members to group
-			group.setUsers(groupMembers);
-			
-			// Set group owner as current user
-			group.setOwner(user);
-			
-			
-			// Save group to database
-			log.info("Adding group to databse.");
-			Session session = HibernateUtil.getTransaction();
-			session.save(group);
-			session.getTransaction().commit();
+			int id= groupForm.handle(user);
+			System.out.println(id);
+//			String[] groupUsers = users.split(",");
+//			
+//			Set<User> groupMembers = new HashSet<User>();
+//			// Register or retrieve all group members as User objects and add to set
+//			for(int i=0; i<groupUsers.length; i++){
+//				groupMembers.add(User.registerUser(groupUsers[i]));
+//			}
+//			
+//			// Add group members to group
+//			group.setUsers(groupMembers);
+//			
+//			// Set group owner as current user
+//			group.setOwner(user);
+//			
+//			
+//			// Save group to database
+//			log.info("Adding group to databse.");
+//			Session session = HibernateUtil.getTransaction();
+//			session.save(group);
+//			session.getTransaction().commit();
 			
 			throw new RedirectException("/app/#groups");
 		}
@@ -103,7 +106,7 @@ public class GroupsController extends ApplicationController {
 		public Map editGroup(@PathParam("id") int id) {
 			
 			// Get the group to edit
-			Session session = HibernateUtil.getTransaction();
+			Session session = HibernateUtil.getTransactionSession();
 			Query editGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
 		  	Group group = (Group) editGroup.uniqueResult();	
 			session.getTransaction().commit();
@@ -127,12 +130,11 @@ public class GroupsController extends ApplicationController {
 		public void deleteGroup(@PathParam("id") int id) {
 			
 			// Delete the group object
-			Session session = HibernateUtil.getTransaction();
+			Session session = HibernateUtil.getTransactionSession();
 			Query groupQuery = session.createQuery("from Group where id = :id");
 			groupQuery.setParameter("id", id);
 			Group group = (Group)groupQuery.uniqueResult();
 			session.delete(group);
-			session.getTransaction().commit();
 
 			throw new RedirectException("/");
 		}

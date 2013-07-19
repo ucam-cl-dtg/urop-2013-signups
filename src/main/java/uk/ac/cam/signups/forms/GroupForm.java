@@ -16,10 +16,10 @@ import uk.ac.cam.signups.util.HibernateUtil;
 
 public class GroupForm {
 	@FormParam("title") String title;
-	@FormParam("users") String users;
+	@FormParam("users[]") String users;
 	
 	public int handle(User currentUser) {		
-		Session session = HibernateUtil.getTransaction();
+		Session session = HibernateUtil.getTransactionSession();
 		
 		// Create group prototype
 		Group group = new Group();
@@ -50,8 +50,6 @@ public class GroupForm {
 			subscriptions.add(group);
 			session.update(u);
 		}
-		
-		session.getTransaction().commit();	
 		
 		return group.getId();
 				

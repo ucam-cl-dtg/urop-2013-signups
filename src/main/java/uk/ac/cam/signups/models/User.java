@@ -66,7 +66,7 @@ public class User {
 		// Add user to database if necessary
 
 		// Begin hibernate session
-		Session session = HibernateUtil.getTransaction();
+		Session session = HibernateUtil.getTransactionSession();
 		
 		// Does the user already exist?
 		Query userQuery = session.createQuery("from User where id = :id").setParameter("id", crsid);
@@ -80,8 +80,6 @@ public class User {
 	  		return newUser;
 	  	}
 
-	  	// Close hibernate session
-		session.getTransaction().commit();
 		
 		return user;
 	}

@@ -70,7 +70,7 @@ public class Type implements Mappable {
 	
 	@SuppressWarnings("unchecked")
   public List<Type> findSimilar(String name, User user, String mode) {
-		Session session = HibernateUtil.getTransaction();
+		Session session = HibernateUtil.getTransactionSession();
 		List<Type> types = null; 
 		if(mode.equals("local")) {
 			Query similars = session.createQuery("SELECT DISTINCT name FROM Type as type WHERE type.event.owner = :user AND lower(type.name) like :name");
@@ -79,7 +79,6 @@ public class Type implements Mappable {
 			Query similars = session.createQuery("SELECT DISTINCT name FROM Type as type WHERE lower(type.name) like :name");
 			types = (List<Type>) similars.setParameter("name", name.toLowerCase()).list();
 		}
-		session.getTransaction().commit();
 		return types;
 	}
 }

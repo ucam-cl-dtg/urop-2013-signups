@@ -24,7 +24,7 @@ public class EventForm {
 	@FormParam("available_minutes[]") String[] availableMinutes;
 	
 	public int handle(User currentUser) {		
-		Session session = HibernateUtil.getTransaction();
+		Session session = HibernateUtil.getTransactionSession();
 		// Create event prototype
 		Event event = new Event();
 		event.setLocation(location);
@@ -74,7 +74,6 @@ public class EventForm {
 		}
 		event.addTypes(types);
 		
-		session.getTransaction().commit();
 		
 		return event.getId();
 	}

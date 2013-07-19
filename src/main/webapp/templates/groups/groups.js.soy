@@ -68,7 +68,7 @@
         </div>
     
         <h3>Create new group</h3>     	
-        <form id="group" name="group" action="/groups" method="post">
+        <form id="group" name="group" action="/timetable-signups/groups" method="post">
             <div class="row">
                 <div class="columns large-2 small-4 field-label">Group name</div>
                 <div class="columns large-10 small-8">
@@ -85,7 +85,7 @@
                     {literal}
                     <script type="text/javascript">
                     $(document).ready(function() {
-                        $(".member_token_input").tokenInput("/groups/queryCRSID", {
+                        $(".member_token_input").tokenInput("/timetable-signups/groups/queryCRSID", {
                             method: "post",
                             tokenValue: "crsid",
                             propertyToSearch: "crsid",
