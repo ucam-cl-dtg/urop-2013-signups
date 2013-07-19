@@ -1,0 +1,178 @@
+{namespace deadlines}
+
+/**
+ * Deadlines page for timetables
+ * 
+ */
+{template .index }
+
+    <h3>Upcoming deadlines</h3>
+    <div class="row">
+        <ul class="panels">
+            <li class="panel-wrapper columns large-12">
+                <div class="list-panel">
+                    <div class="row list-inner-panel">
+                        <div class="columns large-7 small-7">Signup for OOP supervisions - due 12/10/13</div>
+                        <div class="columns large-5 small-5 text-right">
+                            <div class="icon-button-wrapper">
+                                <a class="icon-button panel-icon-button websymbols-icon icon-button-array">&#83;</a>
+                                <a class="icon-button panel-icon-button websymbols-icon">&#39;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <h3>Created deadlines</h3>
+    
+        <div class="row">
+            <ul class="panels">
+            <form id=""> 
+                <li class="panel-wrapper columns large-12">
+                    <div class="list-panel">
+                        <div class="row list-inner-panel">
+                            <div class="columns large-7 small-7">Hand in operating systems work - due 13/12/13</div>
+                            <div class="columns large-5 small-5 text-right">
+                                <div class="icon-button-wrapper">
+                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array expand-sub-panel">&#43;</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader group_edit">Edit</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon group_delete">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="sub-panel">
+                        <li class="list-sub-panel">
+                            <div class="row list-inner-sub-panel">
+                           
+                                <div class="columns large-7 small-7">
+                                users
+                                </div>
+
+                                <div class="columns large-5 small-5 text-right">
+                                    <div class="icon-button-wrapper">
+                                        <!--edit members buttons?-->
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                </form>
+                <div class="columns large-12 small-12">
+                </div>
+                
+            </ul>
+        </div>
+    
+    
+    <h3>Create new deadline</h3>
+    <form>
+        <div class="row">
+            <div class="columns large-2 small-4 field-label">Deadline name</div>
+            <div class="columns large-10 small-8">
+                <input type="text" placeholder="Deadline name" />
+            </div>
+        </div>
+         
+        <div class="row">
+            <div class="columns large-2 small-4 field-label">Time</div>
+            <div class="columns large-10 small-8">
+                <div class="row">
+                    <div class="columns large-6 small-6">
+                        <input type="text" placeholder="Date" />
+                    </div>
+                    <div class="columns large-6 small-6">
+                        <input type="text" placeholder="Time" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns large-2 small-4 field-label">Content</div>
+            <div class="columns large-10 small-8">
+                <textarea></textarea>
+            </div>
+        </div>
+        
+         <div class="row">
+            <div class="columns large-2 small-4 field-label">Recipients</div>
+        </div>
+         <!-- START ADD USERS AS RECIPIENTS -->
+
+        <div class="row">
+                <div class="columns large-2 small-4 field-label">Add users</div>
+                <div class="columns large-10 small-8">
+                    <input type="text" class="deadline_user_token_input" name="groups[]"/>
+                    
+                    <!-- HORRIBLE WAY OF INCLUDING JS - try and get this working in main.js later-->
+                    
+                    {literal}
+                    <script type="text/javascript">
+                    $(document).ready(function() {
+                        $(".member_token_input").tokenInput("/groups/queryCRSID", {
+                            method: "post",
+                            tokenValue: "crsid",
+                            propertyToSearch: "crsid",
+                            theme: "facebook",
+                            minChars: 3,
+                            
+                            resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " (" + item.crsid + ")</div><div class='email'>" + item.crsid + "@cam.ac.uk</div></div></li>" },
+                            tokenFormatter: function(item) { return "<li><p>" + item.name + " (" + item.crsid + ")</p></li>" },                           
+                        });
+                    });
+                    </script>
+                    {/literal}
+                    
+                    <!-- HORRIBLE WAY OF INCLUDING JS - try and get this working in main.js later-->
+                    
+                </div>
+            </div>
+
+         <!-- END ADD USERS AS RECIPIENTS -->
+            
+         <!-- START ADD GROUPS AS RECIPIENTS -->
+         
+         <div class="row">
+                <div class="columns large-2 small-4 field-label">Add groups</div>
+                <div class="columns large-10 small-8">
+                    <input type="text" class="deadline_group_token_input" name="users[]"/>
+                    
+                    <!-- HORRIBLE WAY OF INCLUDING JS - try and get this working in main.js later-->
+                    
+                    {literal}
+                    <script type="text/javascript">
+                    $(document).ready(function() {
+                        $(".member_token_input").tokenInput("/groups/queryCRSID", {
+                            method: "post",
+                            tokenValue: "crsid",
+                            propertyToSearch: "crsid",
+                            theme: "facebook",
+                            minChars: 3,
+                            
+                            resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " (" + item.crsid + ")</div><div class='email'>" + item.crsid + "@cam.ac.uk</div></div></li>" },
+                            tokenFormatter: function(item) { return "<li><p>" + item.name + " (" + item.crsid + ")</p></li>" },                           
+                        });
+                    });
+                    </script>
+                    {/literal}
+                    
+                    <!-- HORRIBLE WAY OF INCLUDING JS - try and get this working in main.js later-->
+                    
+                </div>
+            </div>
+            
+         <!-- END ADD GROUPS AS RECIPIENTS -->
+         
+         <div class="row">
+            <div class="columns large-12 small-12">
+                <input type="submit" value="Create event" />
+            </div>
+        </div>
+        
+    </form>
+
+				
+{/template}

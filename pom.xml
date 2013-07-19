@@ -17,6 +17,7 @@
 		</custom_scripts>
 		<custom_templates>
 			<![CDATA[<script src="/soy/js/3/groups.js"></script>]]>
+            <![CDATA[<script src="/soy/js/3/deadlines.js"></script>]]>
 			<![CDATA[<script src="/soy/js/3/home_page.js"></script>]]>
 		</custom_templates>
 	</properties>

@@ -56,12 +56,15 @@ public class LDAPProvider {
 		
 		Attributes a = queryPeople(crsid, type);
 		
+		//If no match in search
+		if(a==null){ return null;}
+		
 		try {
         	return a.get(type).get().toString();
         } catch (NamingException e) {
 			log.error(e.getMessage());
 			return null;
-		}
+		} 
 		
 	}
 	
