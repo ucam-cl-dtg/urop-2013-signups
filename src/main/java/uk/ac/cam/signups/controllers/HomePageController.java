@@ -1,6 +1,5 @@
 package uk.ac.cam.signups.controllers;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.GET;

@@ -14,5 +14,6 @@ dontaddme.txt
 */*/*/*/*/*/*/*/*/*/*/*/*~
 */*/*/*/*/*/*/*/*/*/*/*/*/*~
 .DS_Store
+.metadata
 *.log
 target
