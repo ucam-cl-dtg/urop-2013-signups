@@ -22,8 +22,8 @@
                             <div class="columns large-5 small-5 text-right">
                                 <div class="icon-button-wrapper">
                                     <a class="icon-button panel-icon-button websymbols-icon icon-button-array expand-sub-panel">&#43;</a>
-                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader group_edit">Edit</a>
-                                    <a class="icon-button panel-icon-button websymbols-icon group_delete">Delete</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader group_edit">&#83;</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon group_delete">&#39;</a>
                                 </div>
                             </div>
                         </div>
@@ -114,33 +114,61 @@
 
 /**
  * Edit group
+ * @param id
  * @param name
  * @param users
  */
 {template .edit }
 
         <h3>Edit group</h3>
-            <table>
-            <form id="edit_group" name="group">
-            <tr>
-                <td>Group name: </td><td><input type="text" id="title" name="title" value="{$name}"/></td>
-            </tr>
-            <tr>
-                <td>
-                Members: 
-                </td>
-                <td>
-                {foreach $user in $users}
-                <input type="text" name="users[]" id="group_users" value="{$user.crsid}"/><input type="button" id="add_member" value="+"/>
-                {ifempty}
-                No users in this group
-                {/foreach}
-                </td>
-            </tr>
-            <tr>
-                <td></td><td><input type="submit" id="submit" value="Save Group"/></td>
-            </tr>
+        <form name="group_edit" action="/timetable-signups/groups/{$id}/update" method="post">
+            <div class="row">
+                <div class="columns large-2 small-4 field-label">Group name</div>
+                <div class="columns large-10 small-8">
+                    <input type="text" placeholder="Group name" name="title" id="title" value="{$name}"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns large-2 small-4 field-label">Group members</div>
+                <div class="columns large-10 small-8">
+                    <input type="text" class="member_token_input" name="users[]"/>
+                    
+                    <!-- HORRIBLE WAY OF INCLUDING JS - try and get this working in main.js later-->
+                    
+                    {literal}
+                    <script type="text/javascript">
+                    $(document).ready(function() {
+                        $(".member_token_input").tokenInput("/timetable-signups/groups/queryCRSID", {
+                            method: "post",
+                            tokenValue: "crsid",
+                            propertyToSearch: "crsid",
+                            theme: "facebook",
+                            minChars: 3,
+                            prePopulate: [
+                            
+                    {/literal}
+                    {foreach $user in $users}
+                    {lb}crsid: "{$user.crsid}", name: "{$user.name}"{rb},
+                    {/foreach}
+                    {literal}                     
+                            ],
 
-
+                            resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " (" + item.crsid + ")</div><div class='email'>" + item.crsid + "@cam.ac.uk</div></div></li>" },
+                            tokenFormatter: function(item) { return "<li><p>" + item.name + " (" + item.crsid + ")</p></li>" },                           
+                        });
+                    });
+                    </script>
+                    {/literal}
+                    
+                    <!-- HORRIBLE WAY OF INCLUDING JS - try and get this working in main.js later-->
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns large-12 small-12">
+                    <input type="submit" value="Save" id="group_submit" />
+                </div>
+            </div>
+        </form>
 
 {/template}

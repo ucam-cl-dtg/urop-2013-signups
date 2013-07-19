@@ -76,7 +76,6 @@ public class User {
 	  	if(user==null){
 	  		User newUser = new User(crsid);
 	  		session.save(newUser);
-			session.getTransaction().commit();
 	  		return newUser;
 	  	}
 

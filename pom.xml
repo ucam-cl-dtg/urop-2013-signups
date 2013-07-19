@@ -144,7 +144,7 @@
 							<outputDirectory>${basedir}/src/main/webapp/app</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/../urop-frontend</directory>
+									<directory>${basedir}/../urop-2013-frontend</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>

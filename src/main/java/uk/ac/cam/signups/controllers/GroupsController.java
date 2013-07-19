@@ -77,7 +77,7 @@ public class GroupsController extends ApplicationController {
 //			session.save(group);
 //			session.getTransaction().commit();
 			
-			throw new RedirectException("/app/#groups");
+			throw new RedirectException("/app/#timetable-signups/groups");
 		}
 		
 		// Find users
@@ -100,25 +100,33 @@ public class GroupsController extends ApplicationController {
 		@Produces(MediaType.APPLICATION_JSON)
 		public Map editGroup(@PathParam("id") int id) {
 			
+
+			
 			// Get the group to edit
 			Session session = HibernateUtil.getTransactionSession();
 			Query editGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
 		  	Group group = (Group) editGroup.uniqueResult();	
-			session.getTransaction().commit();
+		  	
+		  	if(group==null){
+		  		throw new RedirectException("/app/#timetable-signups/groups");
+		  	}
 		  	
 			// Create group map method in group model later
 			return ImmutableMap.of("id", group.getId(), "name", group.getTitle(), "users", group.getUsersMap());
 		}
 		
-//		// Update
-//		@POST @Path("/{id}")
-//		public void updateGroup(@PathParam("id") int id,
-//				@Form Group group) {
-//			
-//			// Check that current user is the e
-//			
-//			throw new RedirectException("/");
-//		}
+		// Update
+		@POST @Path("/{id}/update")
+		public void updateGroup(@PathParam("id") int id,
+				@Form GroupForm groupForm) {
+			
+			// Check that current user is the owner
+			
+			// Update the group
+			
+			
+			throw new RedirectException("/app/#timetable-signups/groups/"+id+"/edit");
+		}
 		
 		//Destroy 
 		@DELETE @Path("/{id}")
@@ -131,7 +139,7 @@ public class GroupsController extends ApplicationController {
 			Group group = (Group)groupQuery.uniqueResult();
 			session.delete(group);
 
-			throw new RedirectException("/");
+			throw new RedirectException("/app/#timetable-signups/groups");
 		}
 		
 }
