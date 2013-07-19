@@ -1,7 +1,6 @@
 package uk.ac.cam.signups.models;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.template.soy.data.SoyListData;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -93,13 +93,16 @@ public class Event implements Mappable {
 		
 		// Make row hierarchy with dates
 		SortedMap<String, Set<Row>> temp = new TreeMap<String, Set<Row>>();
+		SortedSet<Row> rowContainer;
 		for(Row row: rows) {
 			Calendar cal = row.getCalendar();
 			String key = "" + cal.get(Calendar.YEAR) + ":" + cal.get(Calendar.MONTH) + ":" + cal.get(Calendar.DAY_OF_MONTH);
 			if (temp.containsKey(key)) {
 				temp.get(key).add(row);
 			} else {
-				temp.put(key, new TreeSet<Row>());
+				rowContainer = new TreeSet<Row>();
+				rowContainer.add(row);
+				temp.put(key, rowContainer);
 			}
 		}
 		
@@ -111,7 +114,7 @@ public class Event implements Mappable {
 			int month = Integer.parseInt(dateArray[1]);
 			int day = Integer.parseInt(dateArray[2]);
 			Calendar cal = new GregorianCalendar(year, month, day);
-			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, FF 'of' MMMM");
+			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d");
 			String date = formatter.format(cal.getTime());
 
 			dates.add(ImmutableMap.of("date", date, "rows", Util.getImmutableCollection(temp.get(key))));

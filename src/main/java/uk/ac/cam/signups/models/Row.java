@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 
 import uk.ac.cam.signups.util.Util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
@@ -86,11 +87,13 @@ public class Row implements Mappable, Comparable<Row> {
 	
 	public Map<String, ?> toMap() {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
+		SimpleDateFormat minuteFormatter = new SimpleDateFormat("mm");
+		SimpleDateFormat hourFormatter = new SimpleDateFormat("kk");
 		builder = builder.put("date", ImmutableMap.of("day", calendar.get(Calendar.DAY_OF_MONTH),
 																									"month", calendar.get(Calendar.MONTH),
 																									"year", calendar.get(Calendar.YEAR),
-																									"minute", calendar.get(Calendar.MINUTE),
-																									"hour", calendar.get(Calendar.HOUR)));
+																									"minute", minuteFormatter.format(calendar.getTime()),
+																									"hour", hourFormatter.format(calendar.getTime())));
 		builder = builder.put("slots", Util.getImmutableCollection(slots));
 		if (type != null) {
 			builder = builder.put("type", type.toMap());

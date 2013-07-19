@@ -51,7 +51,7 @@ public class EventForm {
 			for(int i = 0; i < availableDates.length; i++) {
 				String[] splitDate = availableDates[i].split("/");
 				int year = Integer.parseInt(splitDate[2]);
-				int month = Integer.parseInt(splitDate[1]);
+				int month = Integer.parseInt(splitDate[1]) - 1;
 				int day = Integer.parseInt(splitDate[0]);
 				cal = new GregorianCalendar(year, month, day, Integer.parseInt(availableHours[i]), Integer.parseInt(availableMinutes[i]));
 				row = new Row(cal, event);
@@ -64,15 +64,13 @@ public class EventForm {
 			}		
 		}
 		
-		// Set types and create them if non-existent
-		Set<Type> types = new HashSet<Type>(0);
+		// Set types
 		Type type;
 		for(String stype: typeNames) {
 			type = new Type(stype);
+			type.setEvent(event);
 			session.save(type);
-			types.add(type);
 		}
-		event.addTypes(types);
 		
 		session.getTransaction().commit();
 		
