@@ -67,7 +67,6 @@ public class GroupsController extends ApplicationController {
 			
 			//Remove q= prefix
 			String x = q.substring(2);
-			System.out.println(x);
 			
 			// Perform LDAP search
 			ArrayList<ImmutableMap<String,?>> matches = (ArrayList<ImmutableMap<String, ?>>) LDAPProvider.partialUserSearch(x);;

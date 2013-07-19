@@ -25,12 +25,32 @@ public class LDAPProvider {
 	//Logger
 	private static Logger log = LoggerFactory.getLogger(LDAPProvider.class);
 	
-	// Query LDAP people
-	public static Attributes queryPeople(String crsid, String type) {
+	/**
+	 * Sets up basic LDAP Query
+	 * subtree is the subtree under o (Cam uni) to search
+	 * possible subtrees: people, groups, institutions 
+	 * @return Attributes
+	 */
+	public static Hashtable setupQuery() {
 		
 		Hashtable env = new Hashtable();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 		env.put(Context.PROVIDER_URL, "ldap://ldap.lookup.cam.ac.uk:389");
+		
+		return env;
+	}
+	
+	/**
+	 * Unique result query
+	 * Constructs and calls final query, returning a single string result 
+	 * Takes 4 arguments: attribute to search (eg. uid), parameter to search with, 
+	 * attribute to return as result and subtree to search
+	 * Possible subtrees to search: people, groups, institutions
+	 * @return String result
+	 */
+	public static String uniqueQuery(String type, String parameter, String result, String subtree) {
+		
+		Hashtable env = setupQuery();
 
 		Attributes a = null;
 		try {
@@ -38,87 +58,168 @@ public class LDAPProvider {
 			SearchControls controls = new SearchControls();
 			controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 			SearchResult searchResult = ctx.search(
-					"ou=people,o=University of Cambridge,dc=cam,dc=ac,dc=uk",
-					"(uid=" + crsid + ")", controls).next();
+					"ou="+ subtree+",o=University of Cambridge,dc=cam,dc=ac,dc=uk",
+					"("+type+"=" + parameter + ")", controls).next();
 			a = searchResult.getAttributes();
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return null;
 		}
 		
-		return a;
-	}
-	
-	//TODO: query LDAP groups and institutions
-	
-	// Get a single result
-	public static String getUniqueResult(String crsid, String type) {
-		
-		Attributes a = queryPeople(crsid, type);
-		
 		//If no match in search
 		if(a==null){ return null;}
 		
 		try {
-        	return a.get(type).get().toString();
+        	return a.get(result).get().toString();
         } catch (NamingException e) {
 			log.error(e.getMessage());
 			return null;
-		} 
+		} 	
 		
 	}
 	
-	//Get a list of results as strings
-	public static List<String> getStringListResult(String crsid, String type){
+	/**
+	 * List of results query
+	 * Constructs and calls final query, returning a list of strings 
+	 * Takes 4 arguments: attribute to search (eg. uid), parameter to search with, 
+	 * attribute to return as result and subtree to search
+	 * Possible subtrees to search: people, groups, institutions
+	 * @return List<String> result
+	 */
+	public static List<String> multipleQuery(String type, String parameter, String result, String subtree) {
 		
-		Attributes a = queryPeople(crsid, type);
+		Hashtable env = setupQuery();
+
+		Attributes a = null;
+		try {
+			DirContext ctx = new InitialDirContext(env);
+			SearchControls controls = new SearchControls();
+			controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+			SearchResult searchResult = ctx.search(
+					"ou="+ subtree+",o=University of Cambridge,dc=cam,dc=ac,dc=uk",
+					"("+type+"=" + parameter + ")", controls).next();
+			a = searchResult.getAttributes();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return null;
+		}
+		
+		//If no match in search
+		if(a==null){ return null;}
+		
+		ArrayList<String> listResults = new ArrayList<String>();
 		
 		try {
-			List<String> listResults = new ArrayList<String>();
-			
 			//Initialise enumResults
 			NamingEnumeration enumResults;
 			
-			//If no results return an empty list
+			//If no results null
 			try {
-			 enumResults = a.get(type).getAll();
+			 enumResults = a.get(result).getAll();
 			} catch (NullPointerException e){
-				log.debug("User has no photo");
+				log.debug("No " + result + " found");
 				return null;
 			}
 			
-			// Convert enumeration type results to string
+			// For a photo need to do something weird
+			if(result.equals("jpegPhoto")){
+				try {
+					while(enumResults.hasMore()){
+						byte[] p = (byte[])enumResults.next();
+						listResults.add(new String(Base64.encodeBase64(p)));	
+					}
+					return listResults;
+				} catch (NamingException e){
+					log.error(e.getMessage());
+					return null;
+				} 
+			}
+			
+			// Convert enumeration type results to string otherwise
 				while(enumResults.hasMore()){
-				listResults.add(enumResults.next().toString());
-				
-				return listResults;
+					listResults.add(enumResults.next().toString());
 				}
 					
         } catch (NamingException e) {
 			log.error(e.getMessage());
 			return null;
 		}
-		return new ArrayList<String>();
-	}
-	
-	// Get LDAP data in unchanged enumeration type form
-	public static NamingEnumeration getEnumListResult(String crsid, String type){
 		
-		Attributes a = queryPeople(crsid, type);
+		return listResults;
+		
+	}
+
+	/**
+	 * Partial Query
+	 * Constructs and calls final query, returning a list of results
+	 * Includes partial matches in search
+	 * Takes 4 arguments: attribute to search (eg. uid), parameter to search with, 
+	 * attribute to return as result and subtree to search
+	 * Possible subtrees to search: people, groups, institutions
+	 * @return List<String> result
+	 */
+	public static List<String> partialQuery(String type, String parameter, String result, String subtree) {
+		
+		Hashtable env = setupQuery();
+
+		Attributes a = null;
+		try {
+			DirContext ctx = new InitialDirContext(env);
+			SearchControls controls = new SearchControls();
+			controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+			SearchResult searchResult = ctx.search(
+					"ou="+ subtree+",o=University of Cambridge,dc=cam,dc=ac,dc=uk",
+					"("+type+"=" + parameter + "*)", controls).next();
+			a = searchResult.getAttributes();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return null;
+		}
+		
+		//If no match in search
+		if(a==null){ return null;}
+		
+		ArrayList<String> listResults = new ArrayList<String>();
 		
 		try {
+			//Initialise enumResults
+			NamingEnumeration enumResults;
+			
+			//If no results null
 			try {
-			 return a.get(type).getAll();
+			 enumResults = a.get(result).getAll();
 			} catch (NullPointerException e){
-				log.debug("No data of type " + " for this user");
+				log.debug("No " + result + " found");
 				return null;
-			}	
+			}
+			
+			// For a photo need to do something weird
+			if(result.equals("jpegPhoto")){
+				try {
+					while(enumResults.hasMore()){
+						byte[] p = (byte[])enumResults.next();
+						listResults.add(new String(Base64.encodeBase64(p)));	
+					}
+					return listResults;
+				} catch (NamingException e){
+					log.error(e.getMessage());
+					return null;
+				} 
+			}
+			
+			// Convert enumeration type results to string otherwise
+				while(enumResults.hasMore()){
+					listResults.add(enumResults.next().toString());
+				}
 					
         } catch (NamingException e) {
 			log.error(e.getMessage());
 			return null;
 		}
-	}	
+		
+		return listResults;
+		
+	}
 	
 	public static List testPartialQuery(String x){
 		

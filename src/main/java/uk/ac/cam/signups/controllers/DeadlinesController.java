@@ -1,6 +1,9 @@
 package uk.ac.cam.signups.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,10 +15,16 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.jboss.resteasy.annotations.Form;
 
 import uk.ac.cam.signups.models.Deadline;
+import uk.ac.cam.signups.models.Group;
 import uk.ac.cam.signups.models.User;
+import uk.ac.cam.signups.util.HibernateUtil;
+import uk.ac.cam.signups.util.LDAPProvider;
 
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.htmleasy.RedirectException;
@@ -28,18 +37,13 @@ public class DeadlinesController extends ApplicationController {
 	@GET @Path("/") //@ViewWith("deadlines.index")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map indexDeadlines() {
-		// Initialise user
+		// Get current user
 		User currentUser = initialiseUser();
+		
 
-		return ImmutableMap.of("crsid", currentUser.getCrsid());
+		return ImmutableMap.of("crsid", currentUser.getCrsid(), "groups", currentUser.getGroupsMap());
 	}
 	
-//	// New
-//	@GET @Path("/new") @ViewWith("deadlines.new")
-//	public Map newDeadline() {
-//		return ImmutableMap.of();
-//	}
-//	
 //	// Create 
 //	@POST @Path("/") 
 //	public void createDeadline(@Form Deadline deadline) {
