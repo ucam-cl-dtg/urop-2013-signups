@@ -36,10 +36,6 @@ public class Row implements Mappable, Comparable<Row> {
 	private Calendar calendar;
 
 	@ManyToOne
-	@JoinColumn(name = "DEADLINE_ID")
-	private Deadline deadline;
-
-	@ManyToOne
 	@JoinColumn(name = "EVENT_ID")
 	private Event event;
 
@@ -62,14 +58,12 @@ public class Row implements Mappable, Comparable<Row> {
 	}
 	
 	public Row(int id, 
-						Calendar calendar, 
-						Deadline deadline, 
+						Calendar calendar,  
 						Set<Slot> slots, 
 						Event event, 
 						Type type) {
 		this.id = id;
 		this.calendar = calendar;
-		this.deadline = deadline;
 		this.slots.addAll(slots);
 		this.event = event;
 		this.type = type;
