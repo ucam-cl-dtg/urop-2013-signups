@@ -131,7 +131,18 @@ public class LDAPQueryHelper {
 	}
 	
 	/**
-	 * Builds a soy-ready immutable map of all data related to user
+	 * Partial query of users by CRSID
+	 * @return ImmutableMap userData
+	 */
+	public static List queryCRSID(String x){
+		ArrayList<ImmutableMap<String, ?>> crsidMatches = new ArrayList<ImmutableMap<String, ?>>();
+		log.debug("Retrieving crsids matching " + x + " from LDAP");
+		crsidMatches = (ArrayList<ImmutableMap<String, ?>>) LDAPProvider.partialUserQuery(x, "uid");
+	return crsidMatches;
+	}
+	
+	/**
+	 * Queries and builds a soy-ready immutable map of all data related to user
 	 * @return ImmutableMap userData
 	 */
 	public static ImmutableMap<String, ?> getAll(String crsid){
@@ -148,5 +159,7 @@ public class LDAPQueryHelper {
 				.build();
 		return userData;
 	}
+	
+
 	
 }

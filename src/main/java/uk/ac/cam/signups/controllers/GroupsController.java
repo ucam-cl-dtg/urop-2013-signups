@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.signups.forms.GroupForm;
+import uk.ac.cam.signups.helpers.LDAPQueryHelper;
 import uk.ac.cam.signups.models.Group;
 import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.HibernateUtil;
@@ -69,7 +70,7 @@ public class GroupsController extends ApplicationController {
 			String x = q.substring(2);
 			
 			// Perform LDAP search
-			ArrayList<ImmutableMap<String,?>> matches = (ArrayList<ImmutableMap<String, ?>>) LDAPProvider.partialUserSearch(x);;
+			ArrayList<ImmutableMap<String,?>> matches = (ArrayList<ImmutableMap<String, ?>>) LDAPQueryHelper.queryCRSID(x);
 			
 			return matches;
 		}
