@@ -1,0 +1,31 @@
+{namespace signapp.home_page}
+
+/**
+ * Home Page for timetables
+ * @param user
+ * 
+ */
+{template .index autoescape="false"}
+<div class="home_page" id="index">
+  <h1>Signups home page</h1>
+  <h2>Welcome {$user.fullname} ({$user.crsid})</h2>
+  <div>Your status is {$user.status}. Your email is {$user.email}</div>
+  <div>
+	  {if $user.photo == 'none'}
+	    <img src="/images/nophoto.jpeg" />
+	  {else}
+	    <img src="data:image/jpeg;base64,{$user.photo}" />
+	  {/if}
+  </div>
+  <div>You are a member of {$user.institution}</div>
+</div>
+
+{/template}
+
+/**
+ * DoS page to view students
+ * 
+ */
+{template .dos autoescape="false"}
+This is the DoS page
+{/template}

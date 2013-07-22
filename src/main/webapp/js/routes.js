@@ -20,12 +20,12 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     router = Router({
-        "signapp/groups": "groups.index",
-        "signapp/deadlines" : "deadlines.index",
-        "signapp/": "home_page.index",
-        "signapp/groups/:id/edit" : "groups.edit",
-        "signapp/events/:id" : "events.show",
-        "signapp/events/new" : "events.new",
+        "signapp/groups": "signapp.groups.index",
+        "signapp/deadlines" : "signapp.deadlines.index",
+        "signapp/": "signapp.home_page.index",
+        "signapp/groups/:id/edit" : "signapp.groups.edit",
+        "signapp/events/:id" : "signapp.events.show",
+        "signapp/events/new" : "signapp.events.new",
         //For getting params in get requests
         // Use the last line to redirect unmatched routes to an error page
         //"*undefined": "errors.notfound"

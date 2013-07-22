@@ -11,15 +11,15 @@
 	<properties>
 		<jettyVersion>7.2.0.v20101020</jettyVersion>
 		<custom_scripts>
-			<![CDATA[<script src="/js/main.js"></script>]]>
       <![CDATA[<link href="/css/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css">]]>
       <![CDATA[<script src="/js/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>]]>
+			<![CDATA[<script src="/js/signups.js"></script>]]>
 		</custom_scripts>
 		<custom_templates>
-			<![CDATA[<script src="/soy/js/3/groups.js"></script>]]>
-      <![CDATA[<script src="/soy/js/3/deadlines.js"></script>]]>
-			<![CDATA[<script src="/soy/js/3/home_page.js"></script>]]>
-			<![CDATA[<script src="/soy/js/3/events.js"></script>]]>
+			<![CDATA[<script src="/soy/js/3/signapp.groups.js"></script>]]>
+      <![CDATA[<script src="/soy/js/3/signapp.deadlines.js"></script>]]>
+			<![CDATA[<script src="/soy/js/3/signapp.home_page.js"></script>]]>
+			<![CDATA[<script src="/soy/js/3/signapp.events.js"></script>]]>
 		</custom_templates>
 		<custom_css>
 		  <![CDATA[<link href="/css/main.css" rel="stylesheet" type="text/css">]]>
