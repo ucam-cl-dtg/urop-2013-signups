@@ -193,5 +193,55 @@ public class LDAPProvider {
 		} 
 		
 	}
+	
+	/**
+	 * Partial Group Query
+	 * Constructs and calls final query, returning immutable map of crsid, displayname, surname
+	 * Includes partial matches in search
+	 * Takes 2 arguments: attribute to search (eg. uid) and, string x to match results with
+	 * Possible subtrees to search: people, groups, institutions
+	 * @return List<ImmutableMap<String,?>>
+	 */
+	public static List partialGroupQuery(String x, String type){
+		
+		System.out.println("Searching " + type + " for " + x);
+		
+		Hashtable env = setupQuery();
+		NamingEnumeration<SearchResult> enumResults;
+		
+		Attributes a = null;
+		try {
+			DirContext ctx = new InitialDirContext(env);
+			SearchControls controls = new SearchControls();
+			controls.setReturningAttributes(new String[]{"groupID", "groupTitle", "description", "visibility"});
+			controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+			enumResults = ctx.search(
+					"ou=groups,o=University of Cambridge,dc=cam,dc=ac,dc=uk",
+					"("+type+"=*" + x + "*)", controls);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return null;
+		}
+		
+		try {
+			ArrayList<ImmutableMap<String,?>> groupMatches = new ArrayList<ImmutableMap<String,?>>();			
+			
+			// Convert enumeration type results to string
+				while(enumResults.hasMore()){
+					Attributes result = enumResults.next().getAttributes();
+					// only add if members are public
+					if(result.get("visibility").get().toString().equals("cam")){
+						groupMatches.add(ImmutableMap.of("id", result.get("groupID").get().toString(), "name", result.get("groupTitle").get().toString(), "description", result.get("description").get().toString()));
+					} 
+				}
+				
+			return groupMatches;
+					
+        } catch (NamingException e) {
+			log.error(e.getMessage());
+			return null;
+		} 
+		
+	}
 
 }

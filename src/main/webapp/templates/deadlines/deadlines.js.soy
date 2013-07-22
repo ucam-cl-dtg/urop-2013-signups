@@ -19,7 +19,7 @@
                 <li class="panel-wrapper columns large-12">
                     <div class="list-panel">
                     <div class="row list-inner-panel">
-                        <div class="columns large-7 small-7"><strong>{$deadline.name}</strong> - due <br/><em>{$deadline.message}</em></div>
+                        <div class="columns large-7 small-7"><strong>{$deadline.name}</strong> - due <span class="{if $deadline.datetime.imminent}round alert label{else}label{/if}">{$deadline.datetime.date} at {$deadline.datetime.time}</span><br/><em>{$deadline.message}</em></div>
                         <div class="columns large-5 small-5 text-right">
                             <div class="icon-button-wrapper">
                                 <a class="icon-button panel-icon-button websymbols-icon">&#88;</a>

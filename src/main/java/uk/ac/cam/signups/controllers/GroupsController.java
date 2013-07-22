@@ -61,6 +61,18 @@ public class GroupsController extends ApplicationController {
 			throw new RedirectException("/app/#signapp/groups");
 		}
 		
+		// Import group from LDAP
+		@POST @Path("/import") 
+		public void importGroup(@Form GroupForm groupForm) throws Exception {
+			// Initialise user
+			user = initialiseUser();
+
+			int id= groupForm.handleImport(user);
+
+			
+			throw new RedirectException("/app/#signapp/groups");
+		}
+		
 		// Find users
 		@POST @Path("/queryCRSID")
 		@Produces(MediaType.APPLICATION_JSON)
@@ -71,6 +83,20 @@ public class GroupsController extends ApplicationController {
 			
 			// Perform LDAP search
 			ArrayList<ImmutableMap<String,?>> matches = (ArrayList<ImmutableMap<String, ?>>) LDAPQueryHelper.queryCRSID(x);
+			
+			return matches;
+		}
+		
+		// Find groups from LDAP
+		@POST @Path("/queryGroup")
+		@Produces(MediaType.APPLICATION_JSON)
+		public List queryGroup(String q) {
+			
+			//Remove q= prefix
+			String x = q.substring(2);
+			
+			// Perform LDAP search
+			ArrayList<ImmutableMap<String,?>> matches = (ArrayList<ImmutableMap<String, ?>>) LDAPQueryHelper.queryGroups(x);
 			
 			return matches;
 		}

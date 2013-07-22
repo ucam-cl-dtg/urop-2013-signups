@@ -131,6 +131,34 @@ public class LDAPQueryHelper {
 	}
 	
 	/**
+	 * Gets the name of a group
+	 * @return String group name
+	 */
+	public static String getGroupName(String id){
+			log.debug("Retrieving name for group " + id + " from LDAP");
+			String group = LDAPProvider.uniqueQuery("groupID", id, "groupTitle", "groups");	
+	
+			if(group==null){
+				log.debug("No group found for id " + id);
+				return "No group";
+			}
+		return group;
+	}
+	
+	/**
+	 * Gets a member CRSIDs of a group
+	 * @return List<String> members
+	 */
+	public static List<String> getGroupMembers(String id){
+			List<String> groupMembers = new ArrayList<String>();
+			log.debug("Retrieving members of group id " + id + " from LDAP");
+			//Default is no institution
+			groupMembers = LDAPProvider.multipleQuery("groupID", id, "uid", "groups");
+
+		return groupMembers;
+	}
+	
+	/**
 	 * Partial query of users by CRSID
 	 * @return ImmutableMap userData
 	 */
@@ -139,6 +167,17 @@ public class LDAPQueryHelper {
 		log.debug("Retrieving crsids matching " + x + " from LDAP");
 		crsidMatches = (ArrayList<ImmutableMap<String, ?>>) LDAPProvider.partialUserQuery(x, "uid");
 	return crsidMatches;
+	}
+	
+	/**
+	 * Partial query of groups by group name
+	 * @return ImmutableMap userData
+	 */
+	public static List queryGroups(String x){
+		ArrayList<ImmutableMap<String, ?>> groupMatches = new ArrayList<ImmutableMap<String, ?>>();
+		log.debug("Retrieving groups matching " + x + " from LDAP");
+		groupMatches = (ArrayList<ImmutableMap<String, ?>>) LDAPProvider.partialGroupQuery(x, "groupTitle");
+	return groupMatches;
 	}
 	
 	/**
