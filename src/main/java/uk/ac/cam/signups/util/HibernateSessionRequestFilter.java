@@ -35,7 +35,7 @@ public class HibernateSessionRequestFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		sf.getCurrentSession().beginTransaction();
+//		sf.getCurrentSession().beginTransaction();
 		chain.doFilter(request, response);
 		
 		Transaction transaction = sf.getCurrentSession().getTransaction();

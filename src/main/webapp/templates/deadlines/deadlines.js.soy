@@ -2,29 +2,15 @@
 
 /**
  * Deadlines page for timetables
- * 
+ * @param cdeadlines
+ * @param deadlines
  */
 {template .index }
 
     <h3>Upcoming deadlines</h3>
-    <div class="row">
-        <ul class="panels">
-            <li class="panel-wrapper columns large-12">
-                <div class="list-panel">
-                    <div class="row list-inner-panel">
-                        <div class="columns large-7 small-7">Signup for OOP supervisions - due 12/10/13</div>
-                        <div class="columns large-5 small-5 text-right">
-                            <div class="icon-button-wrapper">
-                                <a class="icon-button panel-icon-button websymbols-icon">&#88;</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-        </ul>
-    </div>
 
-    <h3>Created deadlines</h3>
+        <div class="row">
+            <ul class="panels">
 
            <!--display a row for each deadline-->
             
@@ -32,8 +18,41 @@
             <form id="{$deadline.id}"> 
                 <li class="panel-wrapper columns large-12">
                     <div class="list-panel">
+                    <div class="row list-inner-panel">
+                        <div class="columns large-7 small-7"><strong>{$deadline.name}</strong> - due <br/><em>{$deadline.message}</em></div>
+                        <div class="columns large-5 small-5 text-right">
+                            <div class="icon-button-wrapper">
+                                <a class="icon-button panel-icon-button websymbols-icon">&#88;</a>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </li>
+                </form>
+                {ifempty}
+                <div class="columns large-12 small-12">
+                    You have not created any deadlines
+                </div>
+                {/foreach}
+                
+                <!-- end display deadline--> 
+                
+            </ul>
+        </div>
+
+    <h3>Created deadlines</h3>
+
+        <div class="row">
+            <ul class="panels">
+
+           <!--display a row for each created deadline-->
+            
+            {foreach $deadline in $cdeadlines}
+            <form id="{$deadline.id}"> 
+                <li class="panel-wrapper columns large-12">
+                    <div class="list-panel">
                         <div class="row list-inner-panel">
-                            <div class="columns large-7 small-7">{$deadline.name}</div>
+                            <div class="columns large-7 small-7"><strong>{$deadline.name}</strong> - due <br/><em>{$deadline.message}</em></div>
                             <div class="columns large-5 small-5 text-right">
                                 <div class="icon-button-wrapper">
                                     <a class="icon-button panel-icon-button websymbols-icon icon-button-array expand-sub-panel">&#43;</a>
@@ -54,7 +73,9 @@
                                 {$user.name} ({$user.crsid})
                                 </div>
                                 {ifempty}
+                                <div class="columns large-7 small-7">
                                 No users associated with this deadline
+                                </div>
                                 {/foreach}
 
                                 <!-- end display members loop -->
@@ -75,6 +96,9 @@
                 {/foreach}
                 
                 <!-- end groups display deadline--> 
+                
+            </ul>
+        </div>
     
     <h3>Create new deadline</h3>
     <form name="deadlineForm" action="/signapp/deadlines" method="post">

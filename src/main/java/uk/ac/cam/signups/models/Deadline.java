@@ -75,6 +75,13 @@ public class Deadline {
 	public void setUsers(Set<User> users) { this.users = users; }
 	
 	// Soy friendly get methods
+	// Get formatted Date and time
+//	public ImmutableMap<String, ?> getCalendarMap(){
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("u-F")
+//		return ImmutableMap.of("day", datetime.get(DAY_OF_WEEK))
+//	}
+	
+	// Get users as a map
 	public HashSet getUsersMap() {
 		HashSet<ImmutableMap<String,?>> deadlineUsers = new HashSet<ImmutableMap<String,?>>();
 		String crsid;

@@ -39,29 +39,34 @@ public class DeadlineForm {
 		Set<User> deadlineUsers = new HashSet<User>();
 		
 		// Add users from users field
-		User user;
-		String[] crsids = users.split(",");
-		for(int i=0;i<crsids.length;i++){
-			// Register user (adds user to database if they don't exist
-			user = User.registerUser(crsids[i]);
-			// Add to set of users
-			deadlineUsers.add(user);
-		}		
-		
+		if(!users.equals("")){
+			User user;
+			String[] crsids = users.split(",");
+			for(int i=0;i<crsids.length;i++){
+				// Register user (adds user to database if they don't exist
+				user = User.registerUser(crsids[i]);
+				// Add to set of users
+				deadlineUsers.add(user);
+			}		
+		}
+			
 		// Add users from groups field
-		Group group;
-		Set<User> groupUsers;
-		String[] groupIds = groups.split(",");
-		for(int i=0;i<groupIds.length;i++){
-			// Get group users
-			Query getGroup = session.createQuery("from Group where id = :id").setParameter("id", Integer.parseInt(groupIds[i]));
-		  	group = (Group) getGroup.uniqueResult();	
-		  	groupUsers = group.getUsers();
-		  	for(User u : groupUsers){
-				// Add user to deadline users set
-				deadlineUsers.add(u);
-		  	}
-		}	
+		if(!groups.equals("")){
+			Group group;
+			Set<User> groupUsers;
+			String[] groupIds = groups.split(",");
+			System.out.println("Ok so far");
+			for(int i=0;i<groupIds.length;i++){
+				// Get group users
+				Query getGroup = session.createQuery("from Group where id = :id").setParameter("id", Integer.parseInt(groupIds[i]));
+			  	group = (Group) getGroup.uniqueResult();	
+			  	groupUsers = group.getUsers();
+			  	for(User u : groupUsers){
+					// Add user to deadline users set
+					deadlineUsers.add(u);
+			  	}
+			}	
+		}
 		
 		for(User u : deadlineUsers){
 			System.out.print(u.getCrsid() + " ");

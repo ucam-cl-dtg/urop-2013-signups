@@ -46,7 +46,7 @@ public class DeadlinesController extends ApplicationController {
 		currentUser = initialiseUser();
 		
 
-		return ImmutableMap.of("crsid", currentUser.getCrsid(), "deadlines", currentUser.getCreatedDeadlinesMap());
+		return ImmutableMap.of("crsid", currentUser.getCrsid(), "deadlines", currentUser.getDeadlinesMap(), "cdeadlines", currentUser.getCreatedDeadlinesMap());
 	}
 
 	// Find groups for AJAX

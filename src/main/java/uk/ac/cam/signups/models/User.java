@@ -102,18 +102,33 @@ public class User {
 	}
 	
 	// Get users deadlines as a map
-	public Set<ImmutableMap<String, ?>> getCreatedDeadlinesMap() {
+	public Set<ImmutableMap<String, ?>> getDeadlinesMap() {
 		HashSet<ImmutableMap<String, ?>> userDeadlines = new HashSet<ImmutableMap<String, ?>>(0);
 		
-		Session session = HibernateUtil.getTransactionSession();
-		Query getDeadlines = session.createQuery("from Deadline where owner = :owner").setParameter("owner", crsid);
-	  	List<Deadline> deadlines = (List<Deadline>) getDeadlines.list();			
-	  	
 		if(deadlines==null){
 			return new HashSet<ImmutableMap<String, ?>>(0);
 		}
 		
+		// Get deadlines as a map of all parameters
 		for(Deadline d : deadlines)  {
+			userDeadlines.add(ImmutableMap.of("id", d.getId(), "name", d.getTitle(), "message", d.getMessage(),"users", d.getUsersMap()));
+		}
+		return userDeadlines;
+	}
+	public Set<ImmutableMap<String, ?>> getCreatedDeadlinesMap() {
+		HashSet<ImmutableMap<String, ?>> userDeadlines = new HashSet<ImmutableMap<String, ?>>(0);
+		
+		// Query deadlines where this user is the owner
+		Session session = HibernateUtil.getTransactionSession();
+		Query getDeadlines = session.createQuery("from Deadline where owner = :owner").setParameter("owner", this);
+	  	List<Deadline> createdDeadlines = (List<Deadline>) getDeadlines.list();			
+	 
+		if(createdDeadlines==null){
+			return new HashSet<ImmutableMap<String, ?>>(0);
+		}
+		
+		// Get deadlines as a map of all parameters
+		for(Deadline d : createdDeadlines)  {
 			userDeadlines.add(ImmutableMap.of("id", d.getId(), "name", d.getTitle(), "message", d.getMessage(),"users", d.getUsersMap()));
 		}
 		return userDeadlines;
