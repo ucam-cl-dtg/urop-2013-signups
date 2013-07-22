@@ -1,5 +1,6 @@
 package uk.ac.cam.signups.models;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ public class Deadline {
 	private String title;
 	private String message;
 	private String url;
+	private Calendar datetime;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "DEADLINES_USERS", 
@@ -58,6 +60,12 @@ public class Deadline {
 
 	public String getMessage() { return this.message; }
 	public void setMessage(String message) { this.message= message; }
+	
+	public Calendar getDatetime() { return this.datetime; }
+	public void setDatetime(Calendar datetime) { this.datetime= datetime; }
+	
+	public User getOwner() { return this.owner; }
+	public void setOwner(User owner) { this.owner= owner; }
 	
 	public Set<User> getUsers() { return this.users; }
 	public void setUsers(Set<User> users) { this.users = users; }

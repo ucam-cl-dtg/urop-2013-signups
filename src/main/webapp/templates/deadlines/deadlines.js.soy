@@ -15,8 +15,7 @@
                         <div class="columns large-7 small-7">Signup for OOP supervisions - due 12/10/13</div>
                         <div class="columns large-5 small-5 text-right">
                             <div class="icon-button-wrapper">
-                                <a class="icon-button panel-icon-button websymbols-icon icon-button-array">&#83;</a>
-                                <a class="icon-button panel-icon-button websymbols-icon">&#39;</a>
+                                <a class="icon-button panel-icon-button websymbols-icon">&#88;</a>
                             </div>
                         </div>
                     </div>
@@ -37,8 +36,8 @@
                             <div class="columns large-5 small-5 text-right">
                                 <div class="icon-button-wrapper">
                                     <a class="icon-button panel-icon-button websymbols-icon icon-button-array expand-sub-panel">&#43;</a>
-                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader group_edit">Edit</a>
-                                    <a class="icon-button panel-icon-button websymbols-icon group_delete">Delete</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader group_edit">&#83;</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon group_delete">&#39;</a>
                                 </div>
                             </div>
                         </div>
@@ -48,7 +47,7 @@
                             <div class="row list-inner-sub-panel">
                            
                                 <div class="columns large-7 small-7">
-                                users
+                                users associated with this deadline
                                 </div>
 
                                 <div class="columns large-5 small-5 text-right">
@@ -69,11 +68,11 @@
     
     
     <h3>Create new deadline</h3>
-    <form>
+    <form name="deadlineForm" action="/signapp/deadlines" method="post">
         <div class="row">
             <div class="columns large-2 small-4 field-label">Deadline name</div>
             <div class="columns large-10 small-8">
-                <input type="text" placeholder="Deadline name" />
+                <input type="text" name="title" placeholder="Deadline name" />
             </div>
         </div>
          
@@ -91,9 +90,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="columns large-2 small-4 field-label">Content</div>
+            <div class="columns large-2 small-4 field-label">Message</div>
             <div class="columns large-10 small-8">
-                <textarea></textarea>
+                <textarea name="message"></textarea>
             </div>
         </div>
         
@@ -105,19 +104,22 @@
         <div class="row">
                 <div class="columns large-2 small-4 field-label">Add users</div>
                 <div class="columns large-10 small-8">
-                    <input type="text" class="deadline_user_token_input" name="groups[]"/>
+                    <input type="text" class="deadline_user_token_input" name="users[]"/>
                     
                     <!-- HORRIBLE WAY OF INCLUDING JS - try and get this working in main.js later-->
                     
                     {literal}
                     <script type="text/javascript">
                     $(document).ready(function() {
-                        $(".member_token_input").tokenInput("/groups/queryCRSID", {
+                        $(".deadline_user_token_input").tokenInput("/signapp/groups/queryCRSID", {
                             method: "post",
                             tokenValue: "crsid",
                             propertyToSearch: "crsid",
                             theme: "facebook",
                             minChars: 3,
+                            hintText: "Search for a user",
+                            resultsLimit: 10,
+                            preventDuplicates: true,
                             
                             resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " (" + item.crsid + ")</div><div class='email'>" + item.crsid + "@cam.ac.uk</div></div></li>" },
                             tokenFormatter: function(item) { return "<li><p>" + item.name + " (" + item.crsid + ")</p></li>" },                           
@@ -135,25 +137,24 @@
             
          <!-- START ADD GROUPS AS RECIPIENTS -->
          
-         <div class="row">
+        <div class="row">
                 <div class="columns large-2 small-4 field-label">Add groups</div>
                 <div class="columns large-10 small-8">
-                    <input type="text" class="deadline_group_token_input" name="users[]"/>
+                    <input type="text" class="deadline_group_token_input" name="groups[]"/>
                     
                     <!-- HORRIBLE WAY OF INCLUDING JS - try and get this working in main.js later-->
                     
                     {literal}
                     <script type="text/javascript">
                     $(document).ready(function() {
-                        $(".member_token_input").tokenInput("/groups/queryCRSID", {
+                        $(".deadline_group_token_input").tokenInput("/signapp/deadlines/queryGroup", {
                             method: "post",
-                            tokenValue: "crsid",
-                            propertyToSearch: "crsid",
+                            tokenValue: "group_id",
+                            propertyToSearch: "group_name",
                             theme: "facebook",
-                            minChars: 3,
-                            
-                            resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " (" + item.crsid + ")</div><div class='email'>" + item.crsid + "@cam.ac.uk</div></div></li>" },
-                            tokenFormatter: function(item) { return "<li><p>" + item.name + " (" + item.crsid + ")</p></li>" },                           
+                            hintText: "Search your groups",
+                            resultsLimit: 10,
+                            preventDuplicates: true           
                         });
                     });
                     </script>

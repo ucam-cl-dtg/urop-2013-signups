@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableMap;
  * Created once per session for a single crsid.
  * Stores the data after the first lookup to avoid looking up the same data
  * through LDAP multiple times.
+ * Uses LDAPQueryHelper class to make queries
  */
 public class UserLookupManager {
 	private static UserLookupManager u;

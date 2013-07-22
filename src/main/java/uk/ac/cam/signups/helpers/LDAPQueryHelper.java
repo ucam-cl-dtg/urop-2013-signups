@@ -16,6 +16,13 @@ import com.google.common.collect.ImmutableMap;
 import uk.ac.cam.signups.util.LDAPProvider;
 import uk.ac.cam.signups.util.UserLookupManager;
 
+/**
+ * @author      Holly Priest <hp343@cam.ac.uk>
+ * @version     1                
+ * A class providing all static methods to make queries to LDAP
+ * Provides defaults to return in case of error or if nothing is found
+ * 
+ */
 public class LDAPQueryHelper {
 	
 	private static Logger log = LoggerFactory.getLogger(LDAPQueryHelper.class);
@@ -26,7 +33,7 @@ public class LDAPQueryHelper {
 	 */
 	public static String getDisplayName(String crsid){
 			log.debug("Retrieving display name for " + crsid + " from LDAP");
-			String displayName = LDAPProvider.getUniqueResult(crsid, "displayName");	
+			String displayName = LDAPProvider.uniqueQuery("uid", crsid, "displayName", "people");	
 			if(displayName==null){
 				log.debug("No displayName found for user " + crsid);
 				return "Annonymous";
@@ -40,7 +47,8 @@ public class LDAPQueryHelper {
 	 */
 	public static String getSurname(String crsid){
 			log.debug("Retrieving surname for " + crsid + " from LDAP");
-			String surname = LDAPProvider.getUniqueResult(crsid, "sn");	
+			String surname = LDAPProvider.uniqueQuery("uid", crsid, "sn", "people");	
+
 			if(surname==null){
 				log.debug("No surname found for user " + crsid);
 				return "Unknown";
@@ -55,7 +63,8 @@ public class LDAPQueryHelper {
 	 */
 	public static String getEmail(String crsid){
 			log.debug("Retrieving email for " + crsid + " from LDAP");
-			String email = LDAPProvider.getUniqueResult(crsid, "mail");	
+			String email = LDAPProvider.uniqueQuery("uid", crsid, "mail", "people");	
+
 			if(email==null){
 				log.debug("No email found for user " + crsid);
 				return "No email";
@@ -73,7 +82,8 @@ public class LDAPQueryHelper {
 			log.debug("Retrieving misAffiliation for " + crsid + " from LDAP");
 			// Default status is student
 			String status = "student";
-			List<String> statusList = LDAPProvider.getStringListResult(crsid, "misAffiliation");
+			List<String> statusList = LDAPProvider.multipleQuery("uid", crsid, "misAffiliation", "people");
+			if(statusList==null){ System.out.println("no misAffiliation");}
 			for(String s : statusList){
 				// If the user has staff misAffiliation, set staff status
 				if(s.toString().equals("staff")){
@@ -90,52 +100,54 @@ public class LDAPQueryHelper {
 	 * @return String photo
 	 */
 	public static String getPhoto(String crsid){
-			Log.debug("Retrieving photo for " + crsid + " from LDAP");
-			
+			String photo;
+			log.debug("Retrieving photo for " + crsid + " from LDAP");
 			// Set default as "none" to convert to no photo image in soy
-			String photo = "none";
-
-			// See if there is a photo on LDAP
-			NamingEnumeration<?> photoEnum = LDAPProvider.getEnumListResult(crsid, "jpegPhoto");
-			// Convert to byte arrays
-			List<byte[]> photoList = new ArrayList<byte[]>();
-			try {
-				while(photoEnum.hasMore()){
-					photoList.add((byte[])photoEnum.next());		
-				}
-				byte[] p = (byte[])photoList.get(0);
-				photo = new String(Base64.encodeBase64(p));
-			} catch (NamingException e){
-				log.error(e.getMessage());
-			} catch (NullPointerException e){
-				log.debug("User " + crsid + " has no photo");
+			List<String> photoList = LDAPProvider.multipleQuery("uid", crsid, "jpegPhoto", "people");
+			if(photoList==null||photoList.isEmpty()){
+				photo="none";
+			} else {
+				photo = photoList.get(0);
 			}
+			
 		return photo;
 	}
 	
 	/**
-	 * Gets a list of misAffiliations associated with user
-	 * If 'staff' misAffiliations user is present sets status as staff, otherwise student
-	 * @return String status
+	 * Gets a list of Institutions associated with user
+	 * @return String institution (first institution found)
 	 */
 	public static String getInstitution(String crsid){
+			String institution;
 			log.debug("Retrieving institution for " + crsid + " from LDAP");
 			//Default is no institution
-			String institution = "none";
-			List<String> inList = LDAPProvider.getStringListResult(crsid, "ou");
-			if(inList!=null&&!inList.isEmpty()){
+			List<String> inList = LDAPProvider.multipleQuery("uid", crsid, "ou", "people");
+			if(inList==null||inList.isEmpty()){
+				institution="no institutions";
+			} else {
 				institution = inList.get(0);
 			}
 		return institution;
 	}
 	
 	/**
-	 * Builds a soy-ready immutable map of all data related to user
+	 * Partial query of users by CRSID
+	 * @return ImmutableMap userData
+	 */
+	public static List queryCRSID(String x){
+		ArrayList<ImmutableMap<String, ?>> crsidMatches = new ArrayList<ImmutableMap<String, ?>>();
+		log.debug("Retrieving crsids matching " + x + " from LDAP");
+		crsidMatches = (ArrayList<ImmutableMap<String, ?>>) LDAPProvider.partialUserQuery(x, "uid");
+	return crsidMatches;
+	}
+	
+	/**
+	 * Queries and builds a soy-ready immutable map of all data related to user
 	 * @return ImmutableMap userData
 	 */
 	public static ImmutableMap<String, ?> getAll(String crsid){
 		// Create a map of all the users data using builder
-		Log.debug("Getting all data for user " + crsid);
+		log.debug("Getting all data for user " + crsid);
 		ImmutableMap<String, ?> userData = new ImmutableMap.Builder<String, String>()
 				.put("crsid", crsid)
 				.put("fullname", getDisplayName(crsid))
@@ -147,5 +159,7 @@ public class LDAPQueryHelper {
 				.build();
 		return userData;
 	}
+	
+
 	
 }
