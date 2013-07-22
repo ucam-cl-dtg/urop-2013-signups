@@ -20,9 +20,11 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     router = Router({
+        "": "",
+        "signapp" : "home_page.index",
         "signapp/groups": "groups.index",
         "signapp/deadlines" : "deadlines.index",
-        "signapp/": "home_page.index",
+
         "signapp/groups/:id/edit" : "groups.edit",
         "signapp/events/:id" : "events.show",
         "signapp/events/new" : "events.new",
