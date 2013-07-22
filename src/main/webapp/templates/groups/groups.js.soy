@@ -116,11 +116,11 @@
         </form>
         
         <h3>Import Existing Group (LDAP)</h3>       
-        <form id="import_group" name="import_group" action="/signapp/groups" method="post">
+        <form id="import_group" name="import_group" action="/signapp/groups/import" method="post">
             <div class="row">
                 <div class="columns large-2 small-4 field-label">Import Group</div>
                 <div class="columns large-10 small-8">
-                    <input type="text" class="exgroup_token_input" name="users[]"/>
+                    <input type="text" class="exgroup_token_input" name="import_id"/>
                     
                     <!-- HORRIBLE WAY OF INCLUDING JS - try and get this working in main.js later-->
                     
@@ -132,7 +132,10 @@
                             tokenValue: "id",
                             propertyToSearch: "name",
                             theme: "facebook",
-                            onResult: function(results) { console.log(results); },
+                            tokenLimit : 1,
+                            
+                            resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + "</div><div class='email'>" + item.description + "</div></div></li>" },
+                            tokenFormatter: function(item) { return "<li><p>" + item.name + "</p></li>" },
                         });
                     });
                     </script>

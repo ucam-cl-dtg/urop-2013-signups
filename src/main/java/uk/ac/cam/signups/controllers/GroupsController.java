@@ -61,6 +61,18 @@ public class GroupsController extends ApplicationController {
 			throw new RedirectException("/app/#signapp/groups");
 		}
 		
+		// Import group from LDAP
+		@POST @Path("/import") 
+		public void importGroup(@Form GroupForm groupForm) throws Exception {
+			// Initialise user
+			user = initialiseUser();
+
+			int id= groupForm.handleImport(user);
+
+			
+			throw new RedirectException("/app/#signapp/groups");
+		}
+		
 		// Find users
 		@POST @Path("/queryCRSID")
 		@Produces(MediaType.APPLICATION_JSON)

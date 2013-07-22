@@ -131,6 +131,34 @@ public class LDAPQueryHelper {
 	}
 	
 	/**
+	 * Gets the name of a group
+	 * @return String group name
+	 */
+	public static String getGroupName(String id){
+			log.debug("Retrieving name for group " + id + " from LDAP");
+			String group = LDAPProvider.uniqueQuery("groupID", id, "groupTitle", "groups");	
+	
+			if(group==null){
+				log.debug("No group found for id " + id);
+				return "No group";
+			}
+		return group;
+	}
+	
+	/**
+	 * Gets a member CRSIDs of a group
+	 * @return List<String> members
+	 */
+	public static List<String> getGroupMembers(String id){
+			List<String> groupMembers = new ArrayList<String>();
+			log.debug("Retrieving members of group id " + id + " from LDAP");
+			//Default is no institution
+			groupMembers = LDAPProvider.multipleQuery("groupID", id, "uid", "groups");
+
+		return groupMembers;
+	}
+	
+	/**
 	 * Partial query of users by CRSID
 	 * @return ImmutableMap userData
 	 */
