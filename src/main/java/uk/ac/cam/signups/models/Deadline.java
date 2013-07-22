@@ -1,5 +1,6 @@
 package uk.ac.cam.signups.models;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -76,10 +77,20 @@ public class Deadline {
 	
 	// Soy friendly get methods
 	// Get formatted Date and time
-//	public ImmutableMap<String, ?> getCalendarMap(){
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("u-F")
-//		return ImmutableMap.of("day", datetime.get(DAY_OF_WEEK))
-//	}
+	public ImmutableMap<String, ?> getDateMap(){
+		SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE, dd MMMMM yyyy");
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+		String dateString = dateFormat.format(datetime.getTime());
+		String timeString = dateFormat.format(datetime.getTime());
+		
+		// Is the deadline imminent? (ie. is it very close to current date)
+		Calendar tomorrow = Calendar.getInstance();
+		tomorrow.add(Calendar.DAY_OF_YEAR, 1);
+//		boolean imminent = datetime.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+//							datetime.get(Calendar.YEAR)
+		
+		return ImmutableMap.of("date", dateString, "time", timeString); 
+	}
 	
 	// Get users as a map
 	public HashSet getUsersMap() {

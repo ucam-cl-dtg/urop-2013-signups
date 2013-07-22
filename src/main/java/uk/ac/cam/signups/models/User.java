@@ -129,7 +129,7 @@ public class User {
 		
 		// Get deadlines as a map of all parameters
 		for(Deadline d : createdDeadlines)  {
-			userDeadlines.add(ImmutableMap.of("id", d.getId(), "name", d.getTitle(), "message", d.getMessage(),"users", d.getUsersMap()));
+			userDeadlines.add(ImmutableMap.of("id", d.getId(), "name", d.getTitle(), "message", d.getMessage(), "datetime", d.getDateMap(), "users", d.getUsersMap()));
 		}
 		return userDeadlines;
 	}
