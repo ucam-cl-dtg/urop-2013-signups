@@ -114,7 +114,7 @@ public class User {
 		}
 		
 		for(Deadline d : deadlines)  {
-			userDeadlines.add(ImmutableMap.of("id", d.getId(), "name", d.getTitle(), "users", d.getUsersMap()));
+			userDeadlines.add(ImmutableMap.of("id", d.getId(), "name", d.getTitle(), "message", d.getMessage(),"users", d.getUsersMap()));
 		}
 		return userDeadlines;
 	}
