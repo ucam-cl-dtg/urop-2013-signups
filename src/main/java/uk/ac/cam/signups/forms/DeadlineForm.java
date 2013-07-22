@@ -6,9 +6,11 @@ import java.util.Set;
 
 import javax.ws.rs.FormParam;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 
 import uk.ac.cam.signups.models.Deadline;
+import uk.ac.cam.signups.models.Group;
 import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.HibernateUtil;
 
@@ -21,60 +23,55 @@ public class DeadlineForm {
 	
 	public int handle(User currentUser) {		
 		
-		System.out.println("Deadline name: " + title);
-		System.out.println("Deadline date: " + datetime);
-		System.out.println("Deadline message: " + message);
-		System.out.println("Deadline users: " + users);
-		System.out.println("Deadline groups: " + groups);
+		Session session = HibernateUtil.getTransactionSession();
 		
-//		Session session = HibernateUtil.getTransactionSession();
-//		
-//		// Create deadline prototype
-//		Deadline deadline = new Deadline();
-//		deadline.setTitle(title);
-//		deadline.setDatetime(datetime);
-//		deadline.setMessage(message);
-//
-//		// Set owner of the user to current user
-//		deadline.setOwner(currentUser);
-//
-//		
-//		// Create set of users for deadline from users field
-//		User user;
-//		Set<User> deadlineUsers = new HashSet<User>();
-//		String[] crsids = users.split(",");
-//		for(int i=0;i<crsids.length;i++){
-//			// Register user (adds user to database if they don't exist
-////			user = User.registerUser(crsids[i]);
-//			// Add to set of users
-////			deadlineUsers.add(user);
-//		}		
-//		// Create set of users for deadline from groups field
-//		Group group;
-//		String[] groupIds = groups.split(",");
-//		for(int i=0;i<groupIds.length;i++){
-//			// Get group users
-//			group = 
-//			// Register user (adds user to database if they don't exist
-////			user = User.registerUser(crsids[i]);
-//			// Add to set of users
-////			deadlineUsers.add(user);
-//		}	
-////		
-////		deadline.setUsers(deadlineUsers);
-////		
-////		session.save(deadline);
-////		
-////		// Add this group to the group members groups
-////		for(User u : groupMembers){
-////			Set<Group> subscriptions = u.getSubscriptions();
-////			subscriptions.add(group);
-////			session.update(u);
-////		}
-////		
-////		return deadline.getId();
+		// Create deadline prototype
+		Deadline deadline = new Deadline();
+		deadline.setTitle(title);
+		deadline.setDatetime(Calendar.getInstance());
+		deadline.setMessage(message);
+
+		// Set owner of the user to current user
+		deadline.setOwner(currentUser);
+
 		
-		return 0;
+		// Create set of users
+		Set<User> deadlineUsers = new HashSet<User>();
+		
+		// Add users from users field
+		User user;
+		String[] crsids = users.split(",");
+		for(int i=0;i<crsids.length;i++){
+			// Register user (adds user to database if they don't exist
+			user = User.registerUser(crsids[i]);
+			// Add to set of users
+			deadlineUsers.add(user);
+		}		
+		
+		// Add users from groups field
+		Group group;
+		Set<User> groupUsers;
+		String[] groupIds = groups.split(",");
+		for(int i=0;i<groupIds.length;i++){
+			// Get group users
+			Query getGroup = session.createQuery("from Group where id = :id").setParameter("id", Integer.parseInt(groupIds[i]));
+		  	group = (Group) getGroup.uniqueResult();	
+		  	groupUsers = group.getUsers();
+		  	for(User u : groupUsers){
+				// Add user to deadline users set
+				deadlineUsers.add(u);
+		  	}
+		}	
+		
+		for(User u : deadlineUsers){
+			System.out.print(u.getCrsid() + " ");
+		}
+		
+		deadline.setUsers(deadlineUsers);
+		
+		session.save(deadline);
+		
+		return deadline.getId();
 				
 	}
 }

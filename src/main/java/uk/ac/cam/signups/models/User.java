@@ -86,6 +86,7 @@ public class User {
 	}
 	
 	// Soy friendly get methods
+	
 	// Get users groups as a map
 	public Set<ImmutableMap<String, ?>> getGroupsMap() {
 		HashSet<ImmutableMap<String, ?>> userGroups = new HashSet<ImmutableMap<String, ?>>(0);
@@ -99,6 +100,26 @@ public class User {
 		}
 		return userGroups;
 	}
+	
+	// Get users deadlines as a map
+	public Set<ImmutableMap<String, ?>> getCreatedDeadlinesMap() {
+		HashSet<ImmutableMap<String, ?>> userDeadlines = new HashSet<ImmutableMap<String, ?>>(0);
+		
+		Session session = HibernateUtil.getTransactionSession();
+		Query getDeadlines = session.createQuery("from Deadline where owner = :owner").setParameter("owner", crsid);
+	  	List<Deadline> deadlines = (List<Deadline>) getDeadlines.list();			
+	  	
+		if(deadlines==null){
+			return new HashSet<ImmutableMap<String, ?>>(0);
+		}
+		
+		for(Deadline d : deadlines)  {
+			userDeadlines.add(ImmutableMap.of("id", d.getId(), "name", d.getTitle(), "users", d.getUsersMap()));
+		}
+		return userDeadlines;
+	}
+	
+	//what is this for??
 	public Map<String, ?> toMap() {
 		return ImmutableMap.of("crsid", crsid);
 	}

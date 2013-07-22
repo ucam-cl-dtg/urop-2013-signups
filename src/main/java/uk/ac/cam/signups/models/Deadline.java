@@ -16,6 +16,10 @@ import javax.persistence.JoinColumn;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import uk.ac.cam.signups.helpers.LDAPQueryHelper;
+
+import com.google.common.collect.ImmutableMap;
+
 @Entity
 @Table(name="DEADLINES")
 public class Deadline {
@@ -69,4 +73,18 @@ public class Deadline {
 	
 	public Set<User> getUsers() { return this.users; }
 	public void setUsers(Set<User> users) { this.users = users; }
+	
+	// Soy friendly get methods
+	public HashSet getUsersMap() {
+		HashSet<ImmutableMap<String,?>> deadlineUsers = new HashSet<ImmutableMap<String,?>>();
+		String crsid;
+		for(User u : users){
+			// Get users crsid
+			crsid = u.getCrsid();
+			// Get users display name from LDAP
+			String name = LDAPQueryHelper.getDisplayName(crsid);
+			deadlineUsers.add(ImmutableMap.of("crsid",crsid, "name", name));
+		}
+		return deadlineUsers;
+	}
 }

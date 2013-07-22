@@ -46,10 +46,10 @@ public class DeadlinesController extends ApplicationController {
 		currentUser = initialiseUser();
 		
 
-		return ImmutableMap.of("crsid", currentUser.getCrsid(), "groups", currentUser.getGroupsMap());
+		return ImmutableMap.of("crsid", currentUser.getCrsid(), "deadlines", currentUser.get);
 	}
 
-	// Find groups
+	// Find groups for AJAX
 	@POST @Path("/queryGroup")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List queryCRSId(String q) {

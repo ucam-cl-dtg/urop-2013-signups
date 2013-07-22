@@ -25,19 +25,20 @@
     </div>
 
     <h3>Created deadlines</h3>
-    
-        <div class="row">
-            <ul class="panels">
-            <form id=""> 
+
+           <!--display a row for each deadline-->
+            
+            {foreach $deadline in $deadlines}
+            <form id="{$deadline.id}"> 
                 <li class="panel-wrapper columns large-12">
                     <div class="list-panel">
                         <div class="row list-inner-panel">
-                            <div class="columns large-7 small-7">Hand in operating systems work - due 13/12/13</div>
+                            <div class="columns large-7 small-7">{$deadline.name}</div>
                             <div class="columns large-5 small-5 text-right">
                                 <div class="icon-button-wrapper">
                                     <a class="icon-button panel-icon-button websymbols-icon icon-button-array expand-sub-panel">&#43;</a>
-                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader group_edit">&#83;</a>
-                                    <a class="icon-button panel-icon-button websymbols-icon group_delete">&#39;</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader deadline_edit" data-target="">&#83;</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon deadline_delete">&#39;</a>
                                 </div>
                             </div>
                         </div>
@@ -45,11 +46,18 @@
                     <ul class="sub-panel">
                         <li class="list-sub-panel">
                             <div class="row list-inner-sub-panel">
-                           
+                            
+                                <!-- display members loop -->
+                       
+                                {foreach $user in $deadline.users}
                                 <div class="columns large-7 small-7">
-                                users associated with this deadline
+                                {$user.name} ({$user.crsid})
                                 </div>
+                                {ifempty}
+                                No users associated with this deadline
+                                {/foreach}
 
+                                <!-- end display members loop -->
                                 <div class="columns large-5 small-5 text-right">
                                     <div class="icon-button-wrapper">
                                         <!--edit members buttons?-->
@@ -60,12 +68,13 @@
                     </ul>
                 </li>
                 </form>
+                {ifempty}
                 <div class="columns large-12 small-12">
+                    You have not created any deadlines
                 </div>
+                {/foreach}
                 
-            </ul>
-        </div>
-    
+                <!-- end groups display deadline--> 
     
     <h3>Create new deadline</h3>
     <form name="deadlineForm" action="/signapp/deadlines" method="post">
