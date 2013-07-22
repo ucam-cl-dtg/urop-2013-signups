@@ -10,8 +10,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.hibernate.Session;
 import org.jboss.resteasy.annotations.Form;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -25,8 +23,6 @@ import com.googlecode.htmleasy.RedirectException;
 @Path("/signapp/events")
 public class EventsController extends ApplicationController {
 	
-	//private User currentUser;
-	private static Logger log = LoggerFactory.getLogger(EventsController.class);
 	
 	// New
 	@GET @Path("/new") @Produces(MediaType.APPLICATION_JSON)
