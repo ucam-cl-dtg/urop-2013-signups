@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import org.hibernate.Session;
 import org.jboss.resteasy.annotations.Form;
 
+import java.util.List;
 import java.util.Map;
 
 import uk.ac.cam.signups.forms.EventForm;
@@ -28,6 +29,14 @@ public class EventsController extends ApplicationController {
 	@GET @Path("/new") @Produces(MediaType.APPLICATION_JSON)
 	public Map<String, Object> newEvent() { 
 		return ImmutableMap.of();
+	}
+	
+	@POST @Path("/queryTypes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<ImmutableMap<String, ?>> generateTypeSuggestions(String q) {
+		q = q.substring(2);
+		
+		return Type.findSimilar(q, initialiseUser(), "global");
 	}
 	
 	// Create

@@ -21,8 +21,15 @@
 		      {literal}
 			      <script type="text/javascript">
 				      $(document).ready(function() {
-				        $(".event-type-input").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
-				          theme: "facebook"
+				        $(".event-type-input").tokenInput("/signapp/events/queryTypes", {
+				          theme: "facebook",
+				          method: "post",
+				          tokenValue: "partial_type",
+				          propertyToSearch: "name",
+				          min_chars: 2,
+				          hintText: "Add a new type",
+				          resultsLimit: 10,
+                  resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + "</div></div></li>" }
 				          });
 				      });
 			      </script>

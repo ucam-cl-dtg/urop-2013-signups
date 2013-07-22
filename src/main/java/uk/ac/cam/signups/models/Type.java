@@ -2,6 +2,7 @@ package uk.ac.cam.signups.models;
 
 import com.google.common.collect.ImmutableMap;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,7 @@ public class Type implements Mappable {
 	}
 	
 	@SuppressWarnings("unchecked")
-  public List<Type> findSimilar(String name, User user, String mode) {
+  public static List<ImmutableMap<String,?>> findSimilar(String name, User user, String mode) {
 		Session session = HibernateUtil.getTransactionSession();
 		List<Type> types = null; 
 		if(mode.equals("local")) {
@@ -78,6 +79,12 @@ public class Type implements Mappable {
 			Query similars = session.createQuery("SELECT DISTINCT name FROM Type as type WHERE lower(type.name) like :name");
 			types = (List<Type>) similars.setParameter("name", name.toLowerCase()).list();
 		}
-		return types;
+		
+		List<ImmutableMap<String,?>> immutableTypes = new ArrayList<ImmutableMap<String,?>>();
+		for(Type type: types)
+			immutableTypes.add(ImmutableMap.of("name", type.name));
+		immutableTypes.add(ImmutableMap.of("name",name));
+		
+		return immutableTypes;
 	}
 }
