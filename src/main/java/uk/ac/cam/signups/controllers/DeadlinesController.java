@@ -48,29 +48,6 @@ public class DeadlinesController extends ApplicationController {
 
 		return ImmutableMap.of("crsid", currentUser.getCrsid(), "deadlines", currentUser.getDeadlinesMap(), "cdeadlines", currentUser.getCreatedDeadlinesMap());
 	}
-
-	// Find groups for AJAX
-	@POST @Path("/queryGroup")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List queryCRSId(String q) {
-		currentUser = initialiseUser();
-		String crsid = currentUser.getCrsid();
-		
-		//Remove q= prefix
-		String x = q.substring(2);
-		
-		//List of group matches
-		ArrayList<ImmutableMap<String,?>> matches = new ArrayList<ImmutableMap<String, ?>>();
-		
-		//Get matching group names.. O(n) each time.. is this too slow? maybe define the .equals and hashCode method?
-		for(Group g : currentUser.getGroups()){
-			if(g.getTitle().contains(x)){
-				matches.add(ImmutableMap.of("group_id", g.getId(), "group_name", g.getTitle()));
-			}
-		}
-		
-		return matches;
-	}
 	
 	// Create
 	@POST @Path("/") 
@@ -103,4 +80,27 @@ public class DeadlinesController extends ApplicationController {
 //		
 //		throw new RedirectException("/events/" + id + "/deadlines");
 //	}
+	
+	// Find groups AJAX
+	@POST @Path("/queryGroup")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List queryCRSId(String q) {
+		currentUser = initialiseUser();
+		String crsid = currentUser.getCrsid();
+		
+		//Remove q= prefix
+		String x = q.substring(2);
+		
+		//List of group matches
+		ArrayList<ImmutableMap<String,?>> matches = new ArrayList<ImmutableMap<String, ?>>();
+		
+		//Get matching group names.. O(n) each time.. is this too slow? maybe define the .equals and hashCode method?
+		for(Group g : currentUser.getGroups()){
+			if(g.getTitle().contains(x)){
+				matches.add(ImmutableMap.of("group_id", g.getId(), "group_name", g.getTitle()));
+			}
+		}
+		
+		return matches;
+	}
 }

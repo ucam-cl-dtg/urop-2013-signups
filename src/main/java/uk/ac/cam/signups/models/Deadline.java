@@ -81,15 +81,15 @@ public class Deadline {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE, dd MMMMM yyyy");
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 		String dateString = dateFormat.format(datetime.getTime());
-		String timeString = dateFormat.format(datetime.getTime());
+		String timeString = timeFormat.format(datetime.getTime());
 		
 		// Is the deadline imminent? (ie. is it very close to current date)
 		Calendar tomorrow = Calendar.getInstance();
 		tomorrow.add(Calendar.DAY_OF_YEAR, 1);
-//		boolean imminent = datetime.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-//							datetime.get(Calendar.YEAR)
+		boolean imminent = tomorrow.get(Calendar.YEAR) >= datetime.get(Calendar.YEAR) &&
+							tomorrow.get(Calendar.DAY_OF_YEAR) >= datetime.get(Calendar.DAY_OF_YEAR);
 		
-		return ImmutableMap.of("date", dateString, "time", timeString); 
+		return ImmutableMap.of("date", dateString, "time", timeString, "imminent", imminent); 
 	}
 	
 	// Get users as a map

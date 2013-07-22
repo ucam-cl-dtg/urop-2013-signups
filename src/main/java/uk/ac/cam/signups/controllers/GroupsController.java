@@ -75,6 +75,20 @@ public class GroupsController extends ApplicationController {
 			return matches;
 		}
 		
+		// Find groups from LDAP
+		@POST @Path("/queryGroup")
+		@Produces(MediaType.APPLICATION_JSON)
+		public List queryGroup(String q) {
+			
+			//Remove q= prefix
+			String x = q.substring(2);
+			
+			// Perform LDAP search
+			ArrayList<ImmutableMap<String,?>> matches = (ArrayList<ImmutableMap<String, ?>>) LDAPQueryHelper.queryGroups(x);
+			
+			return matches;
+		}
+		
 		//Edit
 		@GET @Path("/{id}/edit") //@ViewWith("/soy/groups.edit")
 		@Produces(MediaType.APPLICATION_JSON)

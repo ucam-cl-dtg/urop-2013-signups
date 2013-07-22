@@ -142,6 +142,17 @@ public class LDAPQueryHelper {
 	}
 	
 	/**
+	 * Partial query of groups by group name
+	 * @return ImmutableMap userData
+	 */
+	public static List queryGroups(String x){
+		ArrayList<ImmutableMap<String, ?>> groupMatches = new ArrayList<ImmutableMap<String, ?>>();
+		log.debug("Retrieving groups matching " + x + " from LDAP");
+		groupMatches = (ArrayList<ImmutableMap<String, ?>>) LDAPProvider.partialGroupQuery(x, "groupTitle");
+	return groupMatches;
+	}
+	
+	/**
 	 * Queries and builds a soy-ready immutable map of all data related to user
 	 * @return ImmutableMap userData
 	 */
