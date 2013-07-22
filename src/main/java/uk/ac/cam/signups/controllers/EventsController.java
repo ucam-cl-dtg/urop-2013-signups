@@ -10,9 +10,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.hibernate.Session;
 import org.jboss.resteasy.annotations.Form;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 import uk.ac.cam.signups.forms.EventForm;
@@ -25,13 +24,19 @@ import com.googlecode.htmleasy.RedirectException;
 @Path("/signapp/events")
 public class EventsController extends ApplicationController {
 	
-	//private User currentUser;
-	private static Logger log = LoggerFactory.getLogger(EventsController.class);
 	
 	// New
 	@GET @Path("/new") @Produces(MediaType.APPLICATION_JSON)
 	public Map<String, Object> newEvent() { 
 		return ImmutableMap.of();
+	}
+	
+	@POST @Path("/queryTypes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<ImmutableMap<String, ?>> generateTypeSuggestions(String q) {
+		q = q.substring(2);
+		
+		return Type.findSimilar(q, initialiseUser(), "global");
 	}
 	
 	// Create

@@ -6,45 +6,8 @@
  */
 {template .new}
   <div class="events" id="new">
-    <form id="form" action="/signapp/events/" method="post">
-      <table>
-        <tr>
-          <td>
-            <div class="datetime_rows">Available slots</div>
-            <div class="manual_rows">Number of rows</div>
-           </td>
-          <td>
-            <div class="datetime_rows">
-              <div>
-                <input type="text" class="datepicker" name="available_dates[]" />
-                <select name="available_hours[]">
-                  {for $i in range(6,23)}
-                    <option>{$i}</option> 
-                  {/for}
-                </select>:
-                  <select name="available_minutes[]">
-                  {for $i in range(60)}
-                    <option>{$i}</option> 
-                  {/for}
-                </select>
-              </div>
-              <div><a href="#" id="new_slot">+ Add a new slot</a></div>
-            </div>
-            <div class="manual_rows">
-              <input type="number" value="0" name="n_of_rows"> 
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td><input type="submit" name="submit" value="Create new supervision"/></td>
-        </tr>
-      </table>
-    </form>
-  </div>
-  <div class="events" id="new">
 	  <h3>Create new event</h3>
-		<form>
+		<form class="custom" action="/signapp/events" method="post">
 		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Title</div>
 		    <div class="columns large-10 small-8">
@@ -58,8 +21,15 @@
 		      {literal}
 			      <script type="text/javascript">
 				      $(document).ready(function() {
-				        $(".event-type-input").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
-				          theme: "facebook"
+				        $(".event-type-input").tokenInput("/signapp/events/queryTypes", {
+				          theme: "facebook",
+				          method: "post",
+				          tokenValue: "partial_type",
+				          propertyToSearch: "name",
+				          min_chars: 2,
+				          hintText: "Add a new type",
+				          resultsLimit: 10,
+                  resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + "</div></div></li>" }
 				          });
 				      });
 			      </script>
@@ -80,16 +50,40 @@
 		    </div>
 		  </div>
 		  <div class="row">
+		    <div class="columns large-2 small-4 field-label">Row type</div>
+		    <div class="columns large-10 small-8">
+		      <label for="row_type">
+		        <input name="row_type" type="radio" style="display:none;" value="datetime" class="hidden-field" CHECKED>
+		        <span class="custom radio checked" id="datetime"></span>Supply times
+		      </label>
+		      <label for="row_type">
+		        <input name="row_type" type="radio" style="display:none;" class="hidden-field" value="manual">
+		        <span class="custom radio" id="manual"></span>Supply # of rows
+		      </label>
+		    </div> 
+		  </div>
+		  <div class="row" id="datetime">
 		    <div class="columns large-2 small-4 field-label">Times</div>
 		    <div class="columns large-10 small-8">
 		      <div class="time-controls-wrapper row">
 		        <div class="single-slot-controls columns large-12 small-12 hide">
 		          <div class="row">
 		            <div class="columns large-6 small-6">
-		              <input type="text" class="datepicker" placeholder="Date" />
+		              <input type="text" class="datepicker" name="available_dates[]" placeholder="Date" />
 		            </div>
-		            <div class="columns large-6 small-6">
-		              <input type="text" placeholder="Time" />
+		            <div class="columns large-3 small-3">
+		              <select class="medium" name="available_hours[]">
+		              {for $i in range(6,24)}
+		                <option>{$i}</option>
+		              {/for}
+		              </select>
+		            </div>
+		            <div class="columns large-3 small-3">
+		              <select class="medium" name="available_minutes[]">
+		              {for $i in range(60)}
+		                <option>{$i}</option>
+		              {/for}
+		              </select>
 		            </div>
 		          </div>
 		        </div>
@@ -109,14 +103,20 @@
 		      </div>
 		      <div class="row">
 		        <div class="columns large-6 small-6">
-		          <a class="button medium full-width form-button form-control-option-button" data-element-to-clone="single-slot-controls" data-target="time-controls-wrapper">Single slot</a>
+		          <a class="button medium full-width form-button form-control-option-button new-slot" data-element-to-clone="single-slot-controls" data-target="time-controls-wrapper">Add Single slot</a>
 		        </div>
 		        <div class="columns large-6 small-6">
-		          <a class="button medium full-width form-button form-control-option-button" data-element-to-clone="range-controls" data-target="time-controls-wrapper">Range</a>
+		          <a class="button medium full-width form-button form-control-option-button" data-element-to-clone="range-controls" data-target="time-controls-wrapper">Add Range</a>
 		        </div>
 		      </div>
 		    </div>
 		  </div>
+      <div class="row" id="manual" style="display:none;">
+        <div class="columns large-2 small-4 field-label"># of Rows</div>
+        <div class="columns large-10 small-8" >
+          <input type="text" name="n_of_rows" placeholder="# of rows">
+        </div>
+      </div>
 		  <div class="row">
 		    <div class="columns large-12 small-12">
 		      <input type="submit" value="Create event" />
