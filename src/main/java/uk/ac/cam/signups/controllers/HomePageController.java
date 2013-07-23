@@ -34,11 +34,12 @@ public class HomePageController extends ApplicationController{
 	
 	@GET @Path("/")
 	public void appRedirect() {
-		throw new RedirectException("/app/#signapp/");
+		System.out.println("Redirect");
+		throw new RedirectException("/app/#signapp");
 	}
 	
 	// Index
-	@GET @Path("/signapp/") 
+	@GET @Path("/signapp") 
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map indexHomePage() {
 		

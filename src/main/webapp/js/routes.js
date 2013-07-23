@@ -26,6 +26,7 @@ $(document).ready(function() {
         "signapp/groups/:id/edit" : "signapp.groups.edit",
         "signapp/events/:id" : "signapp.events.show",
         "signapp/events/new" : "signapp.events.new",
+
         //For getting params in get requests
         // Use the last line to redirect unmatched routes to an error page
         //"*undefined": "errors.notfound"
