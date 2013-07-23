@@ -22,6 +22,7 @@ $(document).ready(function() {
     router = Router({
         "signapp/groups": "signapp.groups.index",
         "signapp/deadlines" : "signapp.deadlines.index",
+        "signapp/deadlines/:id/edit" : "signapp.deadlines.edit",
         "signapp/": "signapp.home_page.index",
         "signapp/groups/:id/edit" : "signapp.groups.edit",
         "signapp/events/:id" : "signapp.events.show",
