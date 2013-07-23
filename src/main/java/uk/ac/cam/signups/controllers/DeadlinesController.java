@@ -72,7 +72,7 @@ public class DeadlinesController extends ApplicationController {
 	public void createGroup(@Form DeadlineForm deadlineForm) throws Exception {
 		currentUser = initialiseUser();
 		
-		int id = deadlineForm.handle(currentUser);
+		int id = deadlineForm.handleCreate(currentUser);
 		
 		throw new RedirectException("/app/#signapp/deadlines");
 	}
@@ -95,20 +95,24 @@ public class DeadlinesController extends ApplicationController {
 	  	}
 	  	
 		// Check that the current user owns the deadline, otherwise throw a redirect exception
-	  	if(deadline.getOwner()!=currentUser){
+	  	if(!deadline.getOwner().equals(currentUser)){
 	  		throw new RedirectException("/app/#signapp/deadlines");
 	  	}
 	  	
 		return deadline.getDeadlineMap();		
 	}
 	
-//	// Update
-//	@PUT @Path("/{id}")
-//	public void updateDeadline(@PathParam("id") int deadlineId,
-//			@Form Deadline deadline) {
-//		
-//	}
-//	
+	// Update
+	@POST @Path("/{id}/edit")
+	public void updateDeadline(@Form DeadlineForm deadlineForm, @PathParam("id") int id) {
+		currentUser = initialiseUser();
+		
+		System.out.println("Editing group: "+id);
+		
+		id = deadlineForm.handleUpdate(currentUser, id);
+		throw new RedirectException("/app/#signapp/deadlines");
+	}
+	
 	
 	// Delete
 	@DELETE @Path("/{id}")
