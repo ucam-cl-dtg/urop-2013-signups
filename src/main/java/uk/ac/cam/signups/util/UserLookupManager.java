@@ -58,7 +58,7 @@ public class UserLookupManager {
 	 */
 	public String getDisplayName(){
 		if(displayName==null){
-			displayName = LDAPQueryHelper.getDisplayName(crsid);
+			displayName = LDAPQueryHelper.getRegisteredName(crsid);
 		} 
 		return displayName;
 	}

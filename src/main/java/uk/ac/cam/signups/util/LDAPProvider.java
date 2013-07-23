@@ -61,9 +61,12 @@ public class LDAPProvider {
 					"ou="+ subtree+",o=University of Cambridge,dc=cam,dc=ac,dc=uk",
 					"("+type+"=" + parameter + ")", controls).next();
 			a = searchResult.getAttributes();
-		} catch (Exception e) {
-			log.error(e.getMessage());
+		} catch (NullPointerException e) {
+			log.debug(e.getMessage() + " : no result for " +subtree+" "+ result +" query of " +type+" with parameter "+ parameter);
 			return null;
+		} catch (Exception e){
+			log.debug(e.getMessage() + " : error querying " +subtree+" for "+ result +" using " +type+":"+ parameter);			
+			
 		}
 		
 		//If no match in search
@@ -74,7 +77,10 @@ public class LDAPProvider {
         } catch (NamingException e) {
 			log.error(e.getMessage());
 			return null;
-		} 	
+		} catch (NullPointerException e) {
+			log.error(e.getMessage());
+			return null;
+		}
 		
 	}
 	
@@ -143,7 +149,7 @@ public class LDAPProvider {
         } catch (NamingException e) {
 			log.error(e.getMessage());
 			return null;
-		}
+		} 
 		
 		return listResults;
 		

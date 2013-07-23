@@ -1,5 +1,6 @@
 package uk.ac.cam.signups.forms;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,32 +9,67 @@ import javax.ws.rs.FormParam;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.signups.models.Deadline;
 import uk.ac.cam.signups.models.Group;
 import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.HibernateUtil;
+import uk.ac.cam.signups.util.LDAPProvider;
 
 public class DeadlineForm {
 	@FormParam("title") String title;
-	@FormParam("datetime") String datetime;
+	@FormParam("date") String date;
+	@FormParam("hour") String hour;
+	@FormParam("minute") String minute;
 	@FormParam("message") String message;
+	@FormParam("url") String url;
 	@FormParam("users[]") String users;
 	@FormParam("groups[]") String groups;
 	
+	//Logger
+	private static Logger log = LoggerFactory.getLogger(DeadlineForm.class);
+	
 	public int handle(User currentUser) {		
+		
+		System.out.println("Date: " + date);
+		System.out.println("Hour: " + hour);
+		System.out.println("Minute: " + minute);
 		
 		Session session = HibernateUtil.getTransactionSession();
 		
 		// Create deadline prototype
 		Deadline deadline = new Deadline();
 		deadline.setTitle(title);
-		deadline.setDatetime(Calendar.getInstance());
-		deadline.setMessage(message);
+		
+		// Set defaults for optional fields
+		if(message==null){
+			deadline.setMessage("No description");
+		} else {
+			deadline.setMessage(message);			
+		}
+		if(url==null){
+			deadline.setURL("none");
+		} else {
+			deadline.setURL(url);			
+		}
 
 		// Set owner of the user to current user
 		deadline.setOwner(currentUser);
-
+		
+		// Format and set date
+		String datetime = date;
+		datetime += " " + hour + ":" + minute;
+		System.out.println("Datetime: " + datetime);
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		try {
+			cal.setTime(sdf.parse(datetime));
+		} catch (Exception e) {
+			log.error("e.getMessage()" +  ": error parsing date");
+		}
+		deadline.setDatetime(cal);
 		
 		// Create set of users
 		Set<User> deadlineUsers = new HashSet<User>();
@@ -66,10 +102,6 @@ public class DeadlineForm {
 					deadlineUsers.add(u);
 			  	}
 			}	
-		}
-		
-		for(User u : deadlineUsers){
-			System.out.print(u.getCrsid() + " ");
 		}
 		
 		deadline.setUsers(deadlineUsers);

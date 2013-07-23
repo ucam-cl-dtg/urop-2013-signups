@@ -26,19 +26,33 @@ import uk.ac.cam.signups.util.UserLookupManager;
 public class LDAPQueryHelper {
 	
 	private static Logger log = LoggerFactory.getLogger(LDAPQueryHelper.class);
+
+	/**
+	 * Check if user with given crsid exists
+	 * @return String displayName
+	 */
+	public static String checkCRSID(String crsid){
+			log.debug("Checking user with " + crsid + " exists in LDAP");
+			String uid = LDAPProvider.uniqueQuery("uid", crsid, "uid", "people");	
+			if(uid==null){
+				log.debug("No registedName found for user " + crsid);
+				return null;
+			}
+		return uid;
+	}
 	
 	/**
 	 * Get users display name
 	 * @return String displayName
 	 */
-	public static String getDisplayName(String crsid){
+	public static String getRegisteredName(String crsid){
 			log.debug("Retrieving display name for " + crsid + " from LDAP");
-			String displayName = LDAPProvider.uniqueQuery("uid", crsid, "displayName", "people");	
-			if(displayName==null){
-				log.debug("No displayName found for user " + crsid);
+			String registeredName = LDAPProvider.uniqueQuery("uid", crsid, "cn", "people");	
+			if(registeredName==null){
+				log.debug("No registedName found for user " + crsid);
 				return "Annonymous";
 			}
-		return displayName;
+		return registeredName;
 	}
 	
 	/**
@@ -189,7 +203,7 @@ public class LDAPQueryHelper {
 		log.debug("Getting all data for user " + crsid);
 		ImmutableMap<String, ?> userData = new ImmutableMap.Builder<String, String>()
 				.put("crsid", crsid)
-				.put("fullname", getDisplayName(crsid))
+				.put("fullname", getRegisteredName(crsid))
 				.put("surname", getSurname(crsid))
 				.put("email", getEmail(crsid))
 				.put("status", getStatus(crsid))

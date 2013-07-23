@@ -15,14 +15,14 @@
            <!--display a row for each deadline-->
             
             {foreach $deadline in $deadlines}
-            <form id="{$deadline.id}"> 
+            <form id="d_{$deadline.id}"> 
                 <li class="panel-wrapper columns large-12">
                     <div class="list-panel">
                     <div class="row list-inner-panel">
-                        <div class="columns large-7 small-7"><strong>{$deadline.name}</strong> - due <span class="{if $deadline.datetime.imminent}round alert label{else}label{/if}">{$deadline.datetime.date} at {$deadline.datetime.time}</span><br/><em>{$deadline.message}</em></div>
-                        <div class="columns large-5 small-5 text-right">
+                        <div class="columns large-9 small-9"><strong>{$deadline.name}</strong> - due <span class="{if $deadline.datetime.imminent}round alert label{else}label{/if}">{$deadline.datetime.date} at {$deadline.datetime.time}</span><br/><em>{$deadline.message}</em></div>
+                        <div class="columns large-3 small-3 text-right">
                             <div class="icon-button-wrapper">
-                                <a class="icon-button panel-icon-button websymbols-icon">&#88;</a>
+                                <a class="icon-button panel-icon-button websymbols-icon" data-target="">&#88;</a>
                             </div>
                         </div>
                     </div>
@@ -52,11 +52,11 @@
                 <li class="panel-wrapper columns large-12">
                     <div class="list-panel">
                         <div class="row list-inner-panel">
-                            <div class="columns large-7 small-7"><strong>{$deadline.name}</strong> - due {$deadline.datetime.date} at {$deadline.datetime.time}<br/><em>{$deadline.message}</em></div>
-                            <div class="columns large-5 small-5 text-right">
+                            <div class="columns large-9 small-9"><strong>{$deadline.name}</strong> - due {$deadline.datetime.date} at {$deadline.datetime.time}<br/><em>{$deadline.message}</em></div>
+                            <div class="columns large-3 small-3 text-right">
                                 <div class="icon-button-wrapper">
                                     <a class="icon-button panel-icon-button websymbols-icon icon-button-array expand-sub-panel">&#43;</a>
-                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader deadline_edit" data-target="">&#83;</a>
+                                    <a class="icon-button panel-icon-button websymbols-icon icon-button-array module-loader deadline_edit"  data-target="#signapp/deadlines/{$deadline.id}/edit">&#83;</a>
                                     <a class="icon-button panel-icon-button websymbols-icon deadline_delete">&#39;</a>
                                 </div>
                             </div>
@@ -101,7 +101,7 @@
         </div>
     
     <h3>Create new deadline</h3>
-    <form name="deadlineForm" action="/signapp/deadlines" method="post">
+    <form name="deadlineForm" action="/signapp/deadlines" method="post" class="custom">
         <div class="row">
             <div class="columns large-2 small-4 field-label">Deadline name</div>
             <div class="columns large-10 small-8">
@@ -110,22 +110,49 @@
         </div>
          
         <div class="row">
-            <div class="columns large-2 small-4 field-label">Time</div>
+            <div class="columns large-2 small-4 field-label">Due date</div>
             <div class="columns large-10 small-8">
                 <div class="row">
-                    <div class="columns large-6 small-6">
-                        <input type="text" placeholder="Date" />
+                    <div class="columns large-6">
+                        <input type="text" placeholder="Date" class="datepicker" name="date"/>
                     </div>
-                    <div class="columns large-6 small-6">
-                        <input type="text" placeholder="Time" />
-                    </div>
+                    <div class="large-6 columns">
+                        <div class="row collapse">
+                            <div class="large-3 columns">
+                                <span class="prefix field-label">Hour</span>
+                            </div>
+                            <div class="large-3 columns">
+                                <select name="hour">
+                                    {for $i in range(0,24)}
+                                        <option>{$i}</option> 
+                                    {/for}
+                                </select>
+                            </div>
+                            <div class="large-3 columns">
+                                <span class="prefix field-label">Minute</span>
+                            </div>
+                            <div class="large-3 columns">
+                                <select name="minute">
+                                    {for $i in range(0,60)}
+                                        <option>{$i}</option> 
+                                    {/for}
+                                </select>
+                            </div>                   
+                        </div>
+                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns large-2 small-4 field-label">URL</div>
+            <div class="columns large-10 small-8">
+                <input type="text" name="url" placeholder="(optional) URL of event, question set etc." />
             </div>
         </div>
         <div class="row">
             <div class="columns large-2 small-4 field-label">Message</div>
             <div class="columns large-10 small-8">
-                <textarea name="message"></textarea>
+                <textarea name="message" placeholder="(optional) Deadline description eg. sign up for OOP supervisions"></textarea>
             </div>
         </div>
         
@@ -156,11 +183,114 @@
          
          <div class="row">
             <div class="columns large-12 small-12">
-                <input type="submit" value="Create event" />
+                <input type="submit" value="Create deadline" class="button"/>
             </div>
         </div>
         
     </form>
 
 				
+{/template}
+
+/**
+ * Edit deadline
+ * @param id
+ * @param name
+ * @param message
+ * @param url
+ * @param datetime
+ * @param users
+ * 
+ */
+{template .edit }
+
+    <h3>Edit deadline</h3>
+    <form name="deadline_edit" action="/signapp/deadlines/{$id}/update" method="post" class="custom">
+        <div class="row">
+            <div class="columns large-2 small-4 field-label">Deadline name</div>
+            <div class="columns large-10 small-8">
+                <input type="text" name="title" placeholder="Deadline name" value="{$name} />
+            </div>
+        </div>
+         
+        <div class="row">
+            <div class="columns large-2 small-4 field-label">Due date</div>
+            <div class="columns large-10 small-8">
+                <div class="row">
+                    <div class="columns large-6">
+                        <input type="text" placeholder="Date" class="datepicker" name="date" />
+                    </div>
+                    <div class="large-6 columns">
+                        <div class="row collapse">
+                            <div class="large-3 columns">
+                                <span class="prefix field-label">Hour</span>
+                            </div>
+                            <div class="large-3 columns">
+                                <select name="hour">
+                                    {for $i in range(0,24)}
+                                        <option>{$i}</option> 
+                                    {/for}
+                                </select>
+                            </div>
+                            <div class="large-3 columns">
+                                <span class="prefix field-label">Minute</span>
+                            </div>
+                            <div class="large-3 columns">
+                                <select name="minute">
+                                    {for $i in range(0,60)}
+                                        <option>{$i}</option> 
+                                    {/for}
+                                </select>
+                            </div>                   
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns large-2 small-4 field-label">URL</div>
+            <div class="columns large-10 small-8">
+                <input type="text" name="url" placeholder="(optional) URL of event, question set etc." />
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns large-2 small-4 field-label">Message</div>
+            <div class="columns large-10 small-8">
+                <textarea name="message" placeholder="(optional) Deadline description eg. sign up for OOP supervisions"></textarea>
+            </div>
+        </div>
+        
+         <div class="row">
+            <div class="columns large-2 small-4 field-label">Recipients</div>
+        </div>
+         <!-- START ADD USERS AS RECIPIENTS -->
+
+        <div class="row">
+                <div class="columns large-2 small-4 field-label">Add users</div>
+                <div class="columns large-10 small-8">
+                    <input type="text" class="deadline_user_token_input" name="users[]"/>
+                </div>
+            </div>
+
+         <!-- END ADD USERS AS RECIPIENTS -->
+            
+         <!-- START ADD GROUPS AS RECIPIENTS -->
+         
+        <div class="row">
+                <div class="columns large-2 small-4 field-label">Add groups</div>
+                <div class="columns large-10 small-8">
+                    <input type="text" class="deadline_group_token_input" name="groups[]"/>
+                </div>
+            </div>
+            
+         <!-- END ADD GROUPS AS RECIPIENTS -->
+         
+         <div class="row">
+            <div class="columns large-12 small-12">
+                <input type="submit" value="Create deadline" class="button"/>
+            </div>
+        </div>
+        
+    </form>
+
 {/template}
