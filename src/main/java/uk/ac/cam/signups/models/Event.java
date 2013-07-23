@@ -86,6 +86,7 @@ public class Event implements Mappable {
 	
 	public Map<String, ?> toMap() {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
+		builder = builder.put("id",id);
 		builder = builder.put("title",title);
 		builder = builder.put("location",location);
 		builder = builder.put("owner",owner.toMap());

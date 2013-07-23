@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import uk.ac.cam.signups.forms.EventForm;
+import uk.ac.cam.signups.forms.FillSlot;
 import uk.ac.cam.signups.models.*;
 import uk.ac.cam.signups.util.HibernateUtil;
 
@@ -58,8 +59,9 @@ public class EventsController extends ApplicationController {
 	
 	// Fill Slot
 	@POST @Path("/{id}/fill_slot")
-	public void fillSlot(@PathParam("id") int id) {
-		
+	public void fillSlot(@PathParam("id") int id, @Form FillSlot fillSlot) {
+		fillSlot.handle(id);
+
 		throw new RedirectException("/events/" + id);
 	}
 	

@@ -16,4 +16,23 @@ public class Util {
 			immutalizedCollection.add(raw.toMap());
 		return immutalizedCollection;
 	}
+	
+	public static <T extends Mappable> Set<Integer> getIds(List<T> collection) {
+		Set<Integer> ids = new HashSet<Integer>();
+		for(T item : collection) {
+			ids.add(item.getId());
+		}
+		
+		return ids;
+	}
+	
+	public static <T extends Mappable> T findById(List<T> collection, int id) {
+		for(T element: collection) {
+			if (element.getId() == id) {
+				return element;
+			}
+		}
+		
+		return null;
+	}
 }

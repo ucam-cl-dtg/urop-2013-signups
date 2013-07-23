@@ -34,8 +34,7 @@ public class HomePageController extends ApplicationController{
 	
 	@GET @Path("/")
 	public void appRedirect() {
-		System.out.println("Redirect");
-		throw new RedirectException("/app/#signapp");
+		throw new RedirectException("/app/#signapp/");
 	}
 	
 	// Index

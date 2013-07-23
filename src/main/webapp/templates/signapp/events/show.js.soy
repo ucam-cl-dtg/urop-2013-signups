@@ -7,44 +7,55 @@
  * @param location 
  * @param types 
  * @param dates 
+ * @param id 
  * 
  */
 {template .show}
   <div class="events" id="show">
-      <h2>{$title} at {$location} created by {$owner.crsid}</h2>
-      
-      <form action="fill_slots" method="post"></form>
-	      <table>
-	        {foreach $dateGroup in $dates }
-	        <tr>
-	          <td>{$dateGroup.date}</td> 
-	          <td>
-	            {foreach $row in $dateGroup.rows}
-	              <div>{$row.date.hour}:{$row.date.minute}</div> 
-	              <div>
-	                {foreach $slot in $row.slots}
-	                  <input type="text" name="slot_crsid[]">
-	                  <input type="hidden" name="id[]" value="{$slot.id}">
-	                {/foreach}
-	                {if length($types) != 1 }
-		                <select name="types[]">
-		                  <option value="0">Please select one</option> 
-		                  {foreach $type in $types}
-		                    <option value="{$type.id}">{$type.name}</option>
-		                  {/foreach}
-		                </select>
-	                {else}
-	                  {foreach $type in $types}
-	                    <span>{$type.name}</span>
-	                  {/foreach}
-	                {/if}
-	              </div>
-	            {/foreach}
-	          </td>
-	        </tr>
-	        {/foreach}
-	      </table> 
-	      <div><input type="submit" value="Save"></div>
-      </form>
+    <h2>{$title} at {$location} created by {$owner.crsid}</h2>
+    
+    <form class="custom" action="/signapp/events/{$id}/fill_slots" method="post">
+      <div style="width:100%; overflow-x: scroll"> 
+      <table>
+        {foreach $dateGroup in $dates }
+          <tr>
+            <td>{$dateGroup.date}</td> 
+            <td>
+              <div class="row">
+                <div class="columns large-12 small-12">
+                  {foreach $row in $dateGroup.rows}
+                    <div class="row">
+                      <div class="columns large-12 small-12 time-label"><div>{$row.date.hour}:{$row.date.minute}</div></div> 
+                    </div>
+                    <div class="row">
+                      {foreach $slot in $row.slots}
+                        <input type="text" name="slot_crsids[]" class="slot-field">
+                        <input type="hidden" name="slot_ids[]" value="{$slot.id}">
+                      {/foreach}
+                      <div class="type-choice">
+	                      {if length($types) != 1 }
+	                        <select class="small" name="types[]">
+	                          <option value="0">Please select one</option> 
+	                          {foreach $type in $types}
+	                            <option value="{$type.id}">{$type.name}</option>
+	                          {/foreach}
+	                        </select>
+	                      {else}
+	                        {foreach $type in $types}
+	                          <span>{$type.name}</span>
+	                        {/foreach}
+	                      {/if}
+                      </div>
+                    </div>
+                  {/foreach}
+                </div>
+              </div>
+            </td>
+          </tr>
+        {/foreach}
+      </table>
+      </div>
+      <div><input type="submit" value="Save"></div>
+    </form>
   </div>
 {/template}

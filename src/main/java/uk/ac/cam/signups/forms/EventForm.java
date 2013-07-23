@@ -13,7 +13,7 @@ import javax.ws.rs.FormParam;
 public class EventForm {
 	@FormParam("location") String location;
 	@FormParam("title") String title;
-	@FormParam("types[]") String[] typeNames;
+	@FormParam("types") String typeNames;
 	@FormParam("n_of_columns") int nOfColumns;
 	@FormParam("n_of_rows") int nOfRows;
 	@FormParam("row_type") String rowType;
@@ -31,12 +31,23 @@ public class EventForm {
 		// Set owner of the user to current user
 		event.setOwner(currentUser);
 		session.save(event);
+
+		// Set types
+		Type type = null;
+		String[] types = typeNames.split(",");
+		for(String stype: types){
+			type = new Type(stype);
+			type.setEvent(event);
+			session.save(type);
+		}
 		
 		// Create rows and associated slots
 		Row row;
 		if (rowType.equals("manual")) {
 			for(int i = 0; i < nOfRows; i++) {
 				row = new Row(event);
+				if (types.length == 1)
+					row.setType(type);
 				session.save(row);
 				Slot slot;
 				for(int j = 0; j < nOfColumns; j++) {
@@ -53,6 +64,8 @@ public class EventForm {
 				int day = Integer.parseInt(splitDate[0]);
 				cal = new GregorianCalendar(year, month, day, Integer.parseInt(availableHours[i]), Integer.parseInt(availableMinutes[i]));
 				row = new Row(cal, event);
+				if (types.length == 1)
+					row.setType(type);
 				session.save(row);
 				Slot slot;
 				for(int j = 0; j < nOfColumns; j++) {
@@ -61,15 +74,6 @@ public class EventForm {
 				}
 			}		
 		}
-		
-		// Set types
-		Type type;
-		for(String stype: typeNames) {
-			type = new Type(stype);
-			type.setEvent(event);
-			session.save(type);
-		}
-		
 		
 		return event.getId();
 	}
