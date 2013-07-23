@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import uk.ac.cam.signups.helpers.LDAPQueryHelper;
 import uk.ac.cam.signups.util.HibernateUtil;
 
 import com.google.common.collect.ImmutableMap;
@@ -77,8 +78,11 @@ public class User {
 		Query userQuery = session.createQuery("from User where id = :id").setParameter("id", crsid);
 	  	User user = (User) userQuery.uniqueResult();
 	  	
-	  	// If no, create them
+	  	// If no, check if they exist in LDAP and create them if so
 	  	if(user==null){
+	  		if(LDAPQueryHelper.checkCRSID(crsid)==null){
+	  			return null;
+	  		}
 	  		User newUser = new User(crsid);
 	  		session.save(newUser);
 	  		return newUser;
@@ -120,7 +124,7 @@ public class User {
 		
 		// Get deadlines as a map of all parameters
 		for(Deadline d : sortedDeadlines)  {
-			userDeadlines.add(d.getDeadlinesMap());
+			userDeadlines.add(d.getDeadlineMap());
 		}
 		return userDeadlines;
 		
@@ -139,7 +143,7 @@ public class User {
 		
 		// Get deadlines as a map of all parameters
 		for(Deadline d : createdDeadlines)  {
-			userDeadlines.add(d.getDeadlinesMap());
+			userDeadlines.add(d.getDeadlineMap());
 		}
 		return userDeadlines;
 	}

@@ -104,10 +104,6 @@ public class DeadlineForm {
 			}	
 		}
 		
-		for(User u : deadlineUsers){
-			System.out.print(u.getCrsid() + " ");
-		}
-		
 		deadline.setUsers(deadlineUsers);
 		
 		session.save(deadline);

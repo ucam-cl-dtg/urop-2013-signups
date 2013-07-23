@@ -78,13 +78,30 @@ public class DeadlinesController extends ApplicationController {
 	}
 	
 
-//	// Edit
-//	@GET @Path("/{id}/edit") @ViewWith("/soy/deadlines.edit")
-//	public Map editDeadline(@PathParam("id") int deadlineId) {
-//		
-//		return ImmutableMap.of();
-//	}
-//	
+	// Edit
+	@GET @Path("/{id}/edit") //@ViewWith("/soy/deadlines.edit")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Map editDeadline(@PathParam("id") int id) {
+		currentUser = initialiseUser();
+		
+		// Get the deadline to edit
+		Session session = HibernateUtil.getTransactionSession();
+		Query queryDeadline = session.createQuery("from Deadline where id = :id").setParameter("id", id);
+	  	Deadline deadline = (Deadline) queryDeadline.uniqueResult();	
+	  	
+	  	// If deadline not found
+	  	if(deadline==null){
+	  		throw new RedirectException("/app/#signapp/deadlines");
+	  	}
+	  	
+		// Check that the current user owns the deadline, otherwise throw a redirect exception
+	  	if(deadline.getOwner()!=currentUser){
+	  		throw new RedirectException("/app/#signapp/deadlines");
+	  	}
+	  	
+		return deadline.getDeadlineMap();		
+	}
+	
 //	// Update
 //	@PUT @Path("/{id}")
 //	public void updateDeadline(@PathParam("id") int deadlineId,

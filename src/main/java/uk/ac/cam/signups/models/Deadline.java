@@ -99,7 +99,7 @@ public class Deadline implements Comparable<Deadline> {
 		return ImmutableMap.of("date", dateString, "time", timeString, "imminent", imminent); 
 	}
 	// Get deadline as map
-	public ImmutableMap<String, ?> getDeadlinesMap() {
+	public ImmutableMap<String, ?> getDeadlineMap() {
 			
 			if(url==null){
 				url="none";

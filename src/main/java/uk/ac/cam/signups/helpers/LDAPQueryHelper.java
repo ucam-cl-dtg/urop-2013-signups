@@ -26,6 +26,20 @@ import uk.ac.cam.signups.util.UserLookupManager;
 public class LDAPQueryHelper {
 	
 	private static Logger log = LoggerFactory.getLogger(LDAPQueryHelper.class);
+
+	/**
+	 * Check if user with given crsid exists
+	 * @return String displayName
+	 */
+	public static String checkCRSID(String crsid){
+			log.debug("Checking user with " + crsid + " exists in LDAP");
+			String uid = LDAPProvider.uniqueQuery("uid", crsid, "uid", "people");	
+			if(uid==null){
+				log.debug("No registedName found for user " + crsid);
+				return null;
+			}
+		return uid;
+	}
 	
 	/**
 	 * Get users display name
