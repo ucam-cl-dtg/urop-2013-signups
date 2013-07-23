@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -19,6 +20,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.resteasy.annotations.Form;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.signups.forms.DeadlineForm;
 import uk.ac.cam.signups.forms.GroupForm;
@@ -38,6 +41,9 @@ public class DeadlinesController extends ApplicationController {
 	
 	private User currentUser;
 	
+	//Logger
+	private static Logger log = LoggerFactory.getLogger(DeadlinesController.class);
+	
 	// Index 
 	@GET @Path("/") //@ViewWith("deadlines.index")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -45,8 +51,20 @@ public class DeadlinesController extends ApplicationController {
 		// Get current user
 		currentUser = initialiseUser();
 		
-
-		return ImmutableMap.of("crsid", currentUser.getCrsid(), "deadlines", currentUser.getDeadlinesMap(), "cdeadlines", currentUser.getCreatedDeadlinesMap());
+		String crsid;
+		List<ImmutableMap<String, ?>> deadlines;
+		List<ImmutableMap<String, ?>> cdeadlines;
+		
+		try {
+			crsid = currentUser.getCrsid();
+			deadlines = currentUser.getUserDeadlinesMap();
+			cdeadlines = currentUser.getUserCreatedDeadlinesMap();
+		} catch (Exception e) {
+			log.error("Error getting deadlines: "+  e.getMessage());
+			throw new RedirectException("/app/#signapp/deadlines/error");
+		}
+		
+		return ImmutableMap.of("crsid", crsid, "deadlines", deadlines, "cdeadlines", cdeadlines);
 	}
 	
 	// Create
@@ -74,12 +92,21 @@ public class DeadlinesController extends ApplicationController {
 //		
 //	}
 //	
-//	// Delete
-//	@DELETE @PathParam("/{id}")
-//	public void deleteDeadline(@PathParam("id") int deadlineId) {
-//		
-//		throw new RedirectException("/events/" + id + "/deadlines");
-//	}
+	
+	// Delete
+	@DELETE @Path("/{id}")
+	public void deleteDeadline(@PathParam("id") int id) {
+		
+		// Delete the group object
+		Session session = HibernateUtil.getTransactionSession();
+		Query deadlineQuery = session.createQuery("from Deadline where id = :id");
+		deadlineQuery.setParameter("id", id);
+		Deadline deadline = (Deadline)deadlineQuery.uniqueResult();
+		session.delete(deadline);
+		log.info("Deadline id: " + id + "deleted");
+		
+		throw new RedirectException("/app/#signapp/deadlines");
+	}
 	
 	// Find groups AJAX
 	@POST @Path("/queryGroup")

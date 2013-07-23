@@ -43,10 +43,27 @@ public class GroupsController extends ApplicationController {
 		@GET @Path("/") 
 		@Produces(MediaType.APPLICATION_JSON)
 		public Map indexGroups() {
-			// Initialise user
-			user = initialiseUser();
 
-			return ImmutableMap.of("crsid", user.getCrsid(), "groups", user.getGroupsMap());
+			String crsid;
+			Set<ImmutableMap<String, ?>> groups;
+			
+			try {
+				user = initialiseUser();
+
+			} catch (Exception e) {
+				log.error("Error getting user");
+				throw new RedirectException("/app/#signapp/groups/error");
+			}
+			
+			try {
+				crsid = user.getCrsid();
+				groups = user.getGroupsMap();
+			} catch (Exception e) {
+				log.error("Error getting user groups");
+				throw new RedirectException("/app/#signapp/groups/error");
+			}
+
+			return ImmutableMap.of("crsid", crsid, "groups", groups);
 		}
 		
 		// Create
@@ -145,8 +162,16 @@ public class GroupsController extends ApplicationController {
 			groupQuery.setParameter("id", id);
 			Group group = (Group)groupQuery.uniqueResult();
 			session.delete(group);
+			log.info("Group id: " + id + "deleted");
 
 			throw new RedirectException("/app/#signapp/groups");
+		}
+		
+		//Error
+		@GET @Path("/error")
+		@Produces(MediaType.APPLICATION_JSON)
+		public void groupError(){
+			log.error("Error displaying groups");
 		}
 		
 }

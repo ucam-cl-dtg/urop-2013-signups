@@ -1,9 +1,13 @@
 package uk.ac.cam.signups.models;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,7 +27,7 @@ import com.google.common.collect.ImmutableMap;
 
 @Entity
 @Table(name="DEADLINES")
-public class Deadline {
+public class Deadline implements Comparable<Deadline> {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
@@ -34,7 +38,7 @@ public class Deadline {
 	private String url;
 	private Calendar datetime;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany
 	@JoinTable(name = "DEADLINES_USERS", 
 						joinColumns = { @JoinColumn(name = "DEADLINE_ID")},
 						inverseJoinColumns = { @JoinColumn(name = "USER_CRSID")})
@@ -66,6 +70,9 @@ public class Deadline {
 	public String getMessage() { return this.message; }
 	public void setMessage(String message) { this.message= message; }
 	
+	public String getURL() { return this.url; }
+	public void setURL(String url) { this.url= url; }
+	
 	public Calendar getDatetime() { return this.datetime; }
 	public void setDatetime(Calendar datetime) { this.datetime= datetime; }
 	
@@ -91,6 +98,25 @@ public class Deadline {
 		
 		return ImmutableMap.of("date", dateString, "time", timeString, "imminent", imminent); 
 	}
+	// Get deadline as map
+	public ImmutableMap<String, ?> getDeadlinesMap() {
+			
+			if(url==null){
+				url="none";
+			}
+		
+			ImmutableMap<String, ?> deadlineMap = new ImmutableMap.Builder<String, Object>()
+					.put("id", this.id)
+					.put("name", this.title)
+					.put("message", this.message)
+					.put("url", this.url)
+					.put("datetime", this.getDateMap())
+					.put("users", this.getUsersMap())
+					.put("owner", this.owner.getCrsid())
+					.build();
+			
+			return deadlineMap;
+	}	
 	
 	// Get users as a map
 	public HashSet getUsersMap() {
@@ -100,9 +126,14 @@ public class Deadline {
 			// Get users crsid
 			crsid = u.getCrsid();
 			// Get users display name from LDAP
-			String name = LDAPQueryHelper.getDisplayName(crsid);
+			String name = LDAPQueryHelper.getRegisteredName(crsid);
 			deadlineUsers.add(ImmutableMap.of("crsid",crsid, "name", name));
 		}
 		return deadlineUsers;
+	}
+	
+	// Set deadline natural ordering
+	public int compareTo(Deadline deadline) {
+		return this.datetime.compareTo(deadline.datetime);
 	}
 }

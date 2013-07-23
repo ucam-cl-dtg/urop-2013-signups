@@ -8,10 +8,11 @@ moduleScripts['signapp']['groups'] = {
 			      var deleteData = $.ajax({
 			            type: 'DELETE',
 			            url: "/signapp/groups/" + group_id,
-			            success: function(resultData) {
-			            // Reload the page for now.. can replace this with just redsiplaying div later?
-			            location.reload();
-			            }
+                        success: function(resultData) {
+                            $("#"+group_id).hide(2000, function() {
+                                $(this).remove();
+                            });
+                        }
 			      });
 			  });
 			  

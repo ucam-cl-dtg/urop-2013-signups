@@ -81,7 +81,7 @@ public class Group {
 			// Get users crsid
 			crsid = u.getCrsid();
 			// Get users display name from LDAP
-			String name = LDAPQueryHelper.getDisplayName(crsid);
+			String name = LDAPQueryHelper.getRegisteredName(crsid);
 			groupUsers.add(ImmutableMap.of("crsid",crsid, "name", name));
 		}
 		return groupUsers;

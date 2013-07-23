@@ -1,10 +1,13 @@
 package uk.ac.cam.signups.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
@@ -26,7 +29,7 @@ public class User {
 	private String crsid;
 	
 	@ManyToMany(mappedBy = "users")
-	private Set<Deadline> deadlines = new HashSet<Deadline>(0);
+	private Set<Deadline> deadlines = new HashSet<Deadline>();
 
 	@OneToMany(mappedBy = "owner")
 	private Set<Event> events = new HashSet<Event>(0);
@@ -92,7 +95,7 @@ public class User {
 		HashSet<ImmutableMap<String, ?>> userGroups = new HashSet<ImmutableMap<String, ?>>(0);
 		
 		if(groups==null){
-			return new HashSet<ImmutableMap<String, ?>>(0);
+			return new HashSet<ImmutableMap<String, ?>>();
 		}
 		
 		for(Group g : groups)  {
@@ -102,21 +105,28 @@ public class User {
 	}
 	
 	// Get users deadlines as a map
-	public Set<ImmutableMap<String, ?>> getDeadlinesMap() {
-		HashSet<ImmutableMap<String, ?>> userDeadlines = new HashSet<ImmutableMap<String, ?>>(0);
+	public List<ImmutableMap<String, ?>> getUserDeadlinesMap() {
+		List<ImmutableMap<String, ?>> userDeadlines = new ArrayList<ImmutableMap<String, ?>>();
 		
 		if(deadlines==null){
-			return new HashSet<ImmutableMap<String, ?>>(0);
+			return new ArrayList<ImmutableMap<String, ?>>();
 		}
 		
+		//Sort the deadlines
+		SortedSet<Deadline> sortedDeadlines = new TreeSet<Deadline>();
+		for(Deadline d : deadlines){
+			sortedDeadlines.add(d);
+		}	
+		
 		// Get deadlines as a map of all parameters
-		for(Deadline d : deadlines)  {
-			userDeadlines.add(ImmutableMap.of("id", d.getId(), "name", d.getTitle(), "message", d.getMessage(), "datetime", d.getDateMap(), "users", d.getUsersMap()));
+		for(Deadline d : sortedDeadlines)  {
+			userDeadlines.add(d.getDeadlinesMap());
 		}
 		return userDeadlines;
+		
 	}
-	public Set<ImmutableMap<String, ?>> getCreatedDeadlinesMap() {
-		HashSet<ImmutableMap<String, ?>> userDeadlines = new HashSet<ImmutableMap<String, ?>>(0);
+	public List<ImmutableMap<String, ?>> getUserCreatedDeadlinesMap() {
+		List<ImmutableMap<String, ?>> userDeadlines = new ArrayList<ImmutableMap<String, ?>>();
 		
 		// Query deadlines where this user is the owner
 		Session session = HibernateUtil.getTransactionSession();
@@ -124,12 +134,12 @@ public class User {
 	  	List<Deadline> createdDeadlines = (List<Deadline>) getDeadlines.list();			
 	 
 		if(createdDeadlines==null){
-			return new HashSet<ImmutableMap<String, ?>>(0);
+			return new ArrayList<ImmutableMap<String, ?>>();
 		}
 		
 		// Get deadlines as a map of all parameters
 		for(Deadline d : createdDeadlines)  {
-			userDeadlines.add(ImmutableMap.of("id", d.getId(), "name", d.getTitle(), "message", d.getMessage(), "datetime", d.getDateMap(), "users", d.getUsersMap()));
+			userDeadlines.add(d.getDeadlinesMap());
 		}
 		return userDeadlines;
 	}
