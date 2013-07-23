@@ -86,9 +86,11 @@ public class Deadline implements Comparable<Deadline> {
 	// Get formatted Date and time
 	public ImmutableMap<String, ?> getDateMap(){
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE, dd MMMMM yyyy");
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
+		SimpleDateFormat minuteFormat = new SimpleDateFormat("mm");
 		String dateString = dateFormat.format(datetime.getTime());
-		String timeString = timeFormat.format(datetime.getTime());
+		String hourString = hourFormat.format(datetime.getTime());
+		String minuteString = minuteFormat.format(datetime.getTime());
 		
 		// Is the deadline imminent? (ie. is it very close to current date)
 		Calendar tomorrow = Calendar.getInstance();
@@ -96,7 +98,7 @@ public class Deadline implements Comparable<Deadline> {
 		boolean imminent = tomorrow.get(Calendar.YEAR) >= datetime.get(Calendar.YEAR) &&
 							tomorrow.get(Calendar.DAY_OF_YEAR) >= datetime.get(Calendar.DAY_OF_YEAR);
 		
-		return ImmutableMap.of("date", dateString, "time", timeString, "imminent", imminent); 
+		return ImmutableMap.of("date", dateString, "hour", hourString, "minute", minuteString, "imminent", imminent); 
 	}
 	// Get deadline as map
 	public ImmutableMap<String, ?> getDeadlineMap() {
