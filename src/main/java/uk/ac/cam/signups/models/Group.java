@@ -105,25 +105,37 @@ public class Group implements Mappable {
 	// Map builder
 	@Override
 	public Map<String, ?> toMap() {
-		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>()
-			.put("id",id)
-			.put("name",title)
-			.put("owner",owner.toMap());
+		ImmutableMap.Builder<String, Object> builder;
 		
-		// Get group users
-		HashSet<ImmutableMap<String,?>> groupUsers = new HashSet<ImmutableMap<String,?>>();
-		String crsid;
-		for(User u : users){
-			// Get users crsid
-			crsid = u.getCrsid();
-			// Get users display name from LDAP
-			String name = LDAPQueryHelper.getRegisteredName(crsid);
-			groupUsers.add(ImmutableMap.of("crsid",crsid, "name", name));
+		try {
+			builder = new ImmutableMap.Builder<String, Object>();
+					builder = builder.put("id",id)
+						.put("name",title)
+						.put("owner",owner.toMap());
+			
+			// Get group users
+			HashSet<ImmutableMap<String,?>> groupUsers = new HashSet<ImmutableMap<String,?>>();
+			String crsid;
+			for(User u : users){
+				// Get users crsid
+				crsid = u.getCrsid();
+				// Get users display name from LDAP
+				String name = LDAPQueryHelper.getRegisteredName(crsid);
+				groupUsers.add(ImmutableMap.of("crsid",crsid, "name", name));
+			}
+			
+			builder = builder.put("users", groupUsers);
+			
+			return builder.build();
+			
+		} catch (NullPointerException e) {
+			builder = new ImmutableMap.Builder<String, Object>();
+			builder = builder.put("id",id)
+				.put("name", "Error getting group")
+				.put("owner", "")			
+				.put("users", ImmutableMap.of());
+			return builder.build();
 		}
-		
-		builder = builder.put("users", groupUsers);
-
-		return builder.build();
 		
 	}
 }

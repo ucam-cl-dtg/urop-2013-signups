@@ -26,6 +26,9 @@ public class GroupForm {
 	@FormParam("import_id") String import_id;
 	
 	public int handle(User currentUser) {		
+		
+		parseForm();
+		
 		Session session = HibernateUtil.getTransactionSession();
 		
 		// Create group prototype
@@ -37,15 +40,17 @@ public class GroupForm {
 
 		
 		// Create set of users for group
-		User user;
 		Set<User> groupMembers = new HashSet<User>();
-		String[] crsids = users.split(",");
-		for(int i=0;i<crsids.length;i++){
-			// Register user (adds user to database if they don't exist
-			user = User.registerUser(crsids[i]);
-			// Add to set of users
-			groupMembers.add(user);
-		}	
+		if(!users.equals("")){
+			User user;		
+			String[] crsids = users.split(",");
+			for(int i=0;i<crsids.length;i++){
+				// Register user (adds user to database if they don't exist
+				user = User.registerUser(crsids[i]);
+				// Add to set of users
+				groupMembers.add(user);
+			}		
+		}
 		
 		group.setUsers(groupMembers);
 		
@@ -77,15 +82,17 @@ public class GroupForm {
 		group.setTitle(title);
 		
 		// Create new set of users for group
-		User user;
 		Set<User> groupMembers = new HashSet<User>();
-		String[] crsids = users.split(",");
-		for(int i=0;i<crsids.length;i++){
-			// Register user (adds user to database if they don't exist
-			user = User.registerUser(crsids[i]);
-			// Add to set of users
-			groupMembers.add(user);
-		}		
+		if(!users.equals("")){
+			User user;		
+			String[] crsids = users.split(",");
+			for(int i=0;i<crsids.length;i++){
+				// Register user (adds user to database if they don't exist
+				user = User.registerUser(crsids[i]);
+				// Add to set of users
+				groupMembers.add(user);
+			}		
+		}
 		
 		group.setUsers(groupMembers);
 		
@@ -95,7 +102,14 @@ public class GroupForm {
 				
 	}
 	
-	public int handleImport(User currentUser) {		
+	public int handleImport(User currentUser) {	
+		
+		parseForm();
+		
+		if(import_id==null||import_id.equals("")){
+			throw new RedirectException("/app/#signapp/groups");
+		}
+		
 		Session session = HibernateUtil.getTransactionSession();
 		
 		// Get group info from LDAP
@@ -133,4 +147,13 @@ public class GroupForm {
 		return group.getId();
 				
 	}
+
+	public void parseForm() {
+		
+		// Check for empty fields
+		if(title==null||title.equals("")){ this.title = "Untitled Group"; }
+		if(users==null||users.equals("")){ this.users = ""; }
+				
+	}
+	
 }

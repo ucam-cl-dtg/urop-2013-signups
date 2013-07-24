@@ -42,15 +42,17 @@ public class HomePageController extends ApplicationController{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map indexHomePage() {
 		
-		// Initialise user
 		user = initialiseUser();
+		
+		// Upcoming deadlines
+		
+		// Upcoming events
 		
 		// Get user details
 		log.debug("Index GET: Getting user details");
 		ImmutableMap<String, ?> userMap = ulm.getAll();
-		
-		// Return data for template
-		return ImmutableMap.of("user", userMap);
+
+		return ImmutableMap.of("user", userMap, "deadlines", user.getUserDeadlinesMap());
 	}
 	
 	// DOS Index
