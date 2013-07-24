@@ -12,6 +12,8 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.googlecode.htmleasy.RedirectException;
+
 import uk.ac.cam.signups.models.Deadline;
 import uk.ac.cam.signups.models.Group;
 import uk.ac.cam.signups.models.User;
@@ -31,11 +33,7 @@ public class DeadlineForm {
 	//Logger
 	private static Logger log = LoggerFactory.getLogger(DeadlineForm.class);
 	
-	public int handle(User currentUser) {		
-		
-		System.out.println("Date: " + date);
-		System.out.println("Hour: " + hour);
-		System.out.println("Minute: " + minute);
+	public int handleCreate(User currentUser) {		
 		
 		Session session = HibernateUtil.getTransactionSession();
 		
@@ -107,6 +105,78 @@ public class DeadlineForm {
 		deadline.setUsers(deadlineUsers);
 		
 		session.save(deadline);
+		
+		return deadline.getId();
+				
+	}
+	
+	public int handleUpdate(User currentUser, int id) {		
+		
+		Session session = HibernateUtil.getTransactionSession();
+		
+		// Get the deadline to edit
+		Query getDeadline = session.createQuery("from Deadline where id = :id").setParameter("id", id);
+	  	Deadline deadline = (Deadline) getDeadline.uniqueResult();	
+	  	
+		// Check the owner is current user
+		if(!deadline.getOwner().equals(currentUser)){
+			throw new RedirectException("/app/#signapp/deadlines");
+		}
+		
+		// Set new values
+		deadline.setTitle(title);
+		deadline.setMessage(message);	
+		deadline.setMessage(url);	
+		
+		// Format and set date
+		String datetime = date;
+		datetime += " " + hour + ":" + minute;
+		System.out.println("Datetime: " + datetime);
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		try {
+			cal.setTime(sdf.parse(datetime));
+		} catch (Exception e) {
+			log.error("e.getMessage()" +  ": error parsing date");
+		}
+		deadline.setDatetime(cal);
+		
+		// Create set of users
+		Set<User> deadlineUsers = new HashSet<User>();
+		
+		// Add users from users field
+		if(!users.equals("")){
+			User user;
+			String[] crsids = users.split(",");
+			for(int i=0;i<crsids.length;i++){
+				// Register user (adds user to database if they don't exist
+				user = User.registerUser(crsids[i]);
+				// Add to set of users
+				deadlineUsers.add(user);
+			}		
+		}
+			
+		// Add users from groups field
+		if(!groups.equals("")){
+			Group group;
+			Set<User> groupUsers;
+			String[] groupIds = groups.split(",");
+			System.out.println("Ok so far");
+			for(int i=0;i<groupIds.length;i++){
+				// Get group users
+				Query getGroup = session.createQuery("from Group where id = :id").setParameter("id", Integer.parseInt(groupIds[i]));
+			  	group = (Group) getGroup.uniqueResult();	
+			  	groupUsers = group.getUsers();
+			  	for(User u : groupUsers){
+					// Add user to deadline users set
+					deadlineUsers.add(u);
+			  	}
+			}	
+		}
+		
+		deadline.setUsers(deadlineUsers);
+		
+		session.update(deadline);
 		
 		return deadline.getId();
 				

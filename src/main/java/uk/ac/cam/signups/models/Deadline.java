@@ -85,9 +85,11 @@ public class Deadline implements Comparable<Deadline> {
 	// Soy friendly get methods
 	// Get formatted Date and time
 	public ImmutableMap<String, ?> getDateMap(){
-		SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE, dd MMMMM yyyy");
+		SimpleDateFormat niceDateFormat = new SimpleDateFormat("EEEEE, dd MMMMM yyyy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
 		SimpleDateFormat minuteFormat = new SimpleDateFormat("mm");
+		String niceDateString = niceDateFormat.format(datetime.getTime());
 		String dateString = dateFormat.format(datetime.getTime());
 		String hourString = hourFormat.format(datetime.getTime());
 		String minuteString = minuteFormat.format(datetime.getTime());
@@ -98,7 +100,7 @@ public class Deadline implements Comparable<Deadline> {
 		boolean imminent = tomorrow.get(Calendar.YEAR) >= datetime.get(Calendar.YEAR) &&
 							tomorrow.get(Calendar.DAY_OF_YEAR) >= datetime.get(Calendar.DAY_OF_YEAR);
 		
-		return ImmutableMap.of("date", dateString, "hour", hourString, "minute", minuteString, "imminent", imminent); 
+		return ImmutableMap.of("nicedate", niceDateString, "date", dateString, "hour", hourString, "minute", minuteString, "imminent", imminent); 
 	}
 	// Get deadline as map
 	public ImmutableMap<String, ?> getDeadlineMap() {

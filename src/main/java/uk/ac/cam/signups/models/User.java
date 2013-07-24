@@ -148,6 +148,19 @@ public class User {
 		return userDeadlines;
 	}
 	
+	// equals
+	@Override
+	public boolean equals(Object object){
+		//check for self-comparison
+		if(this == object) return true;
+		
+		//check that the object is a user
+		if(!(object instanceof User)) return false;
+		
+		//compare crsids
+		return (((User) object).getCrsid().equals(this.crsid));
+	}
+	
 	//what is this for??
 	public Map<String, ?> toMap() {
 		return ImmutableMap.of("crsid", crsid);
