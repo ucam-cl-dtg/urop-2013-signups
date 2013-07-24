@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -19,15 +20,19 @@ import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.JoinColumn;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.annotations.GenericGenerator;
 
 import uk.ac.cam.signups.helpers.LDAPQueryHelper;
+import uk.ac.cam.signups.util.HibernateUtil;
 
 import com.google.common.collect.ImmutableMap;
+import com.googlecode.htmleasy.RedirectException;
 
 @Entity
 @Table(name="DEADLINES")
-public class Deadline implements Comparable<Deadline> {
+public class Deadline implements Comparable<Deadline>, Mappable {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
@@ -82,9 +87,73 @@ public class Deadline implements Comparable<Deadline> {
 	public Set<User> getUsers() { return this.users; }
 	public void setUsers(Set<User> users) { this.users = users; }
 	
-	// Soy friendly get methods
+	// Queries
+	public static Deadline getDeadline(int id){
+		
+		Session session = HibernateUtil.getTransactionSession();
+		
+		Query getDeadline = session.createQuery("from Deadline where id = :id").setParameter("id", id);
+	  	Deadline deadline = (Deadline) getDeadline.uniqueResult();	
+	  	return deadline;
+	}
+	
+	public static void deleteDeadline(int id){
+		
+		Session session = HibernateUtil.getTransactionSession();
+		
+		Query getDeadline = session.createQuery("from Deadline where id = :id").setParameter("id", id);
+	  	Deadline deadline = (Deadline) getDeadline.uniqueResult();	
+	  	session.delete(deadline);
+	}
+	
+	// Map builder
+	@Override
+	public Map<String, ?> toMap() {
+		
+		ImmutableMap.Builder<String, Object> builder; ;
+		
+		try {
+			builder = new ImmutableMap.Builder<String, Object>();
+			builder =builder
+				.put("id", id)
+				.put("name", title)
+				.put("message", message)
+				.put("url", url)
+				.put("owner", owner.toMap());
+			
+			HashSet<ImmutableMap<String,?>> deadlineUsers = new HashSet<ImmutableMap<String,?>>();
+			String crsid;
+			for(User u : users){
+				// Get users crsid
+				crsid = u.getCrsid();
+				// Get users display name from LDAP
+				String name = LDAPQueryHelper.getRegisteredName(crsid);
+				deadlineUsers.add(ImmutableMap.of("crsid",crsid, "name", name));
+			}		
+			
+			builder = builder
+					.put("datetime", getDateMap())
+					.put("users", deadlineUsers);
+			
+		} catch(NullPointerException e){
+			builder  = new ImmutableMap.Builder<String, Object>();
+			builder =builder
+					.put("id", id)
+					.put("name", "Error getting deadline")
+					.put("message", "")
+					.put("url", "")
+					.put("owner", "")
+					.put("datetime", getDateMap())
+					.put("users", "");
+			return builder.build();
+		}
+		return builder.build();
+	}
+
 	// Get formatted Date and time
 	public ImmutableMap<String, ?> getDateMap(){
+		ImmutableMap<String, ?> dateMap;
+		
 		SimpleDateFormat niceDateFormat = new SimpleDateFormat("EEEEE, dd MMMMM yyyy");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
@@ -100,44 +169,18 @@ public class Deadline implements Comparable<Deadline> {
 		boolean imminent = tomorrow.get(Calendar.YEAR) >= datetime.get(Calendar.YEAR) &&
 							tomorrow.get(Calendar.DAY_OF_YEAR) >= datetime.get(Calendar.DAY_OF_YEAR);
 		
-		return ImmutableMap.of("nicedate", niceDateString, "date", dateString, "hour", hourString, "minute", minuteString, "imminent", imminent); 
-	}
-	// Get deadline as map
-	public ImmutableMap<String, ?> getDeadlineMap() {
-			
-			if(url==null){
-				url="none";
-			}
-		
-			ImmutableMap<String, ?> deadlineMap = new ImmutableMap.Builder<String, Object>()
-					.put("id", this.id)
-					.put("name", this.title)
-					.put("message", this.message)
-					.put("url", this.url)
-					.put("datetime", this.getDateMap())
-					.put("users", this.getUsersMap())
-					.put("owner", this.owner.getCrsid())
-					.build();
-			
-			return deadlineMap;
-	}	
-	
-	// Get users as a map
-	public HashSet getUsersMap() {
-		HashSet<ImmutableMap<String,?>> deadlineUsers = new HashSet<ImmutableMap<String,?>>();
-		String crsid;
-		for(User u : users){
-			// Get users crsid
-			crsid = u.getCrsid();
-			// Get users display name from LDAP
-			String name = LDAPQueryHelper.getRegisteredName(crsid);
-			deadlineUsers.add(ImmutableMap.of("crsid",crsid, "name", name));
+		try {
+			dateMap = ImmutableMap.of("nicedate", niceDateString, "date", dateString, "hour", hourString, "minute", minuteString, "imminent", imminent);
+			return dateMap;
+		} catch(NullPointerException e){
+			return ImmutableMap.of("nicedate", "00/00/0000", "date", "00/00/0000", "hour", "00", "minute", "00");
 		}
-		return deadlineUsers;
+			
 	}
 	
 	// Set deadline natural ordering
 	public int compareTo(Deadline deadline) {
 		return this.datetime.compareTo(deadline.datetime);
 	}
+	
 }

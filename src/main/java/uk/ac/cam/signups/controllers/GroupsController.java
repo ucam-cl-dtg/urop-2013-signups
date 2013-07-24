@@ -33,61 +33,87 @@ import com.googlecode.htmleasy.RedirectException;
 
 @Path("signapp/groups")
 public class GroupsController extends ApplicationController {
+	
 		// Create the logger
 		private static Logger log = LoggerFactory.getLogger(GroupsController.class);
 		
 		// Get current user from raven session
-		private User user;
+		private User currentUser;
 		
 		// Index
 		@GET @Path("/") 
 		@Produces(MediaType.APPLICATION_JSON)
 		public Map indexGroups() {
 
-			String crsid;
-			Set<ImmutableMap<String, ?>> groups;
-			
-			try {
-				user = initialiseUser();
+			currentUser = initialiseUser();
 
-			} catch (Exception e) {
-				log.error("Error getting user");
-				throw new RedirectException("/app/#signapp/groups/error");
-			}
-			
-			try {
-				crsid = user.getCrsid();
-				groups = user.getGroupsMap();
-			} catch (Exception e) {
-				log.error("Error getting user groups");
-				throw new RedirectException("/app/#signapp/groups/error");
-			}
-
-			return ImmutableMap.of("crsid", crsid, "groups", groups);
+			return ImmutableMap.of("crsid", currentUser.getCrsid(), "groups", currentUser.getGroupsMap());
 		}
 		
 		// Create
 		@POST @Path("/") 
 		public void createGroup(@Form GroupForm groupForm) throws Exception {
-			// Initialise user
-			user = initialiseUser();
+			
+			currentUser = initialiseUser();
 
-			int id= groupForm.handle(user);
-
+			int id= groupForm.handle(currentUser);
 			
 			throw new RedirectException("/app/#signapp/groups");
 		}
 		
-		// Import group from LDAP
+		// Import from LDAP
 		@POST @Path("/import") 
 		public void importGroup(@Form GroupForm groupForm) throws Exception {
-			// Initialise user
-			user = initialiseUser();
+			
+			currentUser = initialiseUser();
 
-			int id= groupForm.handleImport(user);
-
+			int id= groupForm.handleImport(currentUser);
 			
 			throw new RedirectException("/app/#signapp/groups");
+		}
+		
+		//Edit
+		@GET @Path("/{id}/edit") //@ViewWith("/soy/groups.edit")
+		@Produces(MediaType.APPLICATION_JSON)
+		public Map editGroup(@PathParam("id") int id) {
+			
+			currentUser = initialiseUser();
+			
+		  	Group group = Group.getGroup(id);
+		  	
+		  	// If group not found
+		  	if(group==null){
+		  		throw new RedirectException("/app/#signapp/groups");
+		  	}
+		  	
+			return group.toMap();
+		}
+		
+		// Update
+		@POST @Path("/{id}/update")
+		public void updateGroup(@Form GroupForm groupForm, @PathParam("id") int id) {	
+			
+			currentUser = initialiseUser();
+						
+			id = groupForm.handleUpdate(currentUser, id);
+
+			throw new RedirectException("/app/#signapp/groups");
+		}
+		
+		//Destroy 
+		@DELETE @Path("/{id}")
+		public void deleteGroup(@PathParam("id") int id) {
+			
+			Group.deleteGroup(id);
+
+			throw new RedirectException("/app/#signapp/groups");
+		}
+		
+		//Error
+		@GET @Path("/error/{type}")
+		@Produces(MediaType.APPLICATION_JSON)
+		public void groupError(String type){
+			
 		}
 		
 		// Find users
@@ -116,62 +142,5 @@ public class GroupsController extends ApplicationController {
 			ArrayList<ImmutableMap<String,?>> matches = (ArrayList<ImmutableMap<String, ?>>) LDAPQueryHelper.queryGroups(x);
 			
 			return matches;
-		}
-		
-		//Edit
-		@GET @Path("/{id}/edit") //@ViewWith("/soy/groups.edit")
-		@Produces(MediaType.APPLICATION_JSON)
-		public Map editGroup(@PathParam("id") int id) {
-			
-			// Get the group to edit
-			Session session = HibernateUtil.getTransactionSession();
-			Query editGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
-		  	Group group = (Group) editGroup.uniqueResult();	
-		  	
-		  	// If group not found
-		  	if(group==null){
-		  		throw new RedirectException("/app/#signapp/groups");
-		  	}
-		  	
-			// Check that the current user owns the group, otherwise throw a redirect exception
-		  	
-			// Create group map method in group model later
-			return ImmutableMap.of("id", group.getId(), "name", group.getTitle(), "users", group.getUsersMap());
-		}
-		
-		// Update
-		@POST @Path("/{id}/update")
-		public void updateGroup(@PathParam("id") int id,
-				@Form GroupForm groupForm) {
-			
-			// Check that current user is the owner
-			
-			// Update the group
-			
-			
-			throw new RedirectException("/app/#signapp/groups/"+id+"/edit");
-		}
-		
-		//Destroy 
-		@DELETE @Path("/{id}")
-		public void deleteGroup(@PathParam("id") int id) {
-			
-			// Delete the group object
-			Session session = HibernateUtil.getTransactionSession();
-			Query groupQuery = session.createQuery("from Group where id = :id");
-			groupQuery.setParameter("id", id);
-			Group group = (Group)groupQuery.uniqueResult();
-			session.delete(group);
-			log.info("Group id: " + id + "deleted");
-
-			throw new RedirectException("/app/#signapp/groups");
-		}
-		
-		//Error
-		@GET @Path("/error")
-		@Produces(MediaType.APPLICATION_JSON)
-		public void groupError(){
-			log.error("Error displaying groups");
-		}
-		
+		}	
 }

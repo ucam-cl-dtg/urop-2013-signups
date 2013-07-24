@@ -92,28 +92,27 @@ public class User {
 		return user;
 	}
 	
-	// Soy friendly get methods
-	
+	// Maps
 	// Get users groups as a map
-	public Set<ImmutableMap<String, ?>> getGroupsMap() {
-		HashSet<ImmutableMap<String, ?>> userGroups = new HashSet<ImmutableMap<String, ?>>(0);
+	public Set<Map<String, ?>> getGroupsMap() {
+		HashSet<Map<String, ?>> userGroups = new HashSet<Map<String, ?>>();
 		
 		if(groups==null){
-			return new HashSet<ImmutableMap<String, ?>>();
+			return new HashSet<Map<String, ?>>();
 		}
 		
 		for(Group g : groups)  {
-			userGroups.add(ImmutableMap.of("id", g.getId(), "name", g.getTitle(), "users", g.getUsersMap(), "owner", g.getOwner().getCrsid()));
+			userGroups.add(g.toMap());
 		}
 		return userGroups;
 	}
 	
 	// Get users deadlines as a map
-	public List<ImmutableMap<String, ?>> getUserDeadlinesMap() {
-		List<ImmutableMap<String, ?>> userDeadlines = new ArrayList<ImmutableMap<String, ?>>();
+	public List<Map<String, ?>> getUserDeadlinesMap() {
+		List<Map<String, ?>> userDeadlines = new ArrayList<Map<String, ?>>();
 		
 		if(deadlines==null){
-			return new ArrayList<ImmutableMap<String, ?>>();
+			return new ArrayList<Map<String, ?>>();
 		}
 		
 		//Sort the deadlines
@@ -124,13 +123,13 @@ public class User {
 		
 		// Get deadlines as a map of all parameters
 		for(Deadline d : sortedDeadlines)  {
-			userDeadlines.add(d.getDeadlineMap());
+			userDeadlines.add(d.toMap());
 		}
 		return userDeadlines;
 		
 	}
-	public List<ImmutableMap<String, ?>> getUserCreatedDeadlinesMap() {
-		List<ImmutableMap<String, ?>> userDeadlines = new ArrayList<ImmutableMap<String, ?>>();
+	public List<Map<String, ?>> getUserCreatedDeadlinesMap() {
+		List<Map<String, ?>> userDeadlines = new ArrayList<Map<String, ?>>();
 		
 		// Query deadlines where this user is the owner
 		Session session = HibernateUtil.getTransactionSession();
@@ -138,12 +137,12 @@ public class User {
 	  	List<Deadline> createdDeadlines = (List<Deadline>) getDeadlines.list();			
 	 
 		if(createdDeadlines==null){
-			return new ArrayList<ImmutableMap<String, ?>>();
+			return new ArrayList<Map<String, ?>>();
 		}
 		
 		// Get deadlines as a map of all parameters
 		for(Deadline d : createdDeadlines)  {
-			userDeadlines.add(d.getDeadlineMap());
+			userDeadlines.add(d.toMap());
 		}
 		return userDeadlines;
 	}
@@ -161,7 +160,6 @@ public class User {
 		return (((User) object).getCrsid().equals(this.crsid));
 	}
 	
-	//what is this for??
 	public Map<String, ?> toMap() {
 		return ImmutableMap.of("crsid", crsid);
 	}

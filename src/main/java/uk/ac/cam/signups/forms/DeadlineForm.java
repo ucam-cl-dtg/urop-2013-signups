@@ -35,31 +35,21 @@ public class DeadlineForm {
 	
 	public int handleCreate(User currentUser) {		
 		
+		parseForm();
+		
 		Session session = HibernateUtil.getTransactionSession();
 		
 		// Create deadline prototype
 		Deadline deadline = new Deadline();
 		deadline.setTitle(title);
-		
-		// Set defaults for optional fields
-		if(message==null){
-			deadline.setMessage("No description");
-		} else {
-			deadline.setMessage(message);			
-		}
-		if(url==null){
-			deadline.setURL("none");
-		} else {
-			deadline.setURL(url);			
-		}
-
-		// Set owner of the user to current user
 		deadline.setOwner(currentUser);
+		deadline.setMessage(message);
+		deadline.setURL(url);
 		
 		// Format and set date
 		String datetime = date;
 		datetime += " " + hour + ":" + minute;
-		System.out.println("Datetime: " + datetime);
+		
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		try {
@@ -69,7 +59,6 @@ public class DeadlineForm {
 		}
 		deadline.setDatetime(cal);
 		
-		// Create set of users
 		Set<User> deadlineUsers = new HashSet<User>();
 		
 		// Add users from users field
@@ -86,15 +75,12 @@ public class DeadlineForm {
 			
 		// Add users from groups field
 		if(!groups.equals("")){
-			Group group;
 			Set<User> groupUsers;
 			String[] groupIds = groups.split(",");
 			System.out.println("Ok so far");
 			for(int i=0;i<groupIds.length;i++){
 				// Get group users
-				Query getGroup = session.createQuery("from Group where id = :id").setParameter("id", Integer.parseInt(groupIds[i]));
-			  	group = (Group) getGroup.uniqueResult();	
-			  	groupUsers = group.getUsers();
+				groupUsers = Group.getGroup(Integer.parseInt(groupIds[i])).getUsers();
 			  	for(User u : groupUsers){
 					// Add user to deadline users set
 					deadlineUsers.add(u);
@@ -112,11 +98,12 @@ public class DeadlineForm {
 	
 	public int handleUpdate(User currentUser, int id) {		
 		
+		parseForm();
+		
 		Session session = HibernateUtil.getTransactionSession();
 		
 		// Get the deadline to edit
-		Query getDeadline = session.createQuery("from Deadline where id = :id").setParameter("id", id);
-	  	Deadline deadline = (Deadline) getDeadline.uniqueResult();	
+		Deadline deadline = Deadline.getDeadline(id);
 	  	
 		// Check the owner is current user
 		if(!deadline.getOwner().equals(currentUser)){
@@ -139,6 +126,7 @@ public class DeadlineForm {
 		} catch (Exception e) {
 			log.error("e.getMessage()" +  ": error parsing date");
 		}
+		
 		deadline.setDatetime(cal);
 		
 		// Create set of users
@@ -157,16 +145,13 @@ public class DeadlineForm {
 		}
 			
 		// Add users from groups field
+		
 		if(!groups.equals("")){
-			Group group;
 			Set<User> groupUsers;
 			String[] groupIds = groups.split(",");
-			System.out.println("Ok so far");
 			for(int i=0;i<groupIds.length;i++){
 				// Get group users
-				Query getGroup = session.createQuery("from Group where id = :id").setParameter("id", Integer.parseInt(groupIds[i]));
-			  	group = (Group) getGroup.uniqueResult();	
-			  	groupUsers = group.getUsers();
+			  	groupUsers = Group.getGroup(Integer.parseInt(groupIds[i])).getUsers();
 			  	for(User u : groupUsers){
 					// Add user to deadline users set
 					deadlineUsers.add(u);
@@ -178,7 +163,21 @@ public class DeadlineForm {
 		
 		session.update(deadline);
 		
-		return deadline.getId();
+		return deadline.getId();	
+	}
+	
+	public void parseForm() {
+				
+		// Check for empty fields
+		if(title==null||title.equals("")){ this.title = "Untitled Deadline"; }
+		if(date==null||date.equals("")){ this.date = "01/01/1991"; }
+		if(hour==null||hour.equals("")){ this.hour = "0"; }
+		if(minute==null||minute.equals("")){ this.minute = "0"; }
+		if(message==null||message.equals("")){ this.message = "No description"; }		
+		if(url==null||url.equals("")){ this.url = "none"; }	
+		if(users==null||users.equals("")){ this.users = ""; }		
+		if(groups==null||groups.equals("")){ this.groups = ""; }	
 				
 	}
+	
 }

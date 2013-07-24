@@ -16,17 +16,24 @@ $(document).ready(function() {
     })
 })
 */
-
+function supportRedirect(templateName) {
+    return function(json) {
+        if (json.redirect) 
+            router.navigate(json.redirect, {trigger: true});
+        return templateName;
+    }
+}
 
 $(document).ready(function() {
     router = Router({
         "signapp/groups": "signapp.groups.index",
         "signapp/deadlines" : "signapp.deadlines.index",
-        "signapp/deadlines/:id/edit" : "signapp.deadlines.edit",
+        "signapp/deadlines/:id/edit" : supportRedirect("signapp.deadlines.edit"),
         "signapp/": "signapp.home_page.index",
         "signapp/groups/:id/edit" : "signapp.groups.edit",
         "signapp/events/:id" : "signapp.events.show",
         "signapp/events/new" : "signapp.events.new",
+        "signapp/:controller/error/:type" : "signapp.errors.index",
 
         //For getting params in get requests
         // Use the last line to redirect unmatched routes to an error page

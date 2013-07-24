@@ -6,9 +6,13 @@ import java.util.Set;
 
 import javax.ws.rs.FormParam;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.googlecode.htmleasy.RedirectException;
+
 import uk.ac.cam.signups.helpers.LDAPQueryHelper;
+import uk.ac.cam.signups.models.Deadline;
 import uk.ac.cam.signups.models.Group;
 import uk.ac.cam.signups.models.Row;
 import uk.ac.cam.signups.models.Slot;
@@ -57,6 +61,39 @@ public class GroupForm {
 		return group.getId();
 				
 	}
+
+	public int handleUpdate(User currentUser, int id) {		
+		Session session = HibernateUtil.getTransactionSession();
+		
+		// Get the group to edit
+		Group group = Group.getGroup(id);
+	  	
+		// Check the owner is current user
+		if(!group.getOwner().equals(currentUser)){
+			throw new RedirectException("/app/#signapp/deadlines");
+		}
+		
+		// Set new values
+		group.setTitle(title);
+		
+		// Create new set of users for group
+		User user;
+		Set<User> groupMembers = new HashSet<User>();
+		String[] crsids = users.split(",");
+		for(int i=0;i<crsids.length;i++){
+			// Register user (adds user to database if they don't exist
+			user = User.registerUser(crsids[i]);
+			// Add to set of users
+			groupMembers.add(user);
+		}		
+		
+		group.setUsers(groupMembers);
+		
+		session.update(group);
+		
+		return group.getId();
+				
+	}
 	
 	public int handleImport(User currentUser) {		
 		Session session = HibernateUtil.getTransactionSession();
@@ -71,8 +108,6 @@ public class GroupForm {
 
 		// Set owner of the user to current user
 		group.setOwner(currentUser);
-
-
 		
 		// Create set of users for group
 		User user;

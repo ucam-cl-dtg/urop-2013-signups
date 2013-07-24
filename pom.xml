@@ -23,6 +23,7 @@
       <![CDATA[<script src="/soy/js/3/signapp.deadlines.js"></script>]]>
 			<![CDATA[<script src="/soy/js/3/signapp.home_page.js"></script>]]>
 			<![CDATA[<script src="/soy/js/3/signapp.events.js"></script>]]>
+            <![CDATA[<script src="/soy/js/3/signapp.errors.js"></script>]]>
 		</custom_templates>
 		<custom_css>
 		  <![CDATA[<link href="/css/main.css" rel="stylesheet" type="text/css">]]>
