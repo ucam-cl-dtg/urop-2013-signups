@@ -32,12 +32,11 @@ public class EventsController extends ApplicationController {
 		return ImmutableMap.of();
 	}
 	
+	// Query types
 	@POST @Path("/queryTypes")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ImmutableMap<String, ?>> generateTypeSuggestions(String q) {
-		q = q.substring(2);
-		
-		return Type.findSimilar(q, initialiseUser(), "global");
+		return Type.findSimilar(q.substring(2), initialiseUser(), "global");
 	}
 	
 	// Create
@@ -58,11 +57,11 @@ public class EventsController extends ApplicationController {
 	}
 	
 	// Fill Slot
-	@POST @Path("/{id}/fill_slot")
+	@POST @Path("/{id}/fill_slots")
 	public void fillSlot(@PathParam("id") int id, @Form FillSlot fillSlot) {
 		fillSlot.handle(id);
 
-		throw new RedirectException("/events/" + id);
+		throw new RedirectException("/app/#signapp/events/" + id);
 	}
 	
 	// Delete

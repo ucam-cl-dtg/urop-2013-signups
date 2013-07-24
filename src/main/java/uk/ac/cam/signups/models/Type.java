@@ -71,19 +71,20 @@ public class Type implements Mappable {
 	@SuppressWarnings("unchecked")
   public static List<ImmutableMap<String,?>> findSimilar(String name, User user, String mode) {
 		Session session = HibernateUtil.getTransactionSession();
-		List<Type> types = null; 
+		List<String> types = null; 
 		if(mode.equals("local")) {
 			Query similars = session.createQuery("SELECT DISTINCT name FROM Type as type WHERE type.event.owner = :user AND lower(type.name) like :name");
-			types = (List<Type>) similars.setParameter("user", user).setParameter("name", name.toLowerCase()).list();
+			types = (List<String>) similars.setParameter("user", user).setParameter("name", name.toLowerCase() + "%").list();
 		} else if(mode.equals("global")){
 			Query similars = session.createQuery("SELECT DISTINCT name FROM Type as type WHERE lower(type.name) like :name");
-			types = (List<Type>) similars.setParameter("name", name.toLowerCase()).list();
+			types = (List<String>) similars.setParameter("name", name.toLowerCase() + "%").list();
 		}
 		
 		List<ImmutableMap<String,?>> immutableTypes = new ArrayList<ImmutableMap<String,?>>();
-		for(Type type: types)
-			immutableTypes.add(ImmutableMap.of("name", type.name));
-		immutableTypes.add(ImmutableMap.of("name",name));
+		for(String typeName: types)
+			immutableTypes.add(ImmutableMap.of("name", typeName));
+		if (!immutableTypes.contains(name))
+			immutableTypes.add(ImmutableMap.of("name",name));
 		
 		return immutableTypes;
 	}

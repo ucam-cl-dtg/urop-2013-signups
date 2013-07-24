@@ -55,32 +55,62 @@
 		            <div class="columns large-6 small-6">
 		              <input type="text" class="datepicker" name="available_dates[]" placeholder="Date" />
 		            </div>
-		            <div class="columns large-3 small-3">
+		            <div class="columns large-2 small-2">
 		              <select class="medium" name="available_hours[]">
 		              {for $i in range(6,24)}
 		                <option>{$i}</option>
 		              {/for}
 		              </select>
 		            </div>
-		            <div class="columns large-3 small-3">
+		            <div class="columns large-2 small-2">
 		              <select class="medium" name="available_minutes[]">
 		              {for $i in range(60)}
 		                <option>{$i}</option>
 		              {/for}
 		              </select>
 		            </div>
+		            <div class="columns large-2 small-2">
+		              <a class="button medium full-width delete-time-slot disabled">Delete</a>
+		            </div>
 		          </div>
 		        </div>
 		        <div class="range-controls columns large-12 small-12 hide">
 		          <div class="row">
-		            <div class="columns large-4 small-4">
-		              <input type="text" placeholder="Date" />
+		            <div class="columns large-2 small-2">
+		              <label>Number of slots</label>
 		            </div>
-		            <div class="columns large-4 small-4">
-		              <input type="text" placeholder="Time" />
+		            <div class="columns large-1 small-1">
+		              <input type="text" id="number_of_slots"/>
 		            </div>
-		            <div class="columns large-4 small-4">
-		              <input type="text" placeholder="Range" />
+		            <div class="columns large-2 small-2">
+		              <label>Start date/time</label>
+		            </div>
+		            <div class="columns large-2 small-2">
+		              <input type="text" class="datepicker" placeholder="Date" id="date">
+		            </div>
+		            <div class="columns large-1 small-1">
+		              <select class="medium" id="hour">
+                  {for $i in range(6,24)}
+                    <option>{$i}</option>
+                  {/for}
+                  </select>
+		            </div>
+		            <div class="columns large-1 small-1">
+		              <select class="medium" id="minute">
+                  {for $i in range(60)}
+                    <option>{$i}</option>
+                  {/for}
+                  </select>
+		            </div>
+		            <div class="columns large-1 small-1">
+		              <label>Break</label>
+		            </div>
+		            <div class="columns large-1 small-1">
+		              <select class="medium" id="break">
+                  {for $i in range(60)}
+                    <option>{$i}</option>
+                  {/for}
+                  </select>
 		            </div>
 		          </div>
 		        </div>
@@ -90,7 +120,7 @@
 		          <a class="button medium full-width form-button form-control-option-button new-slot" data-element-to-clone="single-slot-controls" data-target="time-controls-wrapper">Add Single slot</a>
 		        </div>
 		        <div class="columns large-6 small-6">
-		          <a class="button medium full-width form-button form-control-option-button" data-element-to-clone="range-controls" data-target="time-controls-wrapper">Add Range</a>
+		          <a class="button medium full-width form-button add-range">Add Range</a>
 		        </div>
 		      </div>
 		    </div>
