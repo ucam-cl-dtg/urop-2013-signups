@@ -27,6 +27,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.OrderBy;
 
 
 @Entity
@@ -39,15 +40,18 @@ public class Event implements Mappable {
 	
 	private String location;
 	private String title;
+	private String sheetType;
 	
 	@ManyToOne
 	@JoinColumn(name = "USER_CRSID")
 	private User owner;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
-	private Set<Row> rows = new HashSet<Row>(0);
+	@OrderBy("id")
+	private Set<Row> rows = new TreeSet<Row>();
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
+	@OrderBy("id")
 	private Set<Type> types = new HashSet<Type>(0);
 
 	public Event() {}
@@ -74,6 +78,9 @@ public class Event implements Mappable {
 
 	public String getTitle() { return this.title; }
 	public void setTitle(String title) { this.title = title; }
+
+	public String getSheetType() { return this.sheetType; }
+	public void setSheetType(String sheetType) { this.sheetType = sheetType; }
 	
 	public User getOwner() { return this.owner; }
 	public void setOwner(User owner) { this.owner = owner; }
@@ -89,39 +96,46 @@ public class Event implements Mappable {
 		builder = builder.put("id",id);
 		builder = builder.put("title",title);
 		builder = builder.put("location",location);
+		builder = builder.put("sheetType",sheetType);
 		builder = builder.put("owner",owner.toMap());
 		builder = builder.put("types", Util.getImmutableCollection(types));
 		
-		// Make row hierarchy with dates
-		SortedMap<String, Set<Row>> temp = new TreeMap<String, Set<Row>>();
-		SortedSet<Row> rowContainer;
-		for(Row row: rows) {
-			Calendar cal = row.getCalendar();
-			String key = "" + cal.get(Calendar.YEAR) + ":" + cal.get(Calendar.MONTH) + ":" + cal.get(Calendar.DAY_OF_MONTH);
-			if (temp.containsKey(key)) {
-				temp.get(key).add(row);
-			} else {
-				rowContainer = new TreeSet<Row>();
-				rowContainer.add(row);
-				temp.put(key, rowContainer);
+		if (sheetType.equals("datetime")) {
+			// Make row hierarchy with dates
+			SortedMap<String, Set<Row>> temp = new TreeMap<String, Set<Row>>();
+			SortedSet<Row> rowContainer;
+			for(Row row: rows) {
+				Calendar cal = row.getCalendar();
+				String key = "" + cal.get(Calendar.YEAR) + ":" + cal.get(Calendar.MONTH) + ":" + cal.get(Calendar.DAY_OF_MONTH);
+				if (temp.containsKey(key)) {
+					temp.get(key).add(row);
+				} else {
+					rowContainer = new TreeSet<Row>();
+					rowContainer.add(row);
+					temp.put(key, rowContainer);
+				}
 			}
+			
+			List<ImmutableMap<String, ?>> dates = new ArrayList<ImmutableMap<String, ?>>();
+			for(String key: temp.keySet()) {
+				// Parse date nicely
+				String[] dateArray = key.split(":");
+				int year = Integer.parseInt(dateArray[0]);
+				int month = Integer.parseInt(dateArray[1]);
+				int day = Integer.parseInt(dateArray[2]);
+				Calendar cal = new GregorianCalendar(year, month, day);
+				SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d");
+				String date = formatter.format(cal.getTime());
+	
+				dates.add(ImmutableMap.of("date", date, "rows", Util.getImmutableCollection(temp.get(key))));
+			}
+			
+			builder = builder.put("dates", dates);
+			builder = builder.put("rows", new ArrayList<ImmutableMap<String,?>>());
+		} else if (sheetType.equals("manual")) {
+			builder = builder.put("dates", new ArrayList<ImmutableMap<String,?>>());
+			builder = builder.put("rows", Util.getImmutableCollection(rows));
 		}
-		
-		List<ImmutableMap<String, ?>> dates = new ArrayList<ImmutableMap<String, ?>>();
-		for(String key: temp.keySet()) {
-			// Parse date nicely
-			String[] dateArray = key.split(":");
-			int year = Integer.parseInt(dateArray[0]);
-			int month = Integer.parseInt(dateArray[1]);
-			int day = Integer.parseInt(dateArray[2]);
-			Calendar cal = new GregorianCalendar(year, month, day);
-			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d");
-			String date = formatter.format(cal.getTime());
-
-			dates.add(ImmutableMap.of("date", date, "rows", Util.getImmutableCollection(temp.get(key))));
-		}
-		
-		builder = builder.put("dates", dates);
 
 		return builder.build();
 	}

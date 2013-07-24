@@ -1,9 +1,13 @@
 package uk.ac.cam.signups.forms;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Set;
 
 import uk.ac.cam.signups.models.*;
 import uk.ac.cam.signups.util.HibernateUtil;
@@ -21,12 +25,15 @@ public class EventForm {
 	@FormParam("available_hours[]") String[] availableHours;
 	@FormParam("available_minutes[]") String[] availableMinutes;
 	
+	Logger log = LoggerFactory.getLogger(EventForm.class);
+	
 	public int handle(User currentUser) {		
 		Session session = HibernateUtil.getTransactionSession();
 		// Create event prototype
 		Event event = new Event();
 		event.setLocation(location);
 		event.setTitle(title);
+		event.setSheetType(rowType);
 
 		// Set owner of the user to current user
 		event.setOwner(currentUser);
@@ -57,16 +64,30 @@ public class EventForm {
 			}
 		} else if (rowType.equals("datetime")) {
 			Calendar cal;
+			Set<Calendar> duplicateCalContainer = new HashSet<Calendar>(); // To keep track of added dates to avoid duplicates
+			MAIN_LOOP:
 			for(int i = 0; i < availableDates.length; i++) {
+				// Create calendar object and parse parameters
 				String[] splitDate = availableDates[i].split("/");
 				int year = Integer.parseInt(splitDate[2]);
 				int month = Integer.parseInt(splitDate[1]) - 1;
 				int day = Integer.parseInt(splitDate[0]);
 				cal = new GregorianCalendar(year, month, day, Integer.parseInt(availableHours[i]), Integer.parseInt(availableMinutes[i]));
+				
+				// Skip duplicates
+				if (duplicateCalContainer.contains(cal))
+					continue MAIN_LOOP;
+				
+				duplicateCalContainer.add(cal);
+				
 				row = new Row(cal, event);
+				
+				// Set type for rows if there is only one type for the event
 				if (types.length == 1)
 					row.setType(type);
 				session.save(row);
+				
+				// Create slots
 				Slot slot;
 				for(int j = 0; j < nOfColumns; j++) {
 					slot = new Slot(row);

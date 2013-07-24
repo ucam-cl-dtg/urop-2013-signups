@@ -7,7 +7,9 @@
  * @param location 
  * @param types 
  * @param dates 
+ * @param rows 
  * @param id 
+ * @param sheetType
  * 
  */
 {template .show}
@@ -15,47 +17,89 @@
     <h2>{$title} at {$location} created by {$owner.crsid}</h2>
     
     <form class="custom" action="/signapp/events/{$id}/fill_slots" method="post">
-      <div style="width:100%; overflow-x: scroll"> 
-      <table>
-        {foreach $dateGroup in $dates }
-          <tr>
-            <td>{$dateGroup.date}</td> 
-            <td>
-              <div class="row">
-                <div class="columns large-12 small-12">
-                  {foreach $row in $dateGroup.rows}
-                    <div class="row">
-                      <div class="columns large-12 small-12 time-label"><div>{$row.date.hour}:{$row.date.minute}</div></div> 
-                    </div>
-                    <div class="row">
-                      {foreach $slot in $row.slots}
-                        <input type="text" name="slot_crsids[]" class="slot-field">
-                        <input type="hidden" name="slot_ids[]" value="{$slot.id}">
-                      {/foreach}
-                      <div class="type-choice">
-	                      {if length($types) != 1 }
-	                        <select class="small" name="types[]">
-	                          <option value="0">Please select one</option> 
-	                          {foreach $type in $types}
-	                            <option value="{$type.id}">{$type.name}</option>
-	                          {/foreach}
-	                        </select>
-	                      {else}
-	                        {foreach $type in $types}
-	                          <span>{$type.name}</span>
-	                        {/foreach}
-	                      {/if}
-                      </div>
-                    </div>
-                  {/foreach}
+      <div style="width:100%"> 
+      {if $sheetType == 'datetime'}
+	      <table>
+	        {foreach $dateGroup in $dates }
+	          <tr>
+	            <td class="big-table-label">{$dateGroup.date}</td> 
+	            <td>
+	              <div class="row">
+	                <div class="columns large-12 small-12">
+	                  {foreach $row in $dateGroup.rows}
+	                    {if not isFirst($row)}<hr>{/if}
+	                    <div class="row">
+	                      <div class="columns large-12 small-12 time-label"><div>{$row.date.hour}:{$row.date.minute}</div></div> 
+	                    </div>
+	                    <div class="row">
+                        {call .slots }{param slots: $row.slots /}{/call}
+                        {call .types}
+                          {param types: $types /}
+                          {param trueType: $row.type /}
+                        {/call}
+	                    </div>
+	                  {/foreach}
+	                </div>
+	              </div>
+	            </td>
+	          </tr>
+	        {/foreach}
+	      </table>
+      {elseif $sheetType == 'manual'}
+        <table>
+          {foreach $row in $rows}
+            <tr>
+              <td class="big-table-label">{index($row) + 1} )</td>
+              <td>
+                <div class="row">
+                  {call .slots }{param slots: $row.slots /}{/call}
+                  {call .types}
+                    {param types: $types /}
+                    {param trueType: $row.type /}
+                  {/call}
                 </div>
-              </div>
-            </td>
-          </tr>
-        {/foreach}
-      </table>
+              </td>
+            </tr>
+          {/foreach}
+        </table>
+      {/if}
       </div>
       <div><input type="submit" value="Save"></div>
     </form>
+  </div>
+{/template}
+
+/**
+ * Partial template to display slots
+ * @param slots
+ *
+ */
+{template .slots}
+  {foreach $slot in $slots}
+    <input type="text" name="slot_crsids[]" class="slot-field" value="{$slot.owner}">
+    <input type="hidden" name="slot_ids[]" value="{$slot.id}">
+  {/foreach}
+{/template}
+
+/**
+ * Partial template to display types
+ * @param types
+ * @param trueType
+ *
+ */
+{template .types}
+  <div class="type-choice">
+    {if length($types) != 1 }
+      <select name="types[]" >
+        <option value="0">Please select one</option> 
+        {foreach $type in $types}
+          <option value="{$type.id}" {if $type.id == $trueType.id}selected{/if}>{$type.name}</option>
+        {/foreach}
+      </select>
+    {else}
+      {foreach $type in $types}
+        <span>{$type.name}</span>
+      {/foreach}
+    {/if}
   </div>
 {/template}
