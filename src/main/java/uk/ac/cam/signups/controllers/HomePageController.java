@@ -1,5 +1,7 @@
 package uk.ac.cam.signups.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.GET;
@@ -15,10 +17,15 @@ import com.googlecode.htmleasy.ViewWith;
 
 
 
+
+
+
+
 //Import models
 import uk.ac.cam.signups.models.*;
 import uk.ac.cam.signups.util.HibernateUtil;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 //Import the following for logging
 import org.slf4j.Logger;
@@ -33,7 +40,7 @@ public class HomePageController extends ApplicationController{
 	private User user;
 	
 	@GET @Path("/")
-	public void appRedirect() {
+	public void localhostRedirect() {
 		throw new RedirectException("/app/#signapp/");
 	}
 	
@@ -46,13 +53,26 @@ public class HomePageController extends ApplicationController{
 		
 		// Upcoming deadlines
 		
-		// Upcoming events
-		
+		// Upcoming events 
+		// move most of this code to a better location later
+		Session session = HibernateUtil.getTransactionSession();
+
+		ArrayList<Slot> slots = new ArrayList<Slot>();
+		Query getSlot = session.createQuery("from Slot where owner = :user").setParameter("user", user);
+		slots = (ArrayList<Slot>) getSlot.list();
+	  	Row row;
+	  	Event event;
+	  	List<ImmutableMap<String, ?>> events = new ArrayList<ImmutableMap<String,?>>();
+		for(Slot s : slots){
+			row = s.getRow();
+			event = row.getEvent();
+			events.add(ImmutableMap.of("name", event.getTitle(), "date", row.getCalendar().getTime().toString()));
+		}
+
 		// Get user details
 		log.debug("Index GET: Getting user details");
 		ImmutableMap<String, ?> userMap = ulm.getAll();
-
-		return ImmutableMap.of("user", userMap, "deadlines", user.getUserDeadlinesMap());
+		return ImmutableMap.of("user", userMap, "deadlines", user.getUserDeadlinesMap(), "events", events);
 	}
 	
 	// DOS Index

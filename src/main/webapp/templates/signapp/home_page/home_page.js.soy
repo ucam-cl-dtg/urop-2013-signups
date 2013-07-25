@@ -4,6 +4,7 @@
  * Home Page for timetables
  * @param user
  * @param deadlines
+ * @param events
  */
 {template .index autoescape="false"}
    
@@ -93,6 +94,44 @@
         </div>
     
     <!-- end upcoming deadlines -->
+    
+    <!-- upcoming events -->
+    
+    <h4> Upcoming events</h4>
+    
+    <div class="row">
+    <ul class="panels">
+
+           <!--display a row for each event-->
+            
+            {foreach $event in $events}
+            <form id=""> 
+                <li class="panel-wrapper columns large-12">
+                    <div class="list-panel">
+                    <div class="row list-inner-panel">
+                        <div class="columns large-9 small-9"><strong>{$event.name}</strong> - due <span class="round alert label">{$event.date}</span><br/><em></em></div>
+                        <div class="columns large-3 small-3 text-right">
+                            <div class="icon-button-wrapper">
+                                <a class="icon-button panel-icon-button websymbols-icon">&#88;</a>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </li>
+                </form>
+                {ifempty}
+                <div class="columns large-12 small-12">
+                    You have not created any deadlines
+                </div>
+                {/foreach}
+                
+                <!-- end display events--> 
+                
+            </ul>
+        </div>
+        
+    </ul>
+    </div>
     
 
 {/template}
