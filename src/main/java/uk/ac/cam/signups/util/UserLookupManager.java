@@ -23,7 +23,6 @@ import uk.ac.cam.signups.helpers.LDAPQueryHelper;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * @author      Holly Priest <hp343@cam.ac.uk>
  * @version     1                
  * A class to contain all data that may need to be looked up for a user.
  * Created once per session for a single crsid.

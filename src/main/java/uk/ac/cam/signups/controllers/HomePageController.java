@@ -21,9 +21,11 @@ import com.googlecode.htmleasy.ViewWith;
 
 
 
+
 //Import models
 import uk.ac.cam.signups.models.*;
 import uk.ac.cam.signups.util.HibernateUtil;
+import uk.ac.cam.signups.util.UserLookupManager;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -71,7 +73,9 @@ public class HomePageController extends ApplicationController{
 
 		// Get user details
 		log.debug("Index GET: Getting user details");
-		ImmutableMap<String, ?> userMap = ulm.getAll();
+		
+		ImmutableMap<String, ?> userMap = ulm.getAll();		
+		
 		return ImmutableMap.of("user", userMap, "deadlines", user.getUserDeadlinesMap(), "events", events);
 	}
 	

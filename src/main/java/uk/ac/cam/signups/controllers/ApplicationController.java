@@ -38,4 +38,15 @@ public class ApplicationController {
 		return User.registerUser(crsid);
 	}
 	
+	// temporary for testing
+	protected User initialiseSpecifiedUser(String crsid) {
+		
+		// Create UserLookupManager for this user
+		log.debug("Creating userLookupManager");	
+		ulm = UserLookupManager.getUserLookupManager(crsid);
+		
+		// Register or return the user
+		return User.registerUser(crsid);
+	}
+	
 }
