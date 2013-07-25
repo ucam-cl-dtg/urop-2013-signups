@@ -9,7 +9,6 @@ moduleScripts['signapp']['events'] = {
 				  var target = $(this).attr('data-target');
 			
 			    var controls = $('.' + elementToClone).clone().get(0).outerHTML;
-			    console.log(controls);
 			    var elem = $(controls).css("display","none");
 			    $('.' + target).find(".single-slot-controls").last().after(elem);
 			    $('.' + target).find(".single-slot-controls").last().slideDown("fast");
@@ -18,7 +17,40 @@ moduleScripts['signapp']['events'] = {
 			  });
 			  
 			  $(".add-range").click(function() {
-			  	$(".range-controls").slideDown("fast");
+			  	if ($(".range-controls").css("display") == "none") {
+			  		$(".range-controls").slideDown("fast");
+			  		$(this).text("Remove Range");
+			  	} else {
+			  		$(".range-controls").slideUp("fast");
+			  		$(this).text("Add Range");
+			  	}
+			  });
+			  
+			  $(".generate-slots").click(function() {
+			  	var parentElem = $(this).parent().parent();
+			  	var len = parseInt(parentElem.find("#number_of_slots").val());
+			  	var date = parseInt(parentElem.find("#date").val());
+			  	var startHour = parseInt(parentElem.find("#hour").val());
+			  	var startMinute = parseInt(parentElem.find("#minute").val());
+			  	var duration = parseInt(parentElem.find("#duration").val());
+			  	var breakDuration = parseInt(parentElem.find("#break").val());
+			  	
+			  	var singleSlot;
+			  	var hour;
+			  	var minute;
+			  	for(var i = 0; i < len; i++) {
+			  		singleSlot = $(".single-slot-controls").clone()
+			  		singleSlot.find("input[name='available_dates[]']").val(date);
+			  		minute = startMinute + ((duration + breakDuration) * i);
+			  		hour = startHour;
+			  		while (minute >= 60) {
+			  			minute -= 60;
+			  			hour++;
+			  		}
+			  		singleSlot.find("input[name='available_minutes[]']").find("option[value="+minute+"]").attr("selected","selected");
+			  		singleSlot.find("input[name='available_hours[]']").find("option[value="+hour+"]").attr("selected","selected");
+			  		$(".time-controls-wrapper").find(".single-slot-controls").last().after(singleSlot.get(0).outerHTML);
+			  	}
 			  });
 			
 			  $(".event-type-input").tokenInput("/signapp/events/queryTypes", {
