@@ -44,6 +44,13 @@ moduleScripts['signapp']['events'] = {
 			  		});
 			  	}
 			  });
+			  
+			  $("#location").geocomplete({
+		        map: ".map-canvas"
+		      });
+			  
+			  $("#location").geocomplete("find", "Computer Laboratory, Cambridge");
+
 			},
 			
 			function() {
@@ -59,6 +66,7 @@ moduleScripts['signapp']['events'] = {
 			    });
 			  });
 			}
+			
 		],
 	'show' 	:	
 		[
