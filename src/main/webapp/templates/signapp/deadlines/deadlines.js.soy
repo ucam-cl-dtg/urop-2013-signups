@@ -101,11 +101,11 @@
         </div>
     
     <h3>Create new deadline</h3>
-    <form name="deadlineForm" action="/signapp/deadlines" method="post" class="custom">
+    <form name="deadlineForm" action="/signapp/deadlines" method="post" class="custom" data-abide>
         <div class="row">
-            <div class="columns large-2 small-4 field-label">Deadline name</div>
+            <div class="columns large-2 small-4 field-label" >Deadline name</div>
             <div class="columns large-10 small-8">
-                <input type="text" name="title" placeholder="Deadline name" />
+                <input type="text" name="title" placeholder="Deadline name" required/>
             </div>
         </div>
          
@@ -114,7 +114,7 @@
             <div class="columns large-10 small-8">
                 <div class="row">
                     <div class="columns large-6">
-                        <input type="text" placeholder="Date" class="datepicker" name="date"/>
+                        <input type="text" placeholder="Date" class="datepicker" name="date" required/>
                     </div>
                     <div class="large-6 columns">
                         <div class="row collapse">

@@ -3,8 +3,17 @@
 /**
  * Group page for timetables
  * @param groups
+ * @param errors
  */
 {template .index }
+        
+        {if $errors.auth}
+        <span class="round alert label">You are not authorised to edit that group</span>
+        {/if}
+        {if $errors.get}
+
+        {/if}
+        
 		<h2>Groups</h2>
 		
 		<h3>Current groups</h3>
@@ -19,7 +28,7 @@
                 <li class="panel-wrapper columns large-12">
                     <div class="list-panel">
                         <div class="row list-inner-panel">
-                            <div class="columns large-7 small-7">{$group.name}</div>
+                            <div class="columns large-7 small-7" >{$group.name}</div>
                             <div class="columns large-5 small-5 text-right">
                                 <div class="icon-button-wrapper">
                                     <a class="icon-button panel-icon-button websymbols-icon icon-button-array expand-sub-panel">&#43;</a>
@@ -71,11 +80,17 @@
         </div>
     
         <h3>Create new group</h3>     	
-        <form id="group" name="group" action="/signapp/groups" method="post">
+        <form id="group" name="group" action="/signapp/groups" method="post"  data-abide>
             <div class="row">
                 <div class="columns large-2 small-4 field-label">Group name</div>
                 <div class="columns large-10 small-8">
-                    <input type="text" placeholder="Group name" name="title" id="title"/>
+                    {if $errors.noname}
+                    <label class="error">Error</label>
+                    <input type="text" name="title" class="error" required/>
+                    <small class="error">No group name specified</small>                             
+                    {else}
+                    <input type="text" placeholder="Group name" name="title" id="title" required/>
+                    {/if}
                 </div>
             </div>
             <div class="row">
@@ -92,11 +107,21 @@
         </form>
         
         <h3>Import Existing Group (LDAP)</h3>       
-        <form id="import_group" name="import_group" action="/signapp/groups/import" method="post">
+        <form id="import_group" name="import_group" action="/signapp/groups/import" method="post" data-abide>
             <div class="row">
                 <div class="columns large-2 small-4 field-label">Import Group</div>
                 <div class="columns large-10 small-8">
-                    <input type="text" class="exgroup_token_input" name="import_id"/>
+                {if $errors.importsize}
+                  <label class="error">Error</label>
+                  <input type="text" name="import_id" class="exgroup_token_input error"/>
+                  <small class="error">Group too large - max 50 members</small>                
+                {elseif $errors.noimport}
+                  <label class="error">Error</label>
+                  <input type="text" name="import_id" class="exgroup_token_input error"/>
+                  <small class="error">No group chosen for import</small>                
+                {else}
+                    <input type="text" class="exgroup_token_input" name="import_id"/>          
+                {/if}
                 </div>
             </div>
             <div class="row">
@@ -116,12 +141,17 @@
  */
 {template .edit }
 
+        {if $id == -1}
+        <span class="round alert label">Error getting group - group may not exist</span>    
+        {elseif $id == -2}
+        <span class="round alert label">You are not authorised to edit that group</span>      
+        {else}
         <h3>Edit group</h3>
-        <form name="group_edit" action="/signapp/groups/{$id}/update" method="post">
+        <form name="group_edit" action="/signapp/groups/{$id}/update" method="post" data-abide>
             <div class="row">
                 <div class="columns large-2 small-4 field-label">Group name</div>
                 <div class="columns large-10 small-8">
-                    <input type="text" placeholder="Group name" name="title" id="title" value="{$name}"/>
+                    <input type="text" placeholder="Group name" name="title" id="title" value="{$name}" required/>
                 </div>
             </div>
             <div class="row">
@@ -169,5 +199,5 @@
                 </div>
             </div>
         </form>
-
+        {/if}
 {/template}

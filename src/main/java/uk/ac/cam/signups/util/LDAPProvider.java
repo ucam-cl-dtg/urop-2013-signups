@@ -237,6 +237,7 @@ public class LDAPProvider {
 					Attributes result = enumResults.next().getAttributes();
 					// only add if members are public
 					if(result.get("visibility").get().toString().equals("cam")){
+						//dont add if the group is larger than 50 people
 						groupMatches.add(ImmutableMap.of("id", result.get("groupID").get().toString(), "name", result.get("groupTitle").get().toString(), "description", result.get("description").get().toString()));
 					} 
 				}

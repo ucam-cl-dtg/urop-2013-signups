@@ -47,7 +47,9 @@ public class GroupsController extends ApplicationController {
 
 			currentUser = initialiseUser();
 
-			return ImmutableMap.of("crsid", currentUser.getCrsid(), "groups", currentUser.getGroupsMap());
+			ImmutableMap<String, ?> errors = ImmutableMap.of("get", false, "auth", false, "noname", false, "noimport", false, "importsize", false);
+			
+			return ImmutableMap.of("crsid", currentUser.getCrsid(), "groups", currentUser.getGroupsMap(), "errors", errors);
 		}
 		
 		// Create
@@ -80,13 +82,18 @@ public class GroupsController extends ApplicationController {
 			currentUser = initialiseUser();
 			
 		  	Group group = Group.getGroup(id);
+		  	Map<String, ?> groupMap;
 		  	
-		  	// If group not found
+		  	// Error handling.. not great but works. can't use redirects because of template errors
 		  	if(group==null){
-		  		throw new RedirectException("/app/#signapp/groups");
+		  		groupMap = ImmutableMap.of("id", -1, "name", "Group not found", "owner", currentUser.toMap(), "users", new HashSet<ImmutableMap<String,?>>());
+		  	} else if(!group.getOwner().equals(currentUser)) {
+		  		groupMap = ImmutableMap.of("id", -2, "name", "Group not found", "owner", currentUser.toMap(), "users", new HashSet<ImmutableMap<String,?>>());		  		
+		  	} else {
+		  		groupMap = group.toMap();
 		  	}
 		  	
-			return group.toMap();
+			return groupMap;
 		}
 		
 		// Update
@@ -109,11 +116,16 @@ public class GroupsController extends ApplicationController {
 			throw new RedirectException("/app/#signapp/groups");
 		}
 		
-		//Error
-		@GET @Path("/error/{type}")
+		// Errors
+		@GET @Path("/error/{type}") 
 		@Produces(MediaType.APPLICATION_JSON)
-		public void groupError(String type){
+		public Map groupErrors(@PathParam("type") int error){
 			
+			currentUser = initialiseUser();
+			
+			ImmutableMap<String, ?> errors = ImmutableMap.of("get", (error==1), "auth", (error==2), "noname", (error==3), "noimport", (error==4), "importsize", (error==5));
+
+			return ImmutableMap.of("crsid", currentUser.getCrsid(), "groups", currentUser.getGroupsMap(), "errors", errors);
 		}
 		
 		// Find users

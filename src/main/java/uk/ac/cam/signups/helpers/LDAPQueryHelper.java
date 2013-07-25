@@ -191,7 +191,7 @@ public class LDAPQueryHelper {
 		ArrayList<ImmutableMap<String, ?>> groupMatches = new ArrayList<ImmutableMap<String, ?>>();
 		log.debug("Retrieving groups matching " + x + " from LDAP");
 		groupMatches = (ArrayList<ImmutableMap<String, ?>>) LDAPProvider.partialGroupQuery(x, "groupTitle");
-	return groupMatches;
+		return groupMatches;
 	}
 	
 	/**

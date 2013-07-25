@@ -11,6 +11,7 @@ import org.hibernate.Session;
 
 import com.googlecode.htmleasy.RedirectException;
 
+import uk.ac.cam.signups.controllers.GroupsController;
 import uk.ac.cam.signups.helpers.LDAPQueryHelper;
 import uk.ac.cam.signups.models.Deadline;
 import uk.ac.cam.signups.models.Group;
@@ -68,6 +69,9 @@ public class GroupForm {
 	}
 
 	public int handleUpdate(User currentUser, int id) {		
+		
+		parseForm();
+		
 		Session session = HibernateUtil.getTransactionSession();
 		
 		// Get the group to edit
@@ -75,7 +79,7 @@ public class GroupForm {
 	  	
 		// Check the owner is current user
 		if(!group.getOwner().equals(currentUser)){
-			throw new RedirectException("/app/#signapp/deadlines");
+			throw new RedirectException("/app/#signapp/groups/2");
 		}
 		
 		// Set new values
@@ -107,7 +111,7 @@ public class GroupForm {
 		parseForm();
 		
 		if(import_id==null||import_id.equals("")){
-			throw new RedirectException("/app/#signapp/groups");
+			throw new RedirectException("/app/#signapp/groups/error/4");
 		}
 		
 		Session session = HibernateUtil.getTransactionSession();
@@ -115,6 +119,11 @@ public class GroupForm {
 		// Get group info from LDAP
 		String title = LDAPQueryHelper.getGroupName(import_id);
 		List<String> members = LDAPQueryHelper.getGroupMembers(import_id);
+		
+		// If group is larger than 50 members, throw new redirect exception
+		if(members.size()>50){
+			throw new RedirectException("/app/#signapp/groups/error/5");
+		}
 		
 		// Create group prototype
 		Group group = new Group();
@@ -151,7 +160,8 @@ public class GroupForm {
 	public void parseForm() {
 		
 		// Check for empty fields
-		if(title==null||title.equals("")){ this.title = "Untitled Group"; }
+		if(title==null||title.equals("")){ 
+		}
 		if(users==null||users.equals("")){ this.users = ""; }
 				
 	}
