@@ -1,7 +1,17 @@
 package uk.ac.cam.signups.models;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -22,13 +32,15 @@ import org.hibernate.annotations.GenericGenerator;
 
 import uk.ac.cam.signups.helpers.LDAPQueryHelper;
 import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
+import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.UserLookupManager;
+import uk.ac.cam.signups.util.Util;
 
 import com.google.common.collect.ImmutableMap;
 
 @Entity
 @Table(name="GROUPS")
-public class Group {
+public class Group implements Mappable {
 
     @Id
 	@GeneratedValue(generator="increment")
@@ -70,20 +82,60 @@ public class Group {
 	
 	public User getOwner() { return this.owner; }
 	public void setOwner(User owner) { this.owner = owner; }
+
+	// Queries
+	public static Group getGroup(int id){
+		
+		Session session = HibernateUtil.getTransactionSession();
+		
+		Query getGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
+	  	Group group = (Group) getGroup.uniqueResult();	
+	  	return group;
+	}
 	
-	// Create group 
+	public static void deleteGroup(int id){
+		
+		Session session = HibernateUtil.getTransactionSession();
+		
+		Query getGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
+	  	Group group = (Group) getGroup.uniqueResult();
+	  	session.delete(group);
+	}
 	
-	// Soy friendly get methods
-	public HashSet getUsersMap() {
-		HashSet<ImmutableMap<String,?>> groupUsers = new HashSet<ImmutableMap<String,?>>();
-		String crsid;
-		for(User u : users){
-			// Get users crsid
-			crsid = u.getCrsid();
-			// Get users display name from LDAP
-			String name = LDAPQueryHelper.getRegisteredName(crsid);
-			groupUsers.add(ImmutableMap.of("crsid",crsid, "name", name));
+	// Map builder
+	@Override
+	public Map<String, ?> toMap() {
+		ImmutableMap.Builder<String, Object> builder;
+		
+		try {
+			builder = new ImmutableMap.Builder<String, Object>();
+					builder = builder.put("id",id)
+						.put("name",title)
+						.put("owner",owner.toMap());
+			
+			// Get group users
+			HashSet<ImmutableMap<String,?>> groupUsers = new HashSet<ImmutableMap<String,?>>();
+			String crsid;
+			for(User u : users){
+				// Get users crsid
+				crsid = u.getCrsid();
+				// Get users display name from LDAP
+				String name = LDAPQueryHelper.getRegisteredName(crsid);
+				groupUsers.add(ImmutableMap.of("crsid",crsid, "name", name));
+			}
+			
+			builder = builder.put("users", groupUsers);
+			
+			return builder.build();
+			
+		} catch (NullPointerException e) {
+			builder = new ImmutableMap.Builder<String, Object>();
+			builder = builder.put("id",id)
+				.put("name", "Error getting group")
+				.put("owner", "")			
+				.put("users", ImmutableMap.of());
+			return builder.build();
 		}
-		return groupUsers;
+		
 	}
 }

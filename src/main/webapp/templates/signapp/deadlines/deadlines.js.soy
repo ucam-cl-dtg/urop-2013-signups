@@ -22,7 +22,7 @@
                         <div class="columns large-9 small-9"><strong>{$deadline.name}</strong> - due <span class="{if $deadline.datetime.imminent}round alert label{else}label{/if}">{$deadline.datetime.nicedate} at {$deadline.datetime.hour}:{$deadline.datetime.minute}</span><br/><em>{$deadline.message}</em></div>
                         <div class="columns large-3 small-3 text-right">
                             <div class="icon-button-wrapper">
-                                <a class="icon-button panel-icon-button websymbols-icon" data-target="{$deadline.url}">&#88;</a>
+                                <a class="icon-button panel-icon-button websymbols-icon" href="{$deadline.url}">&#88;</a>
                             </div>
                         </div>
                     </div>

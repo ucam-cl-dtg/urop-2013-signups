@@ -6,9 +6,13 @@ import java.util.Set;
 
 import javax.ws.rs.FormParam;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.googlecode.htmleasy.RedirectException;
+
 import uk.ac.cam.signups.helpers.LDAPQueryHelper;
+import uk.ac.cam.signups.models.Deadline;
 import uk.ac.cam.signups.models.Group;
 import uk.ac.cam.signups.models.Row;
 import uk.ac.cam.signups.models.Slot;
@@ -22,6 +26,9 @@ public class GroupForm {
 	@FormParam("import_id") String import_id;
 	
 	public int handle(User currentUser) {		
+		
+		parseForm();
+		
 		Session session = HibernateUtil.getTransactionSession();
 		
 		// Create group prototype
@@ -33,15 +40,17 @@ public class GroupForm {
 
 		
 		// Create set of users for group
-		User user;
 		Set<User> groupMembers = new HashSet<User>();
-		String[] crsids = users.split(",");
-		for(int i=0;i<crsids.length;i++){
-			// Register user (adds user to database if they don't exist
-			user = User.registerUser(crsids[i]);
-			// Add to set of users
-			groupMembers.add(user);
-		}	
+		if(!users.equals("")){
+			User user;		
+			String[] crsids = users.split(",");
+			for(int i=0;i<crsids.length;i++){
+				// Register user (adds user to database if they don't exist
+				user = User.registerUser(crsids[i]);
+				// Add to set of users
+				groupMembers.add(user);
+			}		
+		}
 		
 		group.setUsers(groupMembers);
 		
@@ -57,8 +66,50 @@ public class GroupForm {
 		return group.getId();
 				
 	}
+
+	public int handleUpdate(User currentUser, int id) {		
+		Session session = HibernateUtil.getTransactionSession();
+		
+		// Get the group to edit
+		Group group = Group.getGroup(id);
+	  	
+		// Check the owner is current user
+		if(!group.getOwner().equals(currentUser)){
+			throw new RedirectException("/app/#signapp/deadlines");
+		}
+		
+		// Set new values
+		group.setTitle(title);
+		
+		// Create new set of users for group
+		Set<User> groupMembers = new HashSet<User>();
+		if(!users.equals("")){
+			User user;		
+			String[] crsids = users.split(",");
+			for(int i=0;i<crsids.length;i++){
+				// Register user (adds user to database if they don't exist
+				user = User.registerUser(crsids[i]);
+				// Add to set of users
+				groupMembers.add(user);
+			}		
+		}
+		
+		group.setUsers(groupMembers);
+		
+		session.update(group);
+		
+		return group.getId();
+				
+	}
 	
-	public int handleImport(User currentUser) {		
+	public int handleImport(User currentUser) {	
+		
+		parseForm();
+		
+		if(import_id==null||import_id.equals("")){
+			throw new RedirectException("/app/#signapp/groups");
+		}
+		
 		Session session = HibernateUtil.getTransactionSession();
 		
 		// Get group info from LDAP
@@ -71,8 +122,6 @@ public class GroupForm {
 
 		// Set owner of the user to current user
 		group.setOwner(currentUser);
-
-
 		
 		// Create set of users for group
 		User user;
@@ -98,4 +147,13 @@ public class GroupForm {
 		return group.getId();
 				
 	}
+
+	public void parseForm() {
+		
+		// Check for empty fields
+		if(title==null||title.equals("")){ this.title = "Untitled Group"; }
+		if(users==null||users.equals("")){ this.users = ""; }
+				
+	}
+	
 }

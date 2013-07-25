@@ -48,23 +48,10 @@ public class DeadlinesController extends ApplicationController {
 	@GET @Path("/") //@ViewWith("deadlines.index")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map indexDeadlines() {
-		// Get current user
+
 		currentUser = initialiseUser();
-		
-		String crsid;
-		List<ImmutableMap<String, ?>> deadlines;
-		List<ImmutableMap<String, ?>> cdeadlines;
-		
-		try {
-			crsid = currentUser.getCrsid();
-			deadlines = currentUser.getUserDeadlinesMap();
-			cdeadlines = currentUser.getUserCreatedDeadlinesMap();
-		} catch (Exception e) {
-			log.error("Error getting deadlines: "+  e.getMessage());
-			throw new RedirectException("/app/#signapp/deadlines/error");
-		}
-		
-		return ImmutableMap.of("crsid", crsid, "deadlines", deadlines, "cdeadlines", cdeadlines);
+
+		return ImmutableMap.of("crsid", currentUser.getCrsid(), "deadlines", currentUser.getUserDeadlinesMap(), "cdeadlines", currentUser.getUserCreatedDeadlinesMap());
 	}
 	
 	// Create
@@ -82,34 +69,30 @@ public class DeadlinesController extends ApplicationController {
 	@GET @Path("/{id}/edit") //@ViewWith("/soy/deadlines.edit")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map editDeadline(@PathParam("id") int id) {
+		
 		currentUser = initialiseUser();
 		
-		// Get the deadline to edit
-		Session session = HibernateUtil.getTransactionSession();
-		Query queryDeadline = session.createQuery("from Deadline where id = :id").setParameter("id", id);
-	  	Deadline deadline = (Deadline) queryDeadline.uniqueResult();	
+	  	Deadline deadline = Deadline.getDeadline(id);
 	  	
-	  	// If deadline not found
 	  	if(deadline==null){
-	  		throw new RedirectException("/app/#signapp/deadlines");
+	  		//throw new RedirectException("/app/#signapp/deadlines/error/1");
+	  		return ImmutableMap.of("redirect", "signapp/deadlines/error/1");
 	  	}
-	  	
-		// Check that the current user owns the deadline, otherwise throw a redirect exception
 	  	if(!deadline.getOwner().equals(currentUser)){
-	  		throw new RedirectException("/app/#signapp/deadlines");
+	  		//throw new RedirectException("/app/#signapp/deadlines/error/2");
+	  		return ImmutableMap.of("redirect", "signapp/deadlines/error/2");
 	  	}
-	  	
-		return deadline.getDeadlineMap();		
+		return deadline.toMap();		
 	}
 	
 	// Update
 	@POST @Path("/{id}/edit")
 	public void updateDeadline(@Form DeadlineForm deadlineForm, @PathParam("id") int id) {
+		
 		currentUser = initialiseUser();
 		
-		System.out.println("Editing group: "+id);
-		
 		id = deadlineForm.handleUpdate(currentUser, id);
+		
 		throw new RedirectException("/app/#signapp/deadlines");
 	}
 	
@@ -118,15 +101,25 @@ public class DeadlinesController extends ApplicationController {
 	@DELETE @Path("/{id}")
 	public void deleteDeadline(@PathParam("id") int id) {
 		
-		// Delete the group object
-		Session session = HibernateUtil.getTransactionSession();
-		Query deadlineQuery = session.createQuery("from Deadline where id = :id");
-		deadlineQuery.setParameter("id", id);
-		Deadline deadline = (Deadline)deadlineQuery.uniqueResult();
-		session.delete(deadline);
-		log.info("Deadline id: " + id + "deleted");
+		Deadline.deleteDeadline(id);
 		
 		throw new RedirectException("/app/#signapp/deadlines");
+	}
+	
+	// Error
+	@GET @Path("/error/{type}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Map deadlineError(@PathParam("type") int type){
+		
+		switch (type){
+		case 1: // not found
+			return ImmutableMap.of("errormsg", "Deadline not found, returning to deadlines page", "redirect", "/app/#signapp/deadlines");
+		case 2: // auth
+			return ImmutableMap.of("errormsg", "You are not authorised to edit this deadline, returning to deadlines page", "redirect", "/app/#signapp/deadlines");
+		}
+		
+		return ImmutableMap.of("errormsg", "There was an error processing your request, returning to home page", "redirect", "/app/#signapp/deadlines");
+		
 	}
 	
 	// Find groups AJAX
@@ -142,7 +135,7 @@ public class DeadlinesController extends ApplicationController {
 		//List of group matches
 		ArrayList<ImmutableMap<String,?>> matches = new ArrayList<ImmutableMap<String, ?>>();
 		
-		//Get matching group names.. O(n) each time.. is this too slow? maybe define the .equals and hashCode method?
+		//Get matching group names.. is this too slow? 
 		for(Group g : currentUser.getGroups()){
 			if(g.getTitle().contains(x)){
 				matches.add(ImmutableMap.of("group_id", g.getId(), "group_name", g.getTitle()));
