@@ -4,6 +4,7 @@
  * Deadlines page for timetables
  * @param cdeadlines
  * @param deadlines
+ * @param errors
  */
 {template .index }
 
@@ -114,7 +115,13 @@
             <div class="columns large-10 small-8">
                 <div class="row">
                     <div class="columns large-6">
+                        {if $errors.inpast}
+                        <label class="error">Error</label>
+                        <input type="text" placeholder="Date" class="datepicker error" name="date" required/>
+                        <small class="error">Deadline cannot be in the past</small>                             
+                        {else}
                         <input type="text" placeholder="Date" class="datepicker" name="date" required/>
+                        {/if}
                     </div>
                     <div class="large-6 columns">
                         <div class="row collapse">

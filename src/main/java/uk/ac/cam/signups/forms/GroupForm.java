@@ -120,6 +120,11 @@ public class GroupForm {
 		String title = LDAPQueryHelper.getGroupName(import_id);
 		List<String> members = LDAPQueryHelper.getGroupMembers(import_id);
 		
+		// If group has no members, throw new redirect exception
+		if(members==null){
+			throw new RedirectException("/app/#signapp/groups/error/5");
+		}		
+		
 		// If group is larger than 50 members, throw new redirect exception
 		if(members.size()>50){
 			throw new RedirectException("/app/#signapp/groups/error/5");

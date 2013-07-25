@@ -30,6 +30,7 @@ $(document).ready(function() {
         "signapp/groups/error/:type": "signapp.groups.index",
         "signapp/deadlines" : "signapp.deadlines.index",
         "signapp/deadlines/:id/edit" : supportRedirect("signapp.deadlines.edit"),
+        "signapp/deadlines/error/:type": "signapp.deadlines.index",
         "signapp/": "signapp.home_page.index",
         "signapp/groups/:id/edit" : "signapp.groups.edit",
         "signapp/events/:id" : "signapp.events.show",

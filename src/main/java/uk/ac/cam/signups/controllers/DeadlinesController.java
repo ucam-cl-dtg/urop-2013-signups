@@ -51,7 +51,9 @@ public class DeadlinesController extends ApplicationController {
 
 		currentUser = initialiseUser();
 
-		return ImmutableMap.of("crsid", currentUser.getCrsid(), "deadlines", currentUser.getUserDeadlinesMap(), "cdeadlines", currentUser.getUserCreatedDeadlinesMap());
+		ImmutableMap<String, ?> errors = ImmutableMap.of("get", false, "auth", false, "noname", false, "inpast", false);
+		
+		return ImmutableMap.of("crsid", currentUser.getCrsid(), "deadlines", currentUser.getUserDeadlinesMap(), "cdeadlines", currentUser.getUserCreatedDeadlinesMap(), "errors", errors);
 	}
 	
 	// Create
@@ -106,20 +108,16 @@ public class DeadlinesController extends ApplicationController {
 		throw new RedirectException("/app/#signapp/deadlines");
 	}
 	
-	// Error
-	@GET @Path("/error/{type}")
+	// Errors
+	@GET @Path("/error/{type}") 
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map deadlineError(@PathParam("type") int type){
+	public Map deadlineErrors(@PathParam("type") int error){
 		
-		switch (type){
-		case 1: // not found
-			return ImmutableMap.of("errormsg", "Deadline not found, returning to deadlines page", "redirect", "/app/#signapp/deadlines");
-		case 2: // auth
-			return ImmutableMap.of("errormsg", "You are not authorised to edit this deadline, returning to deadlines page", "redirect", "/app/#signapp/deadlines");
-		}
+		currentUser = initialiseUser();
 		
-		return ImmutableMap.of("errormsg", "There was an error processing your request, returning to home page", "redirect", "/app/#signapp/deadlines");
-		
+		ImmutableMap<String, ?> errors = ImmutableMap.of("get", (error==1), "auth", (error==2), "noname", (error==3), "inpast", (error==4));
+
+		return ImmutableMap.of("crsid", currentUser.getCrsid(), "deadlines", currentUser.getUserDeadlinesMap(), "cdeadlines", currentUser.getUserCreatedDeadlinesMap(), "errors", errors);
 	}
 	
 	// Find groups AJAX

@@ -106,7 +106,8 @@
             </div>
         </form>
         
-        <h3>Import Existing Group (LDAP)</h3>       
+        <h3>Import Existing Group (LDAP)</h3>    
+        <h6 class="subheader">Small public groups only</h6>         
         <form id="import_group" name="import_group" action="/signapp/groups/import" method="post" data-abide>
             <div class="row">
                 <div class="columns large-2 small-4 field-label">Import Group</div>
@@ -114,7 +115,7 @@
                 {if $errors.importsize}
                   <label class="error">Error</label>
                   <input type="text" name="import_id" class="exgroup_token_input error"/>
-                  <small class="error">Group too large - max 50 members</small>                
+                  <small class="error">Invalid group size - group must have at least one member and less than 50 members</small>                
                 {elseif $errors.noimport}
                   <label class="error">Error</label>
                   <input type="text" name="import_id" class="exgroup_token_input error"/>

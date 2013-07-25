@@ -51,12 +51,19 @@ public class DeadlineForm {
 		datetime += " " + hour + ":" + minute;
 		
 		Calendar cal = Calendar.getInstance();
+		Calendar today = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		try {
 			cal.setTime(sdf.parse(datetime));
 		} catch (Exception e) {
 			log.error("e.getMessage()" +  ": error parsing date");
 		}
+		
+		//check its not in the past
+		if(cal.getTime().before(today.getTime())){
+			throw new RedirectException("/app/#signapp/deadlines/error/4");
+		}
+		
 		deadline.setDatetime(cal);
 		
 		Set<User> deadlineUsers = new HashSet<User>();
