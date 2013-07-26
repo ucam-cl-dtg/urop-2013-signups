@@ -60,43 +60,7 @@
         
     <!-- end user info-->
     
-    <!-- upcoming deadlines-->
-    
-    <h4> Upcoming deadlines</h4>
-           <div class="row">
-            <ul class="panels">
-
-           <!--display a row for each deadline-->
-            
-            {foreach $deadline in $deadlines}
-            <form id="d_{$deadline.id}"> 
-                <li class="panel-wrapper columns large-12">
-                    <div class="list-panel">
-                    <div class="row list-inner-panel">
-                        <div class="columns large-9 small-9"><strong>{$deadline.name}</strong> - due <span class="{if $deadline.datetime.imminent}round alert label{else}label{/if}">{$deadline.datetime.nicedate} at {$deadline.datetime.hour}:{$deadline.datetime.minute}</span><br/><em>{$deadline.message}</em></div>
-                        <div class="columns large-3 small-3 text-right">
-                            <div class="icon-button-wrapper">
-                                <a class="icon-button panel-icon-button websymbols-icon" href="{$deadline.url}">&#88;</a>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                </li>
-                </form>
-                {ifempty}
-                <div class="columns large-12 small-12">
-                    You have not created any deadlines
-                </div>
-                {/foreach}
-                
-                <!-- end display deadline--> 
-                
-            </ul>
-        </div>
-    
-    <!-- end upcoming deadlines -->
-    
-    <!-- experimental -->
+    <!-- deadlines and events -->
     
     <div class="section-container auto" data-section>
         <section>
@@ -225,6 +189,8 @@
             </div>
         </section>
     </div>
+    
+    <!--end events and deadlines-->
     
 
 {/template}
