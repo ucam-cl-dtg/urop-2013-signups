@@ -1,42 +1,28 @@
 package uk.ac.cam.signups.models;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.core.Context;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.annotations.GenericGenerator;
 
 import uk.ac.cam.signups.helpers.LDAPQueryHelper;
-import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
 import uk.ac.cam.signups.util.HibernateUtil;
-import uk.ac.cam.signups.util.UserLookupManager;
-import uk.ac.cam.signups.util.Util;
 
 import com.google.common.collect.ImmutableMap;
+import com.googlecode.htmleasy.RedirectException;
 
 @Entity
 @Table(name="GROUPS")
@@ -90,6 +76,7 @@ public class Group implements Mappable {
 		
 		Query getGroup = session.createQuery("from Group where id = :id").setParameter("id", id);
 	  	Group group = (Group) getGroup.uniqueResult();	
+	  	
 	  	return group;
 	}
 	
@@ -133,7 +120,7 @@ public class Group implements Mappable {
 			builder = builder.put("id",id)
 				.put("name", "Error getting group")
 				.put("owner", "")			
-				.put("users", ImmutableMap.of());
+				.put("users", new HashSet<ImmutableMap<String,?>>());
 			return builder.build();
 		}
 		

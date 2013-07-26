@@ -1,6 +1,8 @@
 package uk.ac.cam.signups.controllers;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -9,27 +11,22 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.google.common.collect.ImmutableMap;
-import com.googlecode.htmleasy.RedirectException;
-import com.googlecode.htmleasy.ViewWith;
-
-
-
-
-
-
-
-
-
-//Import models
-import uk.ac.cam.signups.models.*;
-import uk.ac.cam.signups.util.HibernateUtil;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 //Import the following for logging
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import uk.ac.cam.signups.models.Event;
+import uk.ac.cam.signups.models.Row;
+import uk.ac.cam.signups.models.Slot;
+//Import models
+import uk.ac.cam.signups.models.User;
+import uk.ac.cam.signups.util.HibernateUtil;
+
+import com.google.common.collect.ImmutableMap;
+import com.googlecode.htmleasy.RedirectException;
+import com.googlecode.htmleasy.ViewWith;
 
 @Path("/")
 public class HomePageController extends ApplicationController{
@@ -51,12 +48,20 @@ public class HomePageController extends ApplicationController{
 		
 		user = initialiseUser();
 		
-		// Upcoming deadlines
-		
-		// Upcoming events 
 		// move most of this code to a better location later
 		Session session = HibernateUtil.getTransactionSession();
 
+		// get dates
+		Calendar cal = Calendar.getInstance();
+		ArrayList<ImmutableMap<String, ?>> weekdates = new ArrayList<ImmutableMap<String,?>>();
+		SimpleDateFormat niceDateFormat = new SimpleDateFormat("EEEEE, dd MMMMM yyyy");
+		SimpleDateFormat dayFormat = new SimpleDateFormat("EEEEE");
+		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		for(int i=0; i<7;i++){
+			weekdates.add(ImmutableMap.of("day", dayFormat.format(cal.getTime()), "date", niceDateFormat.format(cal.getTime())));
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+		}
+		
 		ArrayList<Slot> slots = new ArrayList<Slot>();
 		Query getSlot = session.createQuery("from Slot where owner = :user").setParameter("user", user);
 		slots = (ArrayList<Slot>) getSlot.list();
@@ -68,11 +73,14 @@ public class HomePageController extends ApplicationController{
 			event = row.getEvent();
 			events.add(ImmutableMap.of("name", event.getTitle(), "date", row.getCalendar().getTime().toString()));
 		}
-
+		
+		
 		// Get user details
 		log.debug("Index GET: Getting user details");
-		ImmutableMap<String, ?> userMap = ulm.getAll();
-		return ImmutableMap.of("user", userMap, "deadlines", user.getUserDeadlinesMap(), "events", events);
+		
+		ImmutableMap<String, ?> userMap = ulm.getAll();		
+		
+		return ImmutableMap.of("user", userMap, "deadlines", user.getUserDeadlinesMap(), "events", events, "weekdates", weekdates);
 	}
 	
 	// DOS Index
