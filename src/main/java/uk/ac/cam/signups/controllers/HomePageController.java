@@ -71,7 +71,7 @@ public class HomePageController extends ApplicationController{
 		for(Slot s : slots){
 			row = s.getRow();
 			event = row.getEvent();
-			events.add(ImmutableMap.of("date", row.getCalendar().getTime().toString(), "event", event.toMap()));
+			events.add(ImmutableMap.of("date", row.getCalendar().getTime().toString(), "type", row.getType().getName(), "event", event.toMap()));
 		}
 		
 		

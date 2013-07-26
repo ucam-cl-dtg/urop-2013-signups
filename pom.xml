@@ -13,7 +13,7 @@
 		<custom_scripts>
       <![CDATA[<link href="/css/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css">]]>
       <![CDATA[<script src="/js/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>]]>
-      		<![CDATA[<script src="/js/shared"></script>]]>
+      		<![CDATA[<script src="/js/shared.js"></script>]]>
 			<![CDATA[<script src="/js/signups.js"></script>]]>
 			<![CDATA[<script src="/js/events.js"></script>]]>
 			<![CDATA[<script src="/js/groups.js"></script>]]>
