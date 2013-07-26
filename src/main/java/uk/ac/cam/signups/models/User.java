@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.Query;
@@ -116,13 +116,15 @@ public class User {
 		}
 		
 		//Sort the deadlines
-		SortedSet<Deadline> sortedDeadlines = new TreeSet<Deadline>();
+		ArrayList<Deadline> sortedDeadlines = new ArrayList<Deadline>();
 		for(Deadline d : deadlines){
 			sortedDeadlines.add(d);
 		}	
+		Collections.sort(sortedDeadlines);
 		
 		// Get deadlines as a map of all parameters
 		for(Deadline d : sortedDeadlines)  {
+			System.out.println("Deadline: " +d.getTitle());
 			userDeadlines.add(d.toMap());
 		}
 		return userDeadlines;
