@@ -58,14 +58,14 @@
 		            <div class="columns large-2 small-2">
 		              <select class="medium" name="available_hours[]">
 		              {for $i in range(6,24)}
-		                <option>{$i}</option>
+		                <option value="{$i}">{$i}</option>
 		              {/for}
 		              </select>
 		            </div>
 		            <div class="columns large-2 small-2">
 		              <select class="medium" name="available_minutes[]">
 		              {for $i in range(60)}
-		                <option>{$i}</option>
+		                <option value="{$i}">{$i}</option>
 		              {/for}
 		              </select>
 		            </div>
@@ -76,16 +76,16 @@
 		        </div>
 		        <div class="range-controls columns large-12 small-12 hide">
 		          <div class="row">
-		            <div class="columns large-2 small-2">
+		            <div class="columns large-1 small-1">
 		              <label>Number of slots</label>
 		            </div>
 		            <div class="columns large-1 small-1">
-		              <input type="text" id="number_of_slots"/>
+		              <input type="number" id="number_of_slots" min="1" value="1"/>
 		            </div>
-		            <div class="columns large-2 small-2">
+		            <div class="columns large-1 small-1">
 		              <label>Start date/time</label>
 		            </div>
-		            <div class="columns large-2 small-2">
+		            <div class="columns large-1 small-1">
 		              <input type="text" class="datepicker" placeholder="Date" id="date">
 		            </div>
 		            <div class="columns large-1 small-1">
@@ -103,7 +103,17 @@
                   </select>
 		            </div>
 		            <div class="columns large-1 small-1">
-		              <label>Break</label>
+		              <label>Duration (mins)</label>
+		            </div>
+		            <div class="columns large-1 small-1">
+		              <select class="medium" id="duration">
+                  {for $i in range(60)}
+                    <option>{$i}</option>
+                  {/for}
+                  </select>
+		            </div>
+		            <div class="columns large-1 small-1">
+		              <label>Break (mins)</label>
 		            </div>
 		            <div class="columns large-1 small-1">
 		              <select class="medium" id="break">
@@ -111,6 +121,9 @@
                     <option>{$i}</option>
                   {/for}
                   </select>
+		            </div>
+		            <div class="columns large-2 small-2">
+		              <a class="button medium full-width generate-slots">Generate</a>
 		            </div>
 		          </div>
 		        </div>
