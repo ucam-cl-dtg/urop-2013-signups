@@ -47,8 +47,9 @@ moduleScripts['signapp']['events'] = {
 			  			minute -= 60;
 			  			hour++;
 			  		}
-			  		singleSlot.find("input[name='available_minutes[]']").find("option[value="+minute+"]").attr("selected","selected");
-			  		singleSlot.find("input[name='available_hours[]']").find("option[value="+hour+"]").attr("selected","selected");
+			  		singleSlot.find("select[name='available_minutes[]']").parent().find("current").val(minute);
+			  		singleSlot.find("select[name='available_hours[]']").parent().find("current").val(hour);
+			  		singleSlot.find(".button").removeClass("disabled");
 			  		$(".time-controls-wrapper").find(".single-slot-controls").last().after(singleSlot.get(0).outerHTML);
 			  	}
 			  });
