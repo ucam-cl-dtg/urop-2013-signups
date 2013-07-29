@@ -24,7 +24,7 @@
 		    <div class="columns large-2 small-4 field-label">Location</div>
 		    <div class="columns large-10 small-8">
 		      <input type="text" placeholder="Location" name="location"/>
-		      <iframe width="100%" height="300px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.co.uk/?ie=UTF8&amp;ll=52.202557,0.094757&amp;spn=0.055128,0.154324&amp;t=m&amp;z=13&amp;output=embed"></iframe><br /><br />
+		      <iframe width="100%" height="300px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://map.cam.ac.uk/"></iframe><br /><br />
 		    </div>
 		  </div>
 		  <div class="row">
@@ -52,81 +52,92 @@
 		      <div class="time-controls-wrapper row">
 		        <div class="single-slot-controls columns large-12 small-12">
 		          <div class="row">
-		            <div class="columns large-6 small-6">
+		            <div class="columns large-6">
 		              <input type="text" class="datepicker" name="available_dates[]" placeholder="Date" />
 		            </div>
-		            <div class="columns large-2 small-2">
+		            <div class="columns large-2 small-4">
 		              <select class="medium" name="available_hours[]">
 		              {for $i in range(6,24)}
 		                <option value="{$i}">{$i}</option>
 		              {/for}
 		              </select>
 		            </div>
-		            <div class="columns large-2 small-2">
+		            <div class="columns large-2 small-4">
 		              <select class="medium" name="available_minutes[]">
 		              {for $i in range(60)}
 		                <option value="{$i}">{$i}</option>
 		              {/for}
 		              </select>
 		            </div>
-		            <div class="columns large-2 small-2">
+		            <div class="columns large-2 small-4">
 		              <a class="button medium full-width delete-time-slot disabled">Delete</a>
 		            </div>
 		          </div>
 		        </div>
-		        <div class="range-controls columns large-12 small-12 hide">
-		          <div class="row">
-		            <div class="columns large-1 small-1">
-		              <label>Number of slots</label>
-		            </div>
-		            <div class="columns large-1 small-1">
-		              <input type="number" id="number_of_slots" min="1" value="1"/>
-		            </div>
-		            <div class="columns large-1 small-1">
-		              <label>Start date/time</label>
-		            </div>
-		            <div class="columns large-1 small-1">
-		              <input type="text" class="datepicker" placeholder="Date" id="date">
-		            </div>
-		            <div class="columns large-1 small-1">
-		              <select class="medium" id="hour">
-                  {for $i in range(6,24)}
-                    <option>{$i}</option>
-                  {/for}
+		      </div>
+		      <div class="row hide range-controls">
+            <div class="columns large-2">
+              <div>
+                <label>Number of slots</label>
+              </div>
+              <div>
+                <input type="number" id="number_of_slots" min="1" value="1"/>
+              </div>
+            </div>
+            <div class="columns large-4">
+              <div>
+                <label>Start date/time</label>
+              </div>
+              <div class="row">
+                <div class="columns large-4 small-4">
+                  <input type="text" class="datepicker" placeholder="Date" id="date">
+                </div>
+                <div class="columns large-4 small-4">
+                  <select class="medium" id="hour">
+                    {for $i in range(6,24)}
+                      <option>{$i}</option>
+                    {/for}
                   </select>
-		            </div>
-		            <div class="columns large-1 small-1">
-		              <select class="medium" id="minute">
+                </div>
+                <div class="columns large-4 small-4">
+                  <select class="medium" id="minute">
+                    {for $i in range(60)}
+                      <option>{$i}</option>
+                    {/for}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="columns large-2 small-6">
+              <div>
+                <label>Duration (mins)</label>
+              </div>
+              <div>
+                <select class="medium" id="duration">
                   {for $i in range(60)}
                     <option>{$i}</option>
                   {/for}
-                  </select>
-		            </div>
-		            <div class="columns large-1 small-1">
-		              <label>Duration (mins)</label>
-		            </div>
-		            <div class="columns large-1 small-1">
-		              <select class="medium" id="duration">
-                  {for $i in range(60)}
-                    <option>{$i}</option>
-                  {/for}
-                  </select>
-		            </div>
-		            <div class="columns large-1 small-1">
-		              <label>Break (mins)</label>
-		            </div>
-		            <div class="columns large-1 small-1">
-		              <select class="medium" id="break">
-                  {for $i in range(60)}
-                    <option>{$i}</option>
-                  {/for}
-                  </select>
-		            </div>
-		            <div class="columns large-2 small-2">
-		              <a class="button medium full-width generate-slots">Generate</a>
-		            </div>
-		          </div>
-		        </div>
+                </select>
+              </div>
+            </div>
+            <div class="columns large-2 small-6">
+              <div>
+                  <label>Break (mins)</label>
+              </div>
+              <div>
+	                <select class="medium" id="break">
+	                  {for $i in range(60)}
+	                    <option>{$i}</option>
+	                  {/for}
+	                </select>
+              </div>
+            </div>
+            <div class="columns large-2">
+              <div class="empty"></div>
+              <div>
+                <a class="button medium full-width generate-slots">Generate</a>
+              </div>
+            </div>
 		      </div>
 		      <div class="row">
 		        <div class="columns large-6 small-6">

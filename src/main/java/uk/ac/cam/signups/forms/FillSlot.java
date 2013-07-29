@@ -40,24 +40,14 @@ public class FillSlot {
 		
 		int columnsSize = slots.get(0).getRow().getSlots().size();
 		
-		log.error("IDS I received: ");
-		for(int idxx: ids)
-			log.error("Received id: " + idxx);
-		
-		log.error("IDS in the database: ");
-		for(int idxx: Util.getIds(slots))
-			log.error("Slot id: " + idxx);
-		
-		
 		if (ids.equals(Util.getIds(slots))) {
-			log.error("I passed equal ids test");
 			Slot slot;
 			Row row;
 			Type type;
 			for(int i = 0; i < slotIds.length; i++) {
 				User owner = User.registerUser(crsids[i]);
+				log.error("crsid: " + slotIds[i] +" - " + crsids[i]);
 				if (owner == null) continue;
-				log.error("I passed owner test");
 				slot = Util.findById(slots, slotIds[i]);
 				slot.setOwner(owner);
 				int typeId;

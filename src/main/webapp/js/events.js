@@ -3,6 +3,18 @@ moduleScripts['signapp']['events'] = {
 		[
 			function() {
 			  $(".datepicker").datepicker({dateFormat: "dd/mm/yy"});
+			  $("input[name='location']").autocomplete(
+			  		{
+			  			minLength: 2,
+			  			source: function(request, response) {
+			  				$.getJSON("http://map.cam.ac.uk/v6.json", {partial: "partial", "q": request})
+			  					.done(function(data) {
+			  						$.each(data.items, function(i, item) {
+			  							
+			  						});
+			  					});
+			  			}
+			  		});
 			
 			  $(".form-control-option-button").click(function() {
 					var elementToClone = $(this).attr('data-element-to-clone');
@@ -27,9 +39,9 @@ moduleScripts['signapp']['events'] = {
 			  });
 			  
 			  $(".generate-slots").click(function() {
-			  	var parentElem = $(this).parent().parent();
+			  	var parentElem = $(this).parent().parent().parent();
 			  	var len = parseInt(parentElem.find("#number_of_slots").val());
-			  	var date = parseInt(parentElem.find("#date").val());
+			  	var date = parentElem.find("#date").val();
 			  	var startHour = parseInt(parentElem.find("#hour").val());
 			  	var startMinute = parseInt(parentElem.find("#minute").val());
 			  	var duration = parseInt(parentElem.find("#duration").val());
@@ -39,18 +51,25 @@ moduleScripts['signapp']['events'] = {
 			  	var hour;
 			  	var minute;
 			  	for(var i = 0; i < len; i++) {
-			  		singleSlot = $(".single-slot-controls").clone()
-			  		singleSlot.find("input[name='available_dates[]']").val(date);
+			  		singleSlot = $(".single-slot-controls").clone().get(0).outerHTML;
+			  		singleSlot = $(singleSlot);
+			  		
+			  		// Calculate times
 			  		minute = startMinute + ((duration + breakDuration) * i);
 			  		hour = startHour;
 			  		while (minute >= 60) {
 			  			minute -= 60;
 			  			hour++;
 			  		}
-			  		singleSlot.find("select[name='available_minutes[]']").parent().find("current").val(minute);
-			  		singleSlot.find("select[name='available_hours[]']").parent().find("current").val(hour);
-			  		singleSlot.find(".button").removeClass("disabled");
-			  		$(".time-controls-wrapper").find(".single-slot-controls").last().after(singleSlot.get(0).outerHTML);
+			  		
+			  		// Set necessary attributes
+			  		if (hour < 24) {
+			  			singleSlot.find("select[name='available_minutes[]']").val(minute).parent().find(".current").val(minute).text(minute);
+			  			singleSlot.find("select[name='available_hours[]']").val(hour).parent().find(".current").val(hour).text(hour);
+			  			$(".time-controls-wrapper").find(".single-slot-controls").last().after(singleSlot);
+			  			singleSlot.find(".datepicker").removeClass("hasDatepicker").removeAttr("id").datepicker({dateFormat: "dd/mm/yy"}).val(date).text(date);
+			  		}
+			  		$(".button").removeClass("disabled");
 			  	}
 			  });
 			
@@ -96,7 +115,25 @@ moduleScripts['signapp']['events'] = {
 	'show' 	:	
 		[
 		  function() {
-			  	
-			}
+		  	$(".slot-field").each(function(i) {
+			  	$(this).tokenInput("/signapp/events/queryCRSID", {
+			  		theme: "facebook",
+			  		method: "post",
+			  		tokenValue: "crsid",
+			  		propertyToSearch: "crsid",
+			  		min_chars: 2,
+			  		hintText: "Type a CRSID",
+			  		preventDuplicates: true,
+			  		resultsLimit: 10,
+			  		tokenLimit: 1,
+			  		resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " (" + item.crsid + ")</div><div class='email'>" + item.crsid + "@cam.ac.uk</div></div></li>" },
+			      tokenFormatter: function(item) { return "<li><p>" + item.name + "<br>" + item.crsid + "</p></li>" }	
+			  	});
+
+			  	if($(this).data("crsid") != "") {
+			  		$(this).tokenInput("add", {crsid: $(this).data("crsid"), name: $(this).data("name")});
+			  	}
+		  	});			
+		  }
 		]
 }

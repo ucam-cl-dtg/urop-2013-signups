@@ -42,9 +42,10 @@ public class HomePageController extends ApplicationController{
 	}
 	
 	// Index
-	@GET @Path("/signapp") 
+	@SuppressWarnings("unchecked")
+  @GET @Path("/signapp") 
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map indexHomePage() {
+	public Map<String, ?> indexHomePage() {
 		
 		user = initialiseUser();
 		
@@ -80,12 +81,12 @@ public class HomePageController extends ApplicationController{
 		
 		ImmutableMap<String, ?> userMap = ulm.getAll();		
 		
-		return ImmutableMap.of("user", userMap, "deadlines", user.getUserDeadlinesMap(), "events", events, "weekdates", weekdates);
+		return ImmutableMap.of("user", userMap, "events", events, "weekdates", weekdates);
 	}
 	
 	// DOS Index
 	@GET @Path("signapp/DoS") @ViewWith("/soy/home_page.dos")
-	public Map dosHomePage() {
+	public Map<String, ?> dosHomePage() {
 		
 		// Initialise user
 		initialiseUser();
@@ -100,7 +101,7 @@ public class HomePageController extends ApplicationController{
 	
 	// Admin Index
 	@GET @Path("signapp/admin") @ViewWith("/soy/home_page.admin")
-	public Map adminHomePage() {
+	public Map<String, ?> adminHomePage() {
 		return ImmutableMap.of();
 	}
 	

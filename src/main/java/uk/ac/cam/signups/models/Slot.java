@@ -50,12 +50,12 @@ public class Slot implements Mappable {
 	public void setOwner(User owner) { this.owner = owner; }
 
   public Map<String, ?> toMap() {
-  	String ownerName;
+  	ImmutableMap<String, ?> rOwner;
   	if (owner != null) {
-  		ownerName = owner.getCrsid(); 
+  		rOwner = (ImmutableMap<String, ?>) owner.toMap();
   	} else {
-  		ownerName = "";
+  		rOwner = ImmutableMap.of("crsid", "", "name", "");
   	}
-	  return ImmutableMap.of("id",id,"owner",ownerName);
+	  return ImmutableMap.of("id",id,"owner", rOwner);
   }
 }

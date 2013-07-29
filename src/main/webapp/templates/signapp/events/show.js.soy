@@ -29,14 +29,16 @@
 	                  {foreach $row in $dateGroup.rows}
 	                    {if not isFirst($row)}<hr>{/if}
 	                    <div class="row">
-	                      <div class="columns large-12 small-12 time-label"><div>{$row.date.hour}:{$row.date.minute}</div></div> 
-	                    </div>
-	                    <div class="row">
-                        {call .slots }{param slots: $row.slots /}{/call}
-                        {call .types}
-                          {param types: $types /}
-                          {param trueType: $row.type /}
-                        {/call}
+                        <div class="columns large-1">
+    	                    <div class="time-label"><div>{$row.date.hour}:{$row.date.minute}</div></div>
+                        </div>	                     
+                        <div class="columns large-11">
+	                        {call .slots }{param slots: $row.slots /}{/call}
+	                        {call .types}
+	                          {param types: $types /}
+	                          {param trueType: $row.type /}
+	                        {/call}
+                        </div>
 	                    </div>
 	                  {/foreach}
 	                </div>
@@ -76,7 +78,7 @@
  */
 {template .slots}
   {foreach $slot in $slots}
-    <input type="text" name="slot_crsids[]" class="slot-field" value="{$slot.owner}">
+    <input type="text" name="slot_crsids[]" class="slot-field" data-crsid="{$slot.owner.crsid}" data-name="{$slot.owner.name}">
     <input type="hidden" name="slot_ids[]" value="{$slot.id}">
   {/foreach}
 {/template}
@@ -90,7 +92,7 @@
 {template .types}
   <div class="type-choice">
     {if length($types) != 1 }
-      <select name="types[]" >
+      <select class="small" name="types[]" >
         <option value="0">Please select one</option> 
         {foreach $type in $types}
           <option value="{$type.id}" {if $type.id == $trueType.id}selected{/if}>{$type.name}</option>
