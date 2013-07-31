@@ -16,6 +16,7 @@ import javax.ws.rs.FormParam;
 
 public class EventForm {
 	@FormParam("location") String location;
+	@FormParam("room") String room;
 	@FormParam("title") String title;
 	@FormParam("types") String typeNames;
 	@FormParam("n_of_columns") int nOfColumns;
@@ -32,6 +33,7 @@ public class EventForm {
 		// Create event prototype
 		Event event = new Event();
 		event.setLocation(location);
+		event.setRoom(room);
 		event.setTitle(title);
 		event.setSheetType(rowType);
 

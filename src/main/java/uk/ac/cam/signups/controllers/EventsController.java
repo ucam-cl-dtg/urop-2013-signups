@@ -23,6 +23,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 @Path("/signapp/events")
@@ -42,6 +43,14 @@ public class EventsController extends ApplicationController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ImmutableMap<String, ?>> generateTypeSuggestions(String q) {
 		return Type.findSimilar(q.substring(2), initialiseUser(), "global");
+	}
+	
+	// Query rooms
+	@GET
+	@Path("/queryRooms")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<ImmutableMap<String, String>> generateRoomSuggestions(@QueryParam("qroom") String qroom, @QueryParam("qbuilding") String qbuilding) {
+		return Event.suggestRooms(qbuilding, qroom);
 	}
 
 	// Create

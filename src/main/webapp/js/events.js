@@ -7,14 +7,49 @@ moduleScripts['signapp']['events'] = {
 			  		{
 			  			minLength: 2,
 			  			source: function(request, response) {
-			  				$.getJSON("http://map.cam.ac.uk/v6.json", {partial: "partial", "q": request})
+			  				$.getJSON("http://map.cam.ac.uk/v6.json", {partial: "partial", "q": request.term, limit: "10"})
 			  					.done(function(data) {
-			  						$.each(data.items, function(i, item) {
-			  							
-			  						});
+			  						response($.map(data, function(item) {
+			  							return { 
+				  								label: (item.prefix ? item.prefix + " " : "") + item.name, 
+				  								value: (item.prefix ? item.prefix + " " : "") + item.name
+			  								};
+			  						}));
 			  					});
+			  			},
+			  			select: function(event, resp) {
+			  				$("input[name='location']").val(resp.item.label).text(resp.item.label);
+			  				$("iframe").attr("src", "http://map.cam.ac.uk/" + resp.item.label);
 			  			}
 			  		});
+			  
+			  $("input[name='location'").keyup(function() {
+			  	if ($(this).val() != "") {
+			  		$("input[name='room']").removeAttr("disabled");
+			  	} else {
+			  		$("input[name='room']").attr("disabled","disabled");
+			  	}
+			  });
+
+			  $("input[name='room']").autocomplete(
+			  	{
+			  		minLength: 2,
+			  		source: function(request, response) {
+			  			$.getJSON("/signapp/events/queryRooms", 
+			  					{
+			  						"qroom": request.term, 
+			  						"qbuilding": $("input[name='location']").text()
+			  					})
+			  				.done(function(data) {
+			  					response($.map(data,function(item) {
+			  						return {
+			  							value: item.room,
+			  							label: item.room
+			  						}
+			  					}));
+			  				});
+			  		}
+			  	});
 			
 			  $(".form-control-option-button").click(function() {
 					var elementToClone = $(this).attr('data-element-to-clone');
@@ -115,6 +150,19 @@ moduleScripts['signapp']['events'] = {
 	'show' 	:	
 		[
 		  function() {
+		  	$("#map-toggle").click(function(e){
+		  		e.preventDefault();
+		  		if ($(this).data("show") == "true") {
+		  			$(this).data("show","false");
+		  			$("#iframe-wrapper").addClass("overflow-hidden");
+		  			$(this).text("Show on map");
+		  		} else {
+		  			$(this).data("show", "true");
+		  			$("#iframe-wrapper").removeClass("overflow-hidden");
+		  			$(this).text("Hide map");
+		  		}
+		  	});
+		  	
 		  	$(".slot-field").each(function(i) {
 			  	$(this).tokenInput("/signapp/events/queryCRSID", {
 			  		theme: "facebook",
