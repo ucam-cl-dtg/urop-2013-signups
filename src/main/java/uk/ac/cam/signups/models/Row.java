@@ -130,7 +130,8 @@ public class Row implements Mappable, Comparable<Row> {
 			        + hourFormatter.format(calendar.getTime())
 			        + minuteFormatter.format(calendar.getTime()));
 			builder = builder.put("date", dateBuilder.build());
-		}
+		} 
+
 		builder = builder.put("slots", Util.getImmutableCollection(slots));
 		if (type != null) {
 			builder = builder.put("type", type.toMap());
@@ -141,6 +142,16 @@ public class Row implements Mappable, Comparable<Row> {
 	}
 
 	public int compareTo(Row row) {
-		return this.calendar.compareTo(row.calendar);
+		if (row.calendar != null) {
+			return this.calendar.compareTo(row.calendar);
+		} else {
+			if (this.id > row.getId()) {
+				return 1;
+			} else if (this.id == row.getId()) {
+				return 0;
+			} else {
+				return -1;
+			}
+		}
 	}
 }

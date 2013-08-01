@@ -42,7 +42,7 @@ public class FillSlot {
 		
 		List<Slot> slots = (List<Slot>) session
 		    .createQuery(
-		        "from Slot as slot where slot.row.event.id = :id and slot.row.calendar > :calendar")
+		        "from Slot as slot where slot.row.event.id = :id and (slot.row.calendar > :calendar or slot.row.event.sheetType = 'manual')")
 		    .setParameter("id", id)
 		    .setParameter("calendar", Calendar.getInstance()).list();
 

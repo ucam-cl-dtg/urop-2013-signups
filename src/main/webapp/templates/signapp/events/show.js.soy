@@ -69,7 +69,7 @@
         </table>
       {/if}
       </div>
-      {if $currentDate < $lastRow.date.comparativeString }
+      {if ($sheetType == 'manual') or $currentDate < $lastRow.date.comparativeString }
         <div><input type="submit" value="Save" class="small button"></div>
       {/if}
     </form>
@@ -80,12 +80,13 @@
  * Partial template to display slots
  * @param row
  * @param currentDate
+ * @param sheetType
  *
  *
  */
 {template .slots}
   {foreach $slot in $row.slots}
-    {if $currentDate > $row.date.comparativeString }
+    {if ($sheetType == 'datetime') and $currentDate > $row.date.comparativeString }
       <div class="established-slot"> 
         {if $slot.owner.crsid != ''}
           <div class="full-slot">
@@ -116,11 +117,12 @@
  * @param types
  * @param row
  * @param currentDate 
+ * @param sheetType
  *
  */
 {template .types}
   <div class="type-choice">
-    {if length($types) != 1 and $currentDate  < $row.date.comparativeString }
+    {if length($types) != 1 and (($sheetType == 'manual') or ($currentDate  < $row.date.comparativeString)) }
       <select class="small" name="types[]" >
         <option value="0">Please select one</option> 
         {foreach $type in $types}
@@ -131,6 +133,8 @@
       {foreach $type in $types}
         <div class="type">{$type.name}</div>
       {/foreach}
+    {elseif ($row.type != 'no-type') and ($sheetType == 'datetime') and $currentDate > $row.date.comparativeString }
+      <div class="type">{$row.type.name}</div>
     {else}
       <div class="type">No type is selected</div>
     {/if}

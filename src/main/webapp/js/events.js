@@ -150,6 +150,7 @@ moduleScripts['signapp']['events'] = {
 	'show' 	:	
 		[
 		  function() {
+
 		  	$("#map-toggle").click(function(e){
 		  		e.preventDefault();
 		  		if ($(this).data("show") == "true") {
@@ -182,6 +183,52 @@ moduleScripts['signapp']['events'] = {
 			  		$(this).tokenInput("add", {crsid: $(this).data("crsid"), name: $(this).data("name")});
 			  	}
 		  	});			
+
+		  	$(".token-input-token-facebook").each(function(i) {
+		  		$(this).parent().draggable({
+		  			revert: true,
+		  			revertDuration: 200,
+		  			zIndex: 99999,
+		  			stop: function() {
+		  				if ($(this).next().val() == "") {
+		  					$(this).next().tokenInput("clear");
+		  					$(this).removeClass("draggable-custom");
+		  					$(this).draggable("destroy");
+		  				}
+		  			}
+		  		}).addClass("draggable-custom");
+		  	});
+		  	
+		  	$("ul.token-input-list-facebook").droppable({
+		  		drop: function(event, ui) {
+		  			if ($(this).find(".token-input-token-facebook").length != 0) {
+		  				var nameCrsidDraggable = $(ui.draggable).find("p").html().split(/<br>/);
+		  				var nameCrsidDroppable = $(this).find("p").html().split(/<br>/);
+		  				
+		  				$(ui.draggable).next().tokenInput("clear").tokenInput("add", {name: nameCrsidDroppable[0], crsid: nameCrsidDroppable[1]});
+		  				$(ui.draggable).next().val(nameCrsidDroppable[1]);
+		  				$(this).next().val(nameCrsidDraggable[1]);
+		  				$(this).next().tokenInput("clear").tokenInput("add", {name: nameCrsidDraggable[0], crsid: nameCrsidDraggable[1]});
+		  			} else {
+		  				var nameCrsid = $(ui.draggable).find("p").html().split(/<br>/);
+		  				$(this).next().tokenInput("add", {name: nameCrsid[0], crsid: nameCrsid[1]});
+		  				$(this).next().val($(ui.draggable).next().val());
+		  				$(ui.draggable).next().val("");
+		  				$(this).draggable({
+		  						revert: true,
+		  						revertDuration: 200,
+		  						zIndex: 99999,
+		  						stop: function() {
+		  		  				if ($(this).next().val() == "") {
+		  		  					$(this).next().tokenInput("clear");
+		  		  					$(this).removeClass("draggable-custom");
+		  		  					$(this).draggable("destroy");
+		  		  				}
+		  						}
+		  				}).addClass("draggable-custom");
+		  			}
+		  		}
+		  	});
 		  }
 		]
 }
