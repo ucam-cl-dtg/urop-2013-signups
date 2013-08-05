@@ -2,57 +2,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>urop-2013-signups</artifactId>
-	<name>urop-2013-signups</name>
-	<groupId>util</groupId>
-	<version>0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-
-	<properties>
-		<jettyVersion>7.2.0.v20101020</jettyVersion>
-		<custom_scripts>
-      <![CDATA[<link href="/css/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css">]]>
-      <![CDATA[<script src="/js/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>]]>
-      		<![CDATA[<script src="/js/shared"></script>]]>
-			<![CDATA[<script src="/js/signups.js"></script>]]>
-			<![CDATA[<script src="/js/events.js"></script>]]>
-			<![CDATA[<script src="/js/groups.js"></script>]]>
-			<![CDATA[<script src="/js/deadlines.js"></script>]]>
-		</custom_scripts>
-		<custom_templates>
-			<![CDATA[<script src="/soy/js/3/signapp.groups.js"></script>]]>
-      <![CDATA[<script src="/soy/js/3/signapp.deadlines.js"></script>]]>
-			<![CDATA[<script src="/soy/js/3/signapp.home_page.js"></script>]]>
-			<![CDATA[<script src="/soy/js/3/signapp.events.js"></script>]]>
-            <![CDATA[<script src="/soy/js/3/signapp.errors.js"></script>]]>
-		</custom_templates>
-		<custom_css>
-		  <![CDATA[<link href="/css/main.css" rel="stylesheet" type="text/css">]]>
-		</custom_css>
-		<css_namespace>
-		    <![CDATA[id="signapps"]]>
-		</css_namespace>
-	</properties>
+  <groupId>uk.ac.cam.cl.dtg.teaching</groupId>
+  <artifactId>signups</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>Signup Application</name>
+	
 	<repositories>
 		<repository>
 			<id>htmleasy</id>
 			<url>http://htmleasy-maven.googlecode.com/svn/trunk/</url>
 		</repository>
 		<repository>
-			<id>codedance on Github</id>
+			<id>codedance</id>
 			<url>https://github.com/codedance/maven-repository/raw/master</url>
 		</repository>
-		<repository>
-			<id>jboss</id>
-			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
-		</repository>
 	</repositories>
+	
 	<dependencies>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<version>${jettyVersion}</version>
-		</dependency>
+    <dependency>
+  		<groupId>javax.servlet</groupId>
+  		<artifactId>servlet-api</artifactId>
+  		<version>2.5</version>
+  	</dependency>
+    <dependency>
+      <groupId>uk.ac.cam.cl.dtg.teaching</groupId>
+      <artifactId>frontend</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <type>war</type>
+    </dependency>
 		<dependency>
 			<groupId>com.googlecode.htmleasy</groupId>
 			<artifactId>htmleasy</artifactId>
@@ -109,7 +87,7 @@
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jettyVersion}</version>
+				<version>7.2.0.v20101020</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -134,35 +112,21 @@
 					</sassOptions>
 				</configuration>
 			</plugin>
+			
 			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<!-- here the phase you need -->
-						<phase>validate</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-						  <nonFilteredFileExtensions>
-                <nonFilteredFileExtension>woff</nonFilteredFileExtension>
-                <nonFilteredFileExtension>eot</nonFilteredFileExtension>
-                <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
-                <nonFilteredFileExtension>svg</nonFilteredFileExtension>
-              </nonFilteredFileExtensions>
-							<outputDirectory>${basedir}/src/main/webapp/app</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/../urop-2013-frontend</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <overlays>
+            <overlay>
+            </overlay>
+            <overlay>
+              <groupId>uk.ac.cam.cl.dtg.teaching</groupId>
+              <artifactId>frontend</artifactId>
+            </overlay>
+          </overlays>
+        </configuration>
+      </plugin>
 		</plugins>
 	</build>
 </project>

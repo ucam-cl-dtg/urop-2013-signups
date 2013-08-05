@@ -1,15 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" [
+<!ENTITY frontend SYSTEM "frontend.xml">
+]>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 	
-	<!-- Include this for the raven filter -->
-	<filter>
-		<filter-name>ravenFilter</filter-name>
-		<filter-class>uk.ac.cam.signups.webauth.RavenFilter</filter-class>
-	</filter>
+  <context-param>
+    <param-name>cssNamespace</param-name>
+    <param-value>id="signapps"</param-value>
+  </context-param>
+  
+  <context-param>
+    <param-name>cssFiles</param-name>
+    <param-value>/css/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.css,/css/main.css</param-value>
+  </context-param>
+  
+  <context-param>
+    <param-name>jsFiles</param-name>
+    <param-value>/soy/js/3/signapp.groups.js,/soy/js/3/signapp.deadlines.js,/soy/js/3/signapp.home_page.js,/soy/js/3/signapp.events.js,/soy/js/3/signapp.errors.js,/js/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.js,/js/shared.js,/js/signups.js,/js/events.js,/js/groups.js,/js/deadlines.js</param-value>
+  </context-param>
 
 	<!-- Include this for the Hibernate filter -->
 	<filter>
@@ -26,13 +39,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		</init-param>
 	</filter>
 
-	<!-- Include for raven filter (url-pattern set to /* for securing all
-	pages of the website with raven -->
-	<filter-mapping>
-		<filter-name>ravenFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
 	<filter-mapping>
 		<filter-name>Hibernate</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -43,18 +49,5 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	<servlet>
-		<servlet-name>soy</servlet-name>
-		<servlet-class>com.papercut.silken.SilkenServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-		<init-param>
-			<param-name>disableCaching</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>soy</servlet-name>
-		<url-pattern>/soy/*</url-pattern>
-	</servlet-mapping>
+	&frontend;
 </web-app>

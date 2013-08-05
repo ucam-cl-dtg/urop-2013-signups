@@ -36,11 +36,6 @@ public class HomePageController extends ApplicationController{
 	
 	private User user;
 	
-	@GET @Path("/")
-	public void localhostRedirect() {
-		throw new RedirectException("/app/#signapp/");
-	}
-	
 	// Index
 	@GET @Path("/signapp") 
 	@Produces(MediaType.APPLICATION_JSON)
