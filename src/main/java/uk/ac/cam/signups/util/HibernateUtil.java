@@ -61,4 +61,14 @@ public class HibernateUtil {
     		}
     	}
     }
+    
+    public static void rollback() {
+    	Session session = sf.getCurrentSession();
+    	if( session.isOpen()) {
+    		Transaction t = session.getTransaction();
+    		if (t.isActive()) {
+    			t.rollback();
+    		}
+    	}
+    }
 }

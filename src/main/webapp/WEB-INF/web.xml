@@ -11,7 +11,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	
   <context-param>
     <param-name>cssNamespace</param-name>
-    <param-value>id="signapps"</param-value>
+    <param-value></param-value>
   </context-param>
   
   <context-param>
@@ -21,7 +21,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
   
   <context-param>
     <param-name>jsFiles</param-name>
-    <param-value>/soy/js/3/signapp.groups.js,/soy/js/3/signapp.deadlines.js,/soy/js/3/signapp.home_page.js,/soy/js/3/signapp.events.js,/soy/js/3/signapp.errors.js,/js/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.js,/js/shared.js,/js/signups.js,/js/events.js,/js/groups.js,/js/deadlines.js</param-value>
+    <param-value>/soy/js/3/signapp.groups.js,/soy/js/3/signapp.deadlines.js,/soy/js/3/signapp.home_page.js,/soy/js/3/signapp.events.js,/soy/js/3/signapp.errors.js,/js/shared.js,/js/signups.js,/js/events.js,/js/groups.js,/js/deadlines.js</param-value>
   </context-param>
 
 	<!-- Include this for the Hibernate filter -->

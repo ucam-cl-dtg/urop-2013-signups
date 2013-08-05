@@ -2,25 +2,25 @@
 
 /**
  * Template for show action in EventsController
- * @param title
- * @param owner
- * @param location 
- * @param types 
- * @param dates 
- * @param rows 
- * @param id 
- * @param sheetType
+ * @param data
  * 
  */
 {template .show}
   <div class="events" id="show">
-    <h2>{$title} at {$location} created by {$owner.crsid}</h2>
+    <h3>{$data.title} at {$data.location} { $data.room == '' ? 'in ' + $data.room : ''} created by { $data.owner.crsid }</h3>
     
-    <form class="custom" action="/signapp/events/{$id}/fill_slots" method="post">
+    {if $data.room != ''}
+    <div><a id="map-toggle" href="#" data-show="false" class="small button">Show on map</a></div>
+
+      <div id="iframe-wrapper" class="overflow-hidden">
+        <iframe width="100%" height="500px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://map.cam.ac.uk/{$data.location}"></iframe><br /><br />
+      </div>
+    {/if}
+    <form class="custom" action="/signapp/events/{$data.id}/fill_slots" method="post">
       <div style="width:100%"> 
-      {if $sheetType == 'datetime'}
+      {if $data.sheetType == 'datetime'}
 	      <table>
-	        {foreach $dateGroup in $dates }
+	        {foreach $dateGroup in $data.dates }
 	          <tr>
 	            <td class="big-table-label">{$dateGroup.date}</td> 
 	            <td>
@@ -28,15 +28,14 @@
 	                <div class="columns large-12 small-12">
 	                  {foreach $row in $dateGroup.rows}
 	                    {if not isFirst($row)}<hr>{/if}
-	                    <div class="row">
-	                      <div class="columns large-12 small-12 time-label"><div>{$row.date.hour}:{$row.date.minute}</div></div> 
-	                    </div>
-	                    <div class="row">
-                        {call .slots }{param slots: $row.slots /}{/call}
-                        {call .types}
-                          {param types: $types /}
-                          {param trueType: $row.type /}
-                        {/call}
+	                    <div class="row actual">
+                        <div class="columns large-1">
+    	                    <div class="time-label"><div>{$row.date.hour}:{$row.date.minute}</div></div>
+                        </div>	                     
+                        <div class="columns large-11">
+                          {call .slots data="all" }{param row: $row /}{/call}
+                          {call .types data="all"}{param row: $row /}{/call}
+                        </div>
 	                    </div>
 	                  {/foreach}
 	                </div>
@@ -45,18 +44,15 @@
 	          </tr>
 	        {/foreach}
 	      </table>
-      {elseif $sheetType == 'manual'}
+      {elseif $data.sheetType == 'manual'}
         <table>
-          {foreach $row in $rows}
+          {foreach $row in $data.rows}
             <tr>
               <td class="big-table-label">{index($row) + 1} )</td>
               <td>
                 <div class="row">
-                  {call .slots }{param slots: $row.slots /}{/call}
-                  {call .types}
-                    {param types: $types /}
-                    {param trueType: $row.type /}
-                  {/call}
+                  {call .slots data="all" }{param row: $row /}{/call}
+                  {call .types data="all"}{param row: $row /}{/call}
                 </div>
               </td>
             </tr>
@@ -64,42 +60,71 @@
         </table>
       {/if}
       </div>
-      <div><input type="submit" value="Save"></div>
+      {if ($data.sheetType == 'manual') or $data.currentDate < $data.lastRow.date.comparativeString }
+        <div><input type="submit" value="Save" class="small button"></div>
+      {/if}
     </form>
   </div>
 {/template}
 
 /**
  * Partial template to display slots
- * @param slots
+ * @param row
+ * @param data 
+ *
  *
  */
 {template .slots}
-  {foreach $slot in $slots}
-    <input type="text" name="slot_crsids[]" class="slot-field" value="{$slot.owner}">
-    <input type="hidden" name="slot_ids[]" value="{$slot.id}">
+  {foreach $slot in $row.slots}
+    {if ($data.sheetType == 'datetime') and $data.currentDate > $row.date.comparativeString }
+      <div class="established-slot"> 
+        {if $slot.owner.crsid != ''}
+          <div class="full-slot">
+            <div>
+              <p>
+                {$slot.owner.name}<br>
+                {$slot.owner.crsid}
+              </p>
+            </div>
+          </div>
+        {else}
+          <div class="empty-slot">
+            <div>
+              <p>Left Empty</p>
+            </div>
+          </div>
+        {/if}
+      </div>
+    {else}
+      <input type="text" name="slot_crsids[]" class="slot-field" data-crsid="{$slot.owner.crsid}" data-name="{$slot.owner.name}">
+      <input type="hidden" name="slot_ids[]" value="{$slot.id}">
+    {/if}
   {/foreach}
 {/template}
 
 /**
  * Partial template to display types
- * @param types
- * @param trueType
+ * @param data
+ * @param row
  *
  */
 {template .types}
   <div class="type-choice">
-    {if length($types) != 1 }
-      <select name="types[]" >
+    {if length($data.types) != 1 and (($data.sheetType == 'manual') or ($data.currentDate  < $row.date.comparativeString)) }
+      <select class="small" name="types[]" >
         <option value="0">Please select one</option> 
-        {foreach $type in $types}
-          <option value="{$type.id}" {if $type.id == $trueType.id}selected{/if}>{$type.name}</option>
+        {foreach $type in $data.types}
+          <option value="{$type.id}" {if $type.id == $row.type.id}selected{/if}>{$type.name}</option>
         {/foreach}
       </select>
-    {else}
-      {foreach $type in $types}
-        <span>{$type.name}</span>
+    {elseif length($data.types) == 1}
+      {foreach $type in $data.types}
+        <div class="type">{$type.name}</div>
       {/foreach}
+    {elseif ($row.type != 'no-type') and ($data.sheetType == 'datetime') and $data.currentDate > $row.date.comparativeString }
+      <div class="type">{$row.type.name}</div>
+    {else}
+      <div class="type">No type is selected</div>
     {/if}
   </div>
 {/template}

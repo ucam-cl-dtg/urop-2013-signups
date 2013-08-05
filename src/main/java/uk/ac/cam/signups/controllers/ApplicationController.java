@@ -1,17 +1,13 @@
 package uk.ac.cam.signups.controllers;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.signups.models.User;
-import uk.ac.cam.signups.util.HibernateUtil;
-import uk.ac.cam.signups.util.HibernateSessionRequestFilter;
 import uk.ac.cam.signups.util.UserLookupManager;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 
 public class ApplicationController {
 	// Logger
@@ -48,5 +44,4 @@ public class ApplicationController {
 		// Register or return the user
 		return User.registerUser(crsid);
 	}
-	
 }
