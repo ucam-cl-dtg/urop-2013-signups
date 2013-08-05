@@ -2,6 +2,8 @@
 
 /**
  * Template for new action in EventsController
+ * @param data
+ * @param errors
  * 
  */
 {template .new}
@@ -10,27 +12,31 @@
 		<form class="custom" action="/signapp/events" method="post">
 		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Title</div>
-		    <div class="columns large-10 small-8">
-		      <input type="text" placeholder="Title" name="title"/>
+		    <div class="columns large-10 small-8 {$errors != 'undefined' and $errors.title ? 'error' : ''}">
+		      <input type="text" placeholder="Title" name="title" {if $data != 'undefined' and $data.title}value="{$data.title}{/if}"/>
+		      {call .errors data="all"}{param errorsCollection: $errors.title /}{/call}
 		    </div>
 		  </div>
 		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Event type</div>
-		    <div class="columns large-10 small-8">
-		      <input type="text" class="event-type-input" name="types"/>
+		    <div class="columns large-10 small-8 {$errors != 'undefined' and $errors.eventType ? 'error' : ''}">
+		      <input type="text" class="event-type-input" name="types" {if $data != 'undefined' and $data.types}data-prepopulate="{$data.types}"{/if}/>
+		      {call .errors data="all"}{param errorsCollection: $errors.eventType /}{/call}
 		    </div>
 		  </div>
 		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Location</div>
 		    <div class="columns large-10 small-8">
 		      <div class="row">
-		        <div class="columns large-6">
+		        <div class="columns large-6 {$errors != 'undefined' and $errors.location ? 'error' : ''}">
 		          <div><label for="location">Building</label></div>
-    		      <div><input type="text" placeholder="Building" name="location"/></div>
+    		      <div><input type="text" placeholder="Building" name="location" {if $data != 'undefined' and $data.location}value="{$data.location}"{/if}/></div>
+    		      {call .errors data="all"}{param errorsCollection: $errors.location /}{/call}
 		        </div> 
-		        <div class="columns large-6">
+		        <div class="columns large-6 {$errors != 'undefined' and $errors.room ? 'error' : ''}">
 		          <div><label for="room">Room</label></div>
-    		      <div><input type="text" placeholder="Room" name="room" disabled/></div>
+    		      <div><input type="text" placeholder="Room" name="room" {if $data != 'undefined' and $data.room}value="{$data.room}"{/if} disabled/></div>
+    		      {call .errors data="all"}{param errorsCollection: $errors.room /}{/call}
 		        </div>
 		      </div>
 		    </div>
@@ -50,12 +56,12 @@
 		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Row type</div>
 		    <div class="columns large-10 small-8">
-		      <label for="row_type">
-		        <input name="row_type" type="radio" style="display:none;" value="datetime" class="hidden-field" CHECKED>
+		      <label for="sheet_type">
+		        <input name="sheet_type" type="radio" style="display:none;" value="datetime" class="hidden-field" CHECKED>
 		        <span class="custom radio checked" id="datetime"></span>Supply times
 		      </label>
-		      <label for="row_type">
-		        <input name="row_type" type="radio" style="display:none;" class="hidden-field" value="manual">
+		      <label for="sheet_type">
+		        <input name="sheet_type" type="radio" style="display:none;" class="hidden-field" value="manual">
 		        <span class="custom radio" id="manual"></span>Supply # of rows
 		      </label>
 		    </div> 
@@ -176,4 +182,20 @@
 		  </div>
 		</form>
   </div>
+{/template}
+
+/**
+ * Template for displaying errors
+ * @param errors
+ * @param errorsCollection
+ * 
+ */
+{template .errors}
+  {if $errors != 'undefined' and $errorsCollection}
+    <small>
+      {foreach $error in $errorsCollection}
+        {$error}<br> 
+      {/foreach} 
+    </small>
+  {/if}
 {/template}

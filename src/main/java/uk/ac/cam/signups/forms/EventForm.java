@@ -1,41 +1,58 @@
 package uk.ac.cam.signups.forms;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableMap;
+
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import uk.ac.cam.signups.models.Event;
+import uk.ac.cam.signups.models.Row;
+import uk.ac.cam.signups.models.Slot;
+import uk.ac.cam.signups.models.Type;
+import uk.ac.cam.signups.models.User;
+import uk.ac.cam.signups.util.HibernateUtil;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
-import uk.ac.cam.signups.models.*;
-import uk.ac.cam.signups.util.HibernateUtil;
-
 import javax.ws.rs.FormParam;
 
 public class EventForm {
-	@FormParam("location") String location;
-	@FormParam("room") String room;
-	@FormParam("title") String title;
-	@FormParam("types") String typeNames;
-	@FormParam("n_of_columns") int nOfColumns;
-	@FormParam("n_of_rows") int nOfRows;
-	@FormParam("row_type") String rowType;
-	@FormParam("available_dates[]") String[] availableDates;
-	@FormParam("available_hours[]") String[] availableHours;
-	@FormParam("available_minutes[]") String[] availableMinutes;
-	
+	@FormParam("location")
+	String location;
+	@FormParam("room")
+	String room;
+	@FormParam("title")
+	String title;
+	@FormParam("types")
+	String typeNames;
+	@FormParam("n_of_columns")
+	int nOfColumns;
+	@FormParam("n_of_rows")
+	int nOfRows;
+	@FormParam("sheet_type")
+	String sheetType;
+	@FormParam("available_dates[]")
+	String[] availableDates;
+	@FormParam("available_hours[]")
+	String[] availableHours;
+	@FormParam("available_minutes[]")
+	String[] availableMinutes;
+
 	Logger log = LoggerFactory.getLogger(EventForm.class);
-	
-	public int handle(User currentUser) {		
+
+	public Event handle(User currentUser) {
 		Session session = HibernateUtil.getTransactionSession();
 		// Create event prototype
 		Event event = new Event();
 		event.setLocation(location);
 		event.setRoom(room);
 		event.setTitle(title);
-		event.setSheetType(rowType);
+		event.setSheetType(sheetType);
 
 		// Set owner of the user to current user
 		event.setOwner(currentUser);
@@ -44,60 +61,152 @@ public class EventForm {
 		// Set types
 		Type type = null;
 		String[] types = typeNames.split(",");
-		for(String stype: types){
+		for (String stype : types) {
 			type = new Type(stype);
 			type.setEvent(event);
 			session.save(type);
 		}
-		
+
 		// Create rows and associated slots
 		Row row;
-		if (rowType.equals("manual")) {
-			for(int i = 0; i < nOfRows; i++) {
+		if (sheetType.equals("manual")) {
+			for (int i = 0; i < nOfRows; i++) {
 				row = new Row(event);
 				if (types.length == 1)
 					row.setType(type);
 				session.save(row);
 				Slot slot;
-				for(int j = 0; j < nOfColumns; j++) {
+				for (int j = 0; j < nOfColumns; j++) {
 					slot = new Slot(row);
 					session.save(slot);
 				}
 			}
-		} else if (rowType.equals("datetime")) {
+		} else if (sheetType.equals("datetime")) {
 			Calendar cal;
-			Set<Calendar> duplicateCalContainer = new HashSet<Calendar>(); // To keep track of added dates to avoid duplicates
-			MAIN_LOOP:
-			for(int i = 0; i < availableDates.length; i++) {
+			Set<Calendar> duplicateCalContainer = new HashSet<Calendar>(); // To keep
+			                                                               // track of
+			                                                               // added
+			                                                               // dates to
+			                                                               // avoid
+			                                                               // duplicates
+			MAIN_LOOP: for (int i = 0; i < availableDates.length; i++) {
 				// Create calendar object and parse parameters
 				String[] splitDate = availableDates[i].split("/");
 				int year = Integer.parseInt(splitDate[2]);
 				int month = Integer.parseInt(splitDate[1]) - 1;
 				int day = Integer.parseInt(splitDate[0]);
-				cal = new GregorianCalendar(year, month, day, Integer.parseInt(availableHours[i]), Integer.parseInt(availableMinutes[i]));
-				
+				cal = new GregorianCalendar(year, month, day,
+				    Integer.parseInt(availableHours[i] != null ? availableHours[i]
+				        : "0"),
+				    Integer.parseInt(availableMinutes[i] != null ? availableMinutes[i]
+				        : "0"));
+
 				// Skip duplicates
 				if (duplicateCalContainer.contains(cal))
 					continue MAIN_LOOP;
-				
+
 				duplicateCalContainer.add(cal);
-				
+
 				row = new Row(cal, event);
-				
+
 				// Set type for rows if there is only one type for the event
 				if (types.length == 1)
 					row.setType(type);
 				session.save(row);
-				
+
 				// Create slots
 				Slot slot;
-				for(int j = 0; j < nOfColumns; j++) {
+				for (int j = 0; j < nOfColumns; j++) {
 					slot = new Slot(row);
 					session.save(slot);
 				}
-			}		
+			}
 		}
-		
-		return event.getId();
+
+		return event;
+	}
+
+	public ArrayListMultimap<String, String> validate() {
+		ArrayListMultimap<String, String> errors = ArrayListMultimap.create();
+
+		// Title
+		if (title.equals("") || title == null) {
+			errors.put("title", "Title field cannot be empty.");
+		} else if (title.length() > 90) {
+			errors.put("title", "Title length cannot be more than 90 characters.");
+		}
+
+		// Types
+		if (typeNames.equals("") || typeNames == null) {
+			errors.put("eventType", "At least one event type is needed.");
+		} else {
+			String[] types = typeNames.split(",");
+			for (String type : types) {
+				if (type.length() > 40) {
+					errors.put("eventType",
+					    "No event type can be more than 40 characters.");
+					break;
+				}
+			}
+		}
+
+		// Location and room
+		if (!(location.equals("") || location == null) && location.length() > 90) {
+			errors
+			    .put("location", "Location name cannot be more than 90 characters.");
+		}
+
+		if (!(location.equals("") || location == null) && room.length() > 90) {
+			errors.put("room", "Room name cannot be more than 90 characters.");
+		}
+
+		// Number of columns
+		if (nOfColumns < 1) {
+			errors.put("columns", "Group size cannot be less than 1.");
+		} else if (nOfColumns > 50) {
+			errors.put("columns", "Group size cannot be more more than 50");
+		}
+
+		// Number of rows (MANUAL sheet type)
+		if (sheetType.equals("manual")) {
+			if (nOfRows < 1) {
+				errors.put("manualRows", "Number of rows canot be less than 1.");
+			} else if (nOfRows > 200) {
+				errors.put("manualRows", "Number of rows cannot be more than 200.");
+			}
+		}
+
+		// Number of rows (DATETIME sheet type)
+		if (sheetType.equals("datetime")) {
+			if (!((availableDates.length == availableHours.length) && (availableHours.length == availableMinutes.length))) {
+				errors.put("datetimeRows",
+				    "Number of dates, hours and minutes do not match.");
+			}
+
+			if (availableDates.length < 1) {
+				errors.put("datetimeRows",
+				    "Number of time slots cannot be less than 200.");
+			} else if (availableDates.length > 200) {
+				errors.put("datetimeRows",
+				    "Number of time slots cannot be more than 200.");
+			}
+		}
+
+		return errors;
+	}
+
+	public ImmutableMap<String, ?> toMap() {
+		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
+		builder.put("location", location);
+		builder.put("room", room == null ? "" : room);
+		builder.put("title", title);
+		builder.put("types", typeNames);
+		builder.put("n_of_columns", nOfColumns);
+		builder.put("n_of_rows", nOfRows);
+		builder.put("sheet_type", sheetType);
+		builder.put("available_dates[]", availableDates);
+		builder.put("available_hours[]", availableHours);
+		builder.put("available_minutes[]", availableMinutes);
+		return builder.build();
 	}
 }

@@ -2,34 +2,25 @@
 
 /**
  * Template for show action in EventsController
- * @param title
- * @param owner
- * @param location 
- * @param room 
- * @param types 
- * @param dates 
- * @param rows 
- * @param lastRow 
- * @param id 
- * @param sheetType
- * @param currentDate
+ * @param data
  * 
  */
 {template .show}
   <div class="events" id="show">
-    <h3>{$title} at {$location} in {$room} created by {$owner.crsid}</h3>
-    <div><a id="map-toggle" href="#" data-show="false" class="small button">Show on map</a></div>
+    <h3>{$data.title} at {$data.location} { $data.room == '' ? 'in ' + $data.room : ''} created by { $data.owner.crsid }</h3>
     
-    {if $room != ''}
+    {if $data.room != ''}
+    <div><a id="map-toggle" href="#" data-show="false" class="small button">Show on map</a></div>
+
       <div id="iframe-wrapper" class="overflow-hidden">
-        <iframe width="100%" height="500px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://map.cam.ac.uk/{$location}"></iframe><br /><br />
+        <iframe width="100%" height="500px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://map.cam.ac.uk/{$data.location}"></iframe><br /><br />
       </div>
     {/if}
-    <form class="custom" action="/signapp/events/{$id}/fill_slots" method="post">
+    <form class="custom" action="/signapp/events/{$data.id}/fill_slots" method="post">
       <div style="width:100%"> 
-      {if $sheetType == 'datetime'}
+      {if $data.sheetType == 'datetime'}
 	      <table>
-	        {foreach $dateGroup in $dates }
+	        {foreach $dateGroup in $data.dates }
 	          <tr>
 	            <td class="big-table-label">{$dateGroup.date}</td> 
 	            <td>
@@ -53,9 +44,9 @@
 	          </tr>
 	        {/foreach}
 	      </table>
-      {elseif $sheetType == 'manual'}
+      {elseif $data.sheetType == 'manual'}
         <table>
-          {foreach $row in $rows}
+          {foreach $row in $data.rows}
             <tr>
               <td class="big-table-label">{index($row) + 1} )</td>
               <td>
@@ -69,7 +60,7 @@
         </table>
       {/if}
       </div>
-      {if ($sheetType == 'manual') or $currentDate < $lastRow.date.comparativeString }
+      {if ($data.sheetType == 'manual') or $data.currentDate < $data.lastRow.date.comparativeString }
         <div><input type="submit" value="Save" class="small button"></div>
       {/if}
     </form>
@@ -79,14 +70,13 @@
 /**
  * Partial template to display slots
  * @param row
- * @param currentDate
- * @param sheetType
+ * @param data 
  *
  *
  */
 {template .slots}
   {foreach $slot in $row.slots}
-    {if ($sheetType == 'datetime') and $currentDate > $row.date.comparativeString }
+    {if ($data.sheetType == 'datetime') and $data.currentDate > $row.date.comparativeString }
       <div class="established-slot"> 
         {if $slot.owner.crsid != ''}
           <div class="full-slot">
@@ -114,26 +104,24 @@
 
 /**
  * Partial template to display types
- * @param types
+ * @param data
  * @param row
- * @param currentDate 
- * @param sheetType
  *
  */
 {template .types}
   <div class="type-choice">
-    {if length($types) != 1 and (($sheetType == 'manual') or ($currentDate  < $row.date.comparativeString)) }
+    {if length($data.types) != 1 and (($data.sheetType == 'manual') or ($data.currentDate  < $row.date.comparativeString)) }
       <select class="small" name="types[]" >
         <option value="0">Please select one</option> 
-        {foreach $type in $types}
+        {foreach $type in $data.types}
           <option value="{$type.id}" {if $type.id == $row.type.id}selected{/if}>{$type.name}</option>
         {/foreach}
       </select>
-    {elseif length($types) == 1}
-      {foreach $type in $types}
+    {elseif length($data.types) == 1}
+      {foreach $type in $data.types}
         <div class="type">{$type.name}</div>
       {/foreach}
-    {elseif ($row.type != 'no-type') and ($sheetType == 'datetime') and $currentDate > $row.date.comparativeString }
+    {elseif ($row.type != 'no-type') and ($data.sheetType == 'datetime') and $data.currentDate > $row.date.comparativeString }
       <div class="type">{$row.type.name}</div>
     {else}
       <div class="type">No type is selected</div>

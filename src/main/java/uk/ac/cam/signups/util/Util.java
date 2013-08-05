@@ -1,5 +1,9 @@
 package uk.ac.cam.signups.util;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
 import uk.ac.cam.signups.models.Mappable;
 
 import java.util.ArrayList;
@@ -10,7 +14,7 @@ import java.util.Set;
 
 public class Util {
 	
-	public static List<Map<String, ?>> getImmutableCollection(Set<? extends Mappable> raws) {
+	public static List<Map<String, ?>> getImmutableCollection(Iterable<? extends Mappable> raws) {
 		List<Map<String,?>> immutalizedCollection= new ArrayList<Map<String, ?>>(0);
 		for(Mappable raw: raws)
 			immutalizedCollection.add(raw.toMap());
@@ -34,5 +38,15 @@ public class Util {
 		}
 		
 		return null;
+	}
+	
+	public static <T, K> ImmutableMap<T, List<K>> multimapToImmutableMap(ArrayListMultimap<T, K> mm) {
+		ImmutableMap.Builder<T, List<K>> builder = ImmutableMap.builder();
+				
+		for(T k : mm.keySet()) {
+			builder.put(k, ImmutableList.copyOf(mm.get(k)));
+		}
+			
+		return builder.build();
 	}
 }

@@ -44,5 +44,4 @@ public class ApplicationController {
 		// Register or return the user
 		return User.registerUser(crsid);
 	}
-	
 }

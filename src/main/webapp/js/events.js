@@ -2,6 +2,10 @@ moduleScripts['signapp']['events'] = {
 	'new' : 
 		[
 			function() {
+				$("form").ajaxForm(function(data) {
+					applyTemplate($('.main'), "signapp.events.new", data);
+				});
+				
 			  $(".datepicker").datepicker({dateFormat: "dd/mm/yy"});
 			  $("input[name='location']").autocomplete(
 			  		{
@@ -23,11 +27,15 @@ moduleScripts['signapp']['events'] = {
 			  			}
 			  		});
 			  
+			  if ($("input[name='location']").val() != "") {
+			  		$("input[name='room']").removeAttr("disabled");
+			  }
+			  
 			  $("input[name='location'").keyup(function() {
 			  	if ($(this).val() != "") {
 			  		$("input[name='room']").removeAttr("disabled");
 			  	} else {
-			  		$("input[name='room']").attr("disabled","disabled");
+			  		$("input[name='room']").attr("disabled","disabled").val("");
 			  	}
 			  });
 
@@ -120,6 +128,19 @@ moduleScripts['signapp']['events'] = {
 			    resultsFormatter: function(item){ return "<li><div style='display: inline-block; padding-left: 10px;'>"+ item.name + "</div></li>" }
 			  });
 			  
+			  if (data = (target = $("input[name='types']")).data("prepopulate")) {
+			  	$.each(data.split(","), function(i,v) {
+			  		target.tokenInput("add",{name: v});
+			  	});
+			  }
+			  
+			  
+			  $("input[name='types']").parent().find("ul input").attr("placeholder","Type");
+			  
+			  if ($("input[name='types']").parent().hasClass("error")) {
+			  	$("ul.token-input-list-facebook").addClass("error");
+			  }
+			  
 			  $(this).on("click", ".delete-time-slot", function() {
 			  	if ($(".delete-time-slot").length != 1) {
 			  		$(this).parent().parent().parent().slideUp("fast", function() {
@@ -195,6 +216,7 @@ moduleScripts['signapp']['events'] = {
 		  					$(this).removeClass("draggable-custom");
 		  					$(this).draggable("destroy");
 		  				}
+		  			$(this).effect("highlight", 700);
 		  			}
 		  		}).addClass("draggable-custom");
 		  	});
@@ -227,6 +249,8 @@ moduleScripts['signapp']['events'] = {
 		  						}
 		  				}).addClass("draggable-custom");
 		  			}
+		  			
+		  			$(this).effect("highlight", 700);
 		  		}
 		  	});
 		  }
