@@ -49,51 +49,38 @@
 		  </div>
 		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Group size</div>
-		    <div class="columns large-10 small-8">
-		      <input type="number" placeholder="Group size" min="1" value="1" name="n_of_columns"/>
+		    <div class="columns large-10 small-8 {if $errors != 'undefined' and $errors.columns}error{/if}">
+		      <input type="number" placeholder="Group size" min="1" value="{if $data != 'undefined' and $data.columns}{$data.columns}{else}1{/if}" name="n_of_columns"/>
+    		  {call .errors data="all"}{param errorsCollection: $errors.columns /}{/call}
 		    </div>
 		  </div>
 		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Row type</div>
-		    <div class="columns large-10 small-8">
-		      <label for="sheet_type">
-		        <input name="sheet_type" type="radio" style="display:none;" value="datetime" class="hidden-field" CHECKED>
-		        <span class="custom radio checked" id="datetime"></span>Supply times
+		    <div class="columns large-10 small-8 {if $errors != 'undefined' and $errors.sheetType}error{/if}">
+		      <label for="sheet_type" id="datetime">
+		        <input name="sheet_type" id="sheet_type" type="radio" style="display:none;" value="datetime" class="hidden-field" CHECKED>
+		        <span class="custom radio checked"></span> Supply times
 		      </label>
-		      <label for="sheet_type">
-		        <input name="sheet_type" type="radio" style="display:none;" class="hidden-field" value="manual">
-		        <span class="custom radio" id="manual"></span>Supply # of rows
+		      <label for="sheet_type" id="manual">
+		        <input name="sheet_type" id="sheet_type" type="radio" style="display:none;" class="hidden-field" value="manual">
+		        <span class="custom radio"></span> Supply # of rows
 		      </label>
+		      {if $errors != 'undefined' and $errors.sheetType}
+            <div id="sheet-type-error">
+    		      {call .errors data="all"}{param errorsCollection: $errors.sheetType /}{/call}
+            </div>
+          {/if}
 		    </div> 
 		  </div>
 		  <div class="row" id="datetime">
 		    <div class="columns large-2 small-4 field-label">Times</div>
 		    <div class="columns large-10 small-8">
 		      <div class="time-controls-wrapper row">
-		        <div class="single-slot-controls columns large-12 small-12">
-		          <div class="row">
-		            <div class="columns large-6">
-		              <input type="text" class="datepicker" name="available_dates[]" placeholder="Date" />
-		            </div>
-		            <div class="columns large-2 small-4">
-		              <select class="medium" name="available_hours[]">
-		              {for $i in range(6,24)}
-		                <option value="{$i}">{$i}</option>
-		              {/for}
-		              </select>
-		            </div>
-		            <div class="columns large-2 small-4">
-		              <select class="medium" name="available_minutes[]">
-		              {for $i in range(60)}
-		                <option value="{$i}">{$i}</option>
-		              {/for}
-		              </select>
-		            </div>
-		            <div class="columns large-2 small-4">
-		              <a class="button medium full-width delete-time-slot disabled">Delete</a>
-		            </div>
-		          </div>
-		        </div>
+		        {if $errors == 'undefined' or not $errors.datetime}
+		          {call .singleSlot data="all"/}
+		        {else}
+		        
+		        {/if}
 		      </div>
 		      <div class="row hide range-controls">
             <div class="columns large-2">
@@ -198,4 +185,35 @@
       {/foreach} 
     </small>
   {/if}
+{/template}
+
+/**
+ * Single slot template
+ *
+ */
+{template .singleSlot}
+  <div class="single-slot-controls columns large-12 small-12">
+    <div class="row">
+      <div class="columns large-6">
+        <input type="text" class="datepicker" name="available_dates[]" placeholder="Date" />
+      </div>
+      <div class="columns large-2 small-4">
+        <select class="medium" name="available_hours[]">
+          {for $i in range(6,24)}
+            <option value="{$i}">{$i}</option>
+          {/for}
+        </select>
+      </div>
+      <div class="columns large-2 small-4">
+        <select class="medium" name="available_minutes[]">
+          {for $i in range(60)}
+            <option value="{$i}">{$i}</option>
+          {/for}
+        </select>
+      </div>
+      <div class="columns large-2 small-4">
+        <a class="button medium full-width delete-time-slot disabled">Delete</a>
+      </div>
+    </div>
+  </div> 
 {/template}

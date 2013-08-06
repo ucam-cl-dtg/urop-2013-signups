@@ -21,7 +21,6 @@ public class Signapps extends Application {
     // Add controllers    
     log.debug("Adding controllers to main application");
     myServices.add(EventsController.class);
-    myServices.add(HomePageController.class);
     
     // Add Htmleasy Providers
     log.debug("Adding Htmleasy providers");

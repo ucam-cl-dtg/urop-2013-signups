@@ -1,0 +1,189 @@
+//
+// Create new supervision
+//
+
+div.events#new {
+  ul.error {
+    background-color: rgba(198, 15, 19, 0.1);
+    border-color: #C60F13;
+
+    input {
+      background-color: inherit;
+    }
+  }
+
+  .form_table {
+    width: 100%;
+  }
+
+  .form_table td, .form_table th {
+    font-size: 13px;
+  }
+
+  li.token-input-input-token-facebook input[type="text"]#token-input- {
+    margin: 0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+
+  li.token-input-token-facebook {
+    margin: 6px 0 0 5px;
+  }
+
+  .delete-time-slot {
+    height: 34px;
+    padding: 8px 0 8px 0;
+  }
+
+  .empty {
+    height: 11px;
+  }
+  
+  #sheet-type-error {
+    margin-top: 20px;
+  }
+}
+
+//
+// Specific event
+//
+
+div.events#show {
+
+  .overflow-hidden {
+    overflow: hidden;
+    height: 0;
+    width: 100%;
+  }
+
+  .actual.row:first-child {
+    padding-top: 15px;
+  }
+
+  .established-slot {
+    display: inline-block;
+    width: 145px;
+    border: 1px solid #CCC;
+    background-color: #E9E9E9;
+    margin: 0 10px 15px 0;
+    vertical-align: top;
+
+    .empty-slot {
+      height: 36px;
+      padding: 1px 3px 1px 3px;
+      margin: 7px 3px 3px 3px;
+      vertical-align: top;
+      text-align:center;
+
+      div p {
+        line-height: 26px;
+        vertical-align: middle;
+      }
+    }
+
+    .full-slot {
+      height: 36px;
+      padding: 1px 3px 1px 3px;
+      margin: 7px 3px 3px 3px;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .draggable-custom {
+    cursor: move;
+  }
+
+  .token-input-list-facebook {
+    display: inline-block;
+    width: 145px;
+    height: 47px;
+    margin-right: 10px;
+
+    li.token-input-selected-token-facebook {
+      color: black;
+      cursor: inherit;
+    }
+
+    li.token-input-token-facebook {
+      cursor: inherit;
+      margin-top: 7px;
+      display: inline-block;
+      background-color: transparent;
+      width: 137px;
+      border: 0;
+      position: relative;
+
+
+      .token-input-delete-token-facebook {
+        position: absolute;
+        right: 5px;
+        top: 0;
+      }
+    }
+
+    li.token-input-input-token-facebook {
+      height: 47px;
+
+      input {
+        box-shadow: none;
+        height: 47px;
+      }
+    }
+  }
+
+  .time-label{
+    display: inline-block;
+
+    div {
+      padding: 20px 0 20px 0;
+      width: 80px;
+      margin-right: 10px;
+      display: inline-block;
+    }
+  }
+
+  table {
+    width: 100%;
+
+    td {
+      padding: 10px 10px 10px 10px;
+    }
+  }
+
+  div.type-choice {
+    display: inline-block;
+    margin: 0 0 5px 0;
+    height: 47px;
+    vertical-align: top;
+    line-height: 47px;
+
+    .custom.dropdown {
+      width: 145px !important;
+      height: 100% !important;
+
+      .current, .selector {
+        margin-top: 7px;
+      }
+    }
+  }
+
+  .big-table-label {
+    font-size: 16px;
+    max-width: 240px;
+  }
+
+  .type {
+    width: 145px;
+    font-size: 16px;
+    text-align: center;
+    height: 100%;
+    vertical-align: middle;
+  }
+
+  hr {
+    margin-top: 0;
+  }
+}

@@ -16,12 +16,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
   
   <context-param>
     <param-name>cssFiles</param-name>
-    <param-value>/css/vendor/jquery-ui/jquery-ui-1.10.3.custom.min.css,/css/main.css</param-value>
+    <param-value>/css/events.css</param-value>
   </context-param>
   
   <context-param>
     <param-name>jsFiles</param-name>
-    <param-value>/soy/js/3/signapp.groups.js,/soy/js/3/signapp.deadlines.js,/soy/js/3/signapp.home_page.js,/soy/js/3/signapp.events.js,/soy/js/3/signapp.errors.js,/js/shared.js,/js/signups.js,/js/events.js,/js/groups.js,/js/deadlines.js</param-value>
+    <param-value>http://malsup.github.com/jquery.form.js,/soy/js/3/signapp.events.js,/js/signups.js,/js/events.js</param-value>
   </context-param>
 
 	<!-- Include this for the Hibernate filter -->

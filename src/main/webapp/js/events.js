@@ -155,13 +155,13 @@ moduleScripts['signapp']['events'] = {
 			},
 			
 			function() {
-			  $("span#datetime").click(function() {
+			  $("label#datetime").click(function() {
 			    $("div#manual").slideUp("fast", function() {
 			      $("div#datetime").slideDown("fast");
 			    });
 			  });
 			
-			  $("span#manual").click(function() {
+			  $("label#manual").click(function() {
 			    $("div#datetime").slideUp("fast", function() {
 			      $("div#manual").slideDown("fast");
 			    });

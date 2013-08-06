@@ -166,31 +166,45 @@ public class EventForm {
 		} else if (nOfColumns > 50) {
 			errors.put("columns", "Group size cannot be more more than 50");
 		}
+		
+		if (sheetType == null || !(sheetType.equals("datetime") || sheetType.equals("manual"))) {
+			errors.put("sheetType", "Sheet type should be selected.");
+		} else {
 
-		// Number of rows (MANUAL sheet type)
-		if (sheetType.equals("manual")) {
-			if (nOfRows < 1) {
-				errors.put("manualRows", "Number of rows canot be less than 1.");
-			} else if (nOfRows > 200) {
-				errors.put("manualRows", "Number of rows cannot be more than 200.");
+			// Number of rows (MANUAL sheet type)
+			if (sheetType.equals("manual")) {
+				if (nOfRows < 1) {
+					errors.put("manualRows", "Number of rows canot be less than 1.");
+				} else if (nOfRows > 200) {
+					errors.put("manualRows", "Number of rows cannot be more than 200.");
+				}
+			}
+	
+			// Number of rows (DATETIME sheet type)
+			if (sheetType.equals("datetime")) {
+				if (!((availableDates.length == availableHours.length) && (availableHours.length == availableMinutes.length))) {
+					errors.put("datetimeRows",
+					    "Number of dates, hours and minutes do not match.");
+				}
+				
+				for(String availableDate: availableDates) {
+					if (availableDate == "") {
+						errors.put("datetime", "No date can be empty.");
+					} else if (!availableDate.matches("\\d\\d\\/\\d\\d\\/\\d\\d")) {
+						
+					}
+				}
+	
+				if (availableDates.length < 1) {
+					errors.put("datetimeRows",
+					    "Number of time slots cannot be less than 200.");
+				} else if (availableDates.length > 200) {
+					errors.put("datetimeRows",
+					    "Number of time slots cannot be more than 200.");
+				}
 			}
 		}
 
-		// Number of rows (DATETIME sheet type)
-		if (sheetType.equals("datetime")) {
-			if (!((availableDates.length == availableHours.length) && (availableHours.length == availableMinutes.length))) {
-				errors.put("datetimeRows",
-				    "Number of dates, hours and minutes do not match.");
-			}
-
-			if (availableDates.length < 1) {
-				errors.put("datetimeRows",
-				    "Number of time slots cannot be less than 200.");
-			} else if (availableDates.length > 200) {
-				errors.put("datetimeRows",
-				    "Number of time slots cannot be more than 200.");
-			}
-		}
 
 		return errors;
 	}
@@ -201,9 +215,9 @@ public class EventForm {
 		builder.put("room", room == null ? "" : room);
 		builder.put("title", title);
 		builder.put("types", typeNames);
-		builder.put("n_of_columns", nOfColumns);
-		builder.put("n_of_rows", nOfRows);
-		builder.put("sheet_type", sheetType);
+		builder.put("columns", nOfColumns);
+		builder.put("manualRows", nOfRows);
+		builder.put("sheetType", sheetType == null ? "" : sheetType);
 		builder.put("available_dates[]", availableDates);
 		builder.put("available_hours[]", availableHours);
 		builder.put("available_minutes[]", availableMinutes);

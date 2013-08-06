@@ -26,7 +26,6 @@ function supportRedirect(templateName) {
 
 $(document).ready(function() {
     router = Router({
-        "signapp/": "signapp.home_page.index",
         "signapp/groups/:id/edit" : "signapp.groups.edit",
         "signapp/events/:id" : "signapp.events.show",
         "signapp/events/new" : "signapp.events.new"

@@ -24,6 +24,7 @@ public class ApplicationController {
 		
 		// This will extract the CRSID of the current user and return it:
 		log.debug("Getting crsid from raven");	
+		log.error("Request is null? " + (sRequest == null));
 		String crsid = (String) sRequest.getSession().getAttribute("RavenRemoteUser");
 		
 		// Create UserLookupManager for this user
