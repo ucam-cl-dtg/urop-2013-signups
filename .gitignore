@@ -3,6 +3,7 @@
 *.log
 target
 Gemfile
+Gemfile.lock
 *.rb
 Guardfile
 Gemfile
