@@ -2,10 +2,11 @@ package uk.ac.cam.signups.controllers;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
-import com.googlecode.htmleasy.RedirectException;
 
 import org.hibernate.Session;
 import org.jboss.resteasy.annotations.Form;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.signups.forms.EventForm;
 import uk.ac.cam.signups.forms.FillSlot;
@@ -30,6 +31,8 @@ import javax.ws.rs.core.MediaType;
 @Path("/signapp/events")
 public class EventsController extends ApplicationController {
 	
+	@SuppressWarnings("unused")
+  private Logger logger = LoggerFactory.getLogger(EventsController.class);
 	/*
 	 * CRUD and few other actions
 	 */
@@ -85,10 +88,11 @@ public class EventsController extends ApplicationController {
 	//Fill Slot
 	@POST
 	@Path("/{id}/fill_slots")
-	public void fillSlot(@PathParam("id") int id, @Form FillSlot fillSlot) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Map<String,String>fillSlot(@PathParam("id") int id, @Form FillSlot fillSlot) {
 		fillSlot.handle(id);
 
-		throw new RedirectException("/app/#signapp/events/" + id);
+		return ImmutableMap.of("redirectTo", "signapp/events/" + id);
 	}
 	
 	/*

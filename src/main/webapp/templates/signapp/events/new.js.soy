@@ -9,7 +9,7 @@
 {template .new}
   <div class="events" id="new">
 	  <h3>Create new event</h3>
-		<form class="custom" action="/signapp/events" method="post">
+		<form class="custom" action="/api/signapp/events" method="post">
 		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Title</div>
 		    <div class="columns large-10 small-8 {$errors != 'undefined' and $errors.title ? 'error' : ''}">
@@ -76,10 +76,12 @@
 		    <div class="columns large-2 small-4 field-label">Times</div>
 		    <div class="columns large-10 small-8">
 		      <div class="time-controls-wrapper row">
-		        {if $errors == 'undefined' or not $errors.datetime}
-		          {call .singleSlot data="all"/}
+		        {if $errors != 'undefined' and $data.datetimes }
+		          {foreach $datetime in $data.datetimes}
+		            {call .singleSlot data="all"}{param datetime: $datetime/}{/call} 
+		          {/foreach}
 		        {else}
-		        
+		          {call .singleSlot data="all"}{param datetime: 'undefined'/}{/call}
 		        {/if}
 		      </div>
 		      <div class="row hide range-controls">
@@ -189,25 +191,27 @@
 
 /**
  * Single slot template
+ * @param datetime
  *
  */
 {template .singleSlot}
   <div class="single-slot-controls columns large-12 small-12">
     <div class="row">
       <div class="columns large-6">
-        <input type="text" class="datepicker" name="available_dates[]" placeholder="Date" />
+        <input type="text" {if $datetime != 'undefined' and $datetime.date}value="{$datetime.date}"{/if} class="datepicker" name="available_dates[]" placeholder="Date" />
       </div>
       <div class="columns large-2 small-4">
         <select class="medium" name="available_hours[]">
           {for $i in range(6,24)}
-            <option value="{$i}">{$i}</option>
+            <option value="{$i}" {if $datetime != 'undefined' and $datetime.hour == $i }selected{/if}>{$i}</option>
           {/for}
+          
         </select>
       </div>
       <div class="columns large-2 small-4">
         <select class="medium" name="available_minutes[]">
           {for $i in range(60)}
-            <option value="{$i}">{$i}</option>
+            <option value="{$i}" {if $datetime != 'undefined' and $datetime.minute == $i}selected{/if}>{$i}</option>
           {/for}
         </select>
       </div>

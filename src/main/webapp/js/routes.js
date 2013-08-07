@@ -1,3 +1,8 @@
+var BASE_PATH="/api/";
+var ROUTER_OPTIONS= {
+    pushState: true
+};
+
 /* Demo Routes:
 
 The first term must be the route from where the template will get the data.
@@ -26,6 +31,7 @@ function supportRedirect(templateName) {
 
 $(document).ready(function() {
     router = Router({
+        "signapp/": "signapp.home_page.index",
         "signapp/groups/:id/edit" : "signapp.groups.edit",
         "signapp/events/:id" : "signapp.events.show",
         "signapp/events/new" : "signapp.events.new"

@@ -14,9 +14,12 @@ import uk.ac.cam.signups.models.Type;
 import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.HibernateUtil;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.FormParam;
@@ -42,6 +45,8 @@ public class EventForm {
 	String[] availableHours;
 	@FormParam("available_minutes[]")
 	String[] availableMinutes;
+
+	ArrayListMultimap<String, String> errors;
 
 	Logger log = LoggerFactory.getLogger(EventForm.class);
 
@@ -127,7 +132,7 @@ public class EventForm {
 	}
 
 	public ArrayListMultimap<String, String> validate() {
-		ArrayListMultimap<String, String> errors = ArrayListMultimap.create();
+		errors = ArrayListMultimap.create();
 
 		// Title
 		if (title.equals("") || title == null) {
@@ -166,8 +171,9 @@ public class EventForm {
 		} else if (nOfColumns > 50) {
 			errors.put("columns", "Group size cannot be more more than 50");
 		}
-		
-		if (sheetType == null || !(sheetType.equals("datetime") || sheetType.equals("manual"))) {
+
+		if (sheetType == null
+		    || !(sheetType.equals("datetime") || sheetType.equals("manual"))) {
 			errors.put("sheetType", "Sheet type should be selected.");
 		} else {
 
@@ -179,32 +185,33 @@ public class EventForm {
 					errors.put("manualRows", "Number of rows cannot be more than 200.");
 				}
 			}
-	
+
 			// Number of rows (DATETIME sheet type)
 			if (sheetType.equals("datetime")) {
 				if (!((availableDates.length == availableHours.length) && (availableHours.length == availableMinutes.length))) {
 					errors.put("datetimeRows",
 					    "Number of dates, hours and minutes do not match.");
 				}
-				
-				for(String availableDate: availableDates) {
+
+				for (String availableDate : availableDates) {
 					if (availableDate == "") {
 						errors.put("datetime", "No date can be empty.");
-					} else if (!availableDate.matches("\\d\\d\\/\\d\\d\\/\\d\\d")) {
-						
+						break;
+					} else if (!availableDate.matches("\\d\\d\\/\\d\\d\\/\\d\\d\\d\\d")) {
+						errors.put("datetime", "Date field shoud be in the form of dd/mm/yy.");
+						break;
 					}
 				}
-	
+
 				if (availableDates.length < 1) {
-					errors.put("datetimeRows",
+					errors.put("datetime",
 					    "Number of time slots cannot be less than 200.");
 				} else if (availableDates.length > 200) {
-					errors.put("datetimeRows",
+					errors.put("datetime",
 					    "Number of time slots cannot be more than 200.");
 				}
 			}
 		}
-
 
 		return errors;
 	}
@@ -218,9 +225,15 @@ public class EventForm {
 		builder.put("columns", nOfColumns);
 		builder.put("manualRows", nOfRows);
 		builder.put("sheetType", sheetType == null ? "" : sheetType);
-		builder.put("available_dates[]", availableDates);
-		builder.put("available_hours[]", availableHours);
-		builder.put("available_minutes[]", availableMinutes);
+
+		List<Map<String, String>> datetimes = new ArrayList<Map<String, String>>();
+		for (int i = 0; i < availableDates.length; i++) {
+			datetimes.add(ImmutableMap.of("date", availableDates[i], "hour",
+			    availableHours[i], "minute", availableMinutes[i]));
+		}
+
+		builder.put("datetimes", datetimes);
+
 		return builder.build();
 	}
 }

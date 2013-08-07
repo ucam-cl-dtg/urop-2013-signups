@@ -43,7 +43,7 @@ moduleScripts['signapp']['events'] = {
 			  	{
 			  		minLength: 2,
 			  		source: function(request, response) {
-			  			$.getJSON("/signapp/events/queryRooms", 
+			  			$.getJSON(prepareURL("signapp/events/queryRooms"), 
 			  					{
 			  						"qroom": request.term, 
 			  						"qbuilding": $("input[name='location']").text()
@@ -116,7 +116,7 @@ moduleScripts['signapp']['events'] = {
 			  	}
 			  });
 			
-			  $(".event-type-input").tokenInput("/signapp/events/queryTypes", {
+			  $(".event-type-input").tokenInput(prepareURL("signapp/events/queryTypes"), {
 			    theme: "facebook",
 			    method: "post",
 			    tokenValue: "name",
@@ -171,7 +171,10 @@ moduleScripts['signapp']['events'] = {
 	'show' 	:	
 		[
 		  function() {
-
+				$("form").ajaxForm(function(data) {
+					applyTemplate($('.main'), "signapp.events.show", data);
+				});
+		  	
 		  	$("#map-toggle").click(function(e){
 		  		e.preventDefault();
 		  		if ($(this).data("show") == "true") {
@@ -186,7 +189,7 @@ moduleScripts['signapp']['events'] = {
 		  	});
 		  	
 		  	$(".slot-field").each(function(i) {
-			  	$(this).tokenInput("/signapp/events/queryCRSID", {
+			  	$(this).tokenInput(prepareURL("signapp/events/queryCRSID"), {
 			  		theme: "facebook",
 			  		method: "post",
 			  		tokenValue: "crsid",
