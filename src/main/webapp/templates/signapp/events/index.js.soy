@@ -1,0 +1,91 @@
+{namespace signapp.events}
+
+/**
+ * Template for the index action of Events Controller
+ * @param eventsCreated 
+ * @param eventsSignedUp
+ * @param eventsNoTime
+ * @param eventsArchived
+ * 
+ */
+{template .index}
+<div class="row">
+  <div class="columns large-3">
+    <h3>Events you created</h3> 
+    {foreach $event in $eventsCreated.data}
+      <div class="row">
+        <div class="columns large-12">
+          <div class="created-event">
+            <a href="/signapp/events/{$event.id}">{$event.title}</a>
+          </div>
+        </div>
+      </div>
+    {/foreach}
+    
+    {call .loadMore}
+      {param exhausted: $eventsCreated.exhausted/}
+      {param className: 'load-created'/}
+    {/call}
+  </div>
+  
+  <div class="columns large-3">
+    <h3>Upcoming events</h3> 
+    {call .eventsCollection}{param events: $eventsSignedUp.data /}{/call}
+    {call .loadMore}
+      {param exhausted: $eventsSignedUp.exhausted/}
+      {param className: 'load-signed-up'/}
+    {/call}
+  </div>
+  
+  <div class="columns large-3">
+    <h3>Events without time</h3> 
+    {call .eventsCollection}{param events: $eventsNoTime.data /}{/call}
+    {call .loadMore}
+      {param exhausted: $eventsNoTime.exhausted/}
+      {param className: 'load-no-time'/}
+    {/call}
+  </div>
+  
+  <div class="columns large-3">
+    <h3>Archived events</h3> 
+    {call .eventsCollection}{param events: $eventsArchived.data /}{/call}
+    {call .loadMore}
+      {param exhausted: $eventsArchived.exhausted/}
+      {param className: 'load-archived'/}
+    {/call}
+  </div>
+</div> 
+{/template}
+
+/**
+ * @param events
+ */
+{template .eventsCollection}
+  {foreach $row in $events}
+    <div class="row">
+      <div class="columns large-12">
+        <div class="signed-up-row">
+          <div><a href="/signapp/events/{$row.eventSummary.id}">{$row.eventSummary.title}</a></div> 
+          {if $row.date}
+            <div>{if $row.date}{$row.date.dateDisplay}{/if}</div>
+          {/if}
+        </div>
+      </div>
+    </div>
+  {/foreach}
+{/template}
+
+/**
+ * @param exhausted
+ * @param className
+ * 
+ */
+{template .loadMore}
+  {if not $exhausted}
+    <div class="row">
+      <div class="columns large-12">
+        <a class="small button" id="{$className}">Load more</a>
+      </div>
+    </div> 
+  {/if}
+{/template}

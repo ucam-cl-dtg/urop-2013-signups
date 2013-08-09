@@ -15,7 +15,8 @@ import java.util.Set;
 public class Util {
 	
 	public static List<Map<String, ?>> getImmutableCollection(Iterable<? extends Mappable> raws) {
-		List<Map<String,?>> immutalizedCollection= new ArrayList<Map<String, ?>>(0);
+		List<Map<String,?>> immutalizedCollection= new ArrayList<Map<String, ?>>();
+
 		for(Mappable raw: raws)
 			immutalizedCollection.add(raw.toMap());
 		return immutalizedCollection;
@@ -32,9 +33,8 @@ public class Util {
 	
 	public static <T extends Mappable> T findById(List<T> collection, int id) {
 		for(T element: collection) {
-			if (element.getId() == id) {
+			if (element.getId() == id)
 				return element;
-			}
 		}
 		
 		return null;
@@ -43,10 +43,8 @@ public class Util {
 	public static <T, K> ImmutableMap<T, List<K>> multimapToImmutableMap(ArrayListMultimap<T, K> mm) {
 		ImmutableMap.Builder<T, List<K>> builder = ImmutableMap.builder();
 				
-		for(T k : mm.keySet()) {
+		for(T k : mm.keySet()) 
 			builder.put(k, ImmutableList.copyOf(mm.get(k)));
-		}
-			
 		return builder.build();
 	}
 }

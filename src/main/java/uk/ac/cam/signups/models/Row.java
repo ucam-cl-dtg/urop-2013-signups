@@ -2,6 +2,8 @@ package uk.ac.cam.signups.models;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import uk.ac.cam.signups.util.Util;
 
 import java.text.SimpleDateFormat;
@@ -10,20 +12,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
-import javax.persistence.OrderBy;
-
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "ROWS")
@@ -41,7 +42,7 @@ public class Row implements Mappable, Comparable<Row> {
 	@JoinColumn(name = "EVENT_ID")
 	private Event event;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "row")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "row")
 	@OrderBy("id")
 	private Set<Slot> slots = new TreeSet<Slot>();
 
@@ -124,13 +125,18 @@ public class Row implements Mappable, Comparable<Row> {
 			    hourFormatter.format(calendar.getTime()));
 			dateBuilder = dateBuilder.put(
 			    "comparativeString",
-			    "" + calendar.get(Calendar.YEAR)
-			        + calendar.get(Calendar.MONTH)
+			    "" + calendar.get(Calendar.YEAR) + calendar.get(Calendar.MONTH)
 			        + calendar.get(Calendar.DAY_OF_MONTH)
 			        + hourFormatter.format(calendar.getTime())
 			        + minuteFormatter.format(calendar.getTime()));
+
+			// Date display
+			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d kk:mm");
+			String dateString = formatter.format(calendar.getTime());
+			builder = builder.put("dateDisplay", dateString);
+			
 			builder = builder.put("date", dateBuilder.build());
-		} 
+		}
 
 		builder = builder.put("slots", Util.getImmutableCollection(slots));
 		if (type != null) {
@@ -138,6 +144,9 @@ public class Row implements Mappable, Comparable<Row> {
 		} else {
 			builder = builder.put("type", "no-type");
 		}
+
+		builder.put("eventSummary",
+		    ImmutableMap.of("id", event.getId(), "title", event.getTitle()));
 		return builder.build();
 	}
 

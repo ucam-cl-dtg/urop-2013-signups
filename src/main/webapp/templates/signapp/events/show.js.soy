@@ -7,7 +7,7 @@
  */
 {template .show}
   <div class="events" id="show">
-    <h3>{$data.title} at {$data.location} { $data.room == '' ? 'in ' + $data.room : ''} created by { $data.owner.crsid }</h3>
+    <h3>{$data.title} {if $data.location}at {$data.location} {/if}{ $data.room == '' ? 'in ' + $data.room : ''} created by { $data.owner.crsid }</h3>
     
     {if $data.room != ''}
     <div><a id="map-toggle" href="#" data-show="false" class="small button">Show on map</a></div>

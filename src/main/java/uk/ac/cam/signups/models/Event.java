@@ -41,7 +41,7 @@ import javax.persistence.Transient;
 public class Event implements Mappable {
 	
 	@Transient
-	private Logger log = LoggerFactory.getLogger(Event.class);
+	private Logger logger = LoggerFactory.getLogger(Event.class);
 	
 	@Id
 	@GeneratedValue(generator = "increment")
@@ -178,7 +178,7 @@ public class Event implements Mappable {
 		builder = builder.put("sheetType", sheetType);
 		builder = builder.put("owner", owner.toMap());
 		builder = builder.put("types", Util.getImmutableCollection(types));
-		builder = builder.put("lastRow", getRows().last().toMap());
+		builder = builder.put("lastRow", rows.last().toMap());
 
 		if (sheetType.equals("datetime")) {
 			// Make row hierarchy with dates

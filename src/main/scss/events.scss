@@ -136,6 +136,7 @@ div.events#show {
 
   .time-label{
     display: inline-block;
+    font-size: 16px;
 
     div {
       padding: 20px 0 20px 0;
@@ -161,6 +162,7 @@ div.events#show {
     line-height: 47px;
 
     .custom.dropdown {
+      max-width: 170px !important;
       width: 170px !important;
       height: 100% !important;
 
@@ -170,9 +172,12 @@ div.events#show {
     }
   }
 
-  .big-table-label {
+  td.big-table-label {
+    padding-top: 43px;
     font-size: 16px;
     max-width: 240px;
+    width: 240px;
+    vertical-align: top;
   }
 
   .type {

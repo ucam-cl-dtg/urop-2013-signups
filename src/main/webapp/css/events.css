@@ -77,7 +77,8 @@ div.events#show .token-input-list-facebook {
       box-shadow: none;
       height: 47px; }
 div.events#show .time-label {
-  display: inline-block; }
+  display: inline-block;
+  font-size: 16px; }
   div.events#show .time-label div {
     padding: 20px 0 20px 0;
     width: 80px;
@@ -94,13 +95,17 @@ div.events#show div.type-choice {
   vertical-align: top;
   line-height: 47px; }
   div.events#show div.type-choice .custom.dropdown {
+    max-width: 170px !important;
     width: 170px !important;
     height: 100% !important; }
     div.events#show div.type-choice .custom.dropdown .current, div.events#show div.type-choice .custom.dropdown .selector {
       margin-top: 7px; }
-div.events#show .big-table-label {
+div.events#show td.big-table-label {
+  padding-top: 43px;
   font-size: 16px;
-  max-width: 240px; }
+  max-width: 240px;
+  width: 240px;
+  vertical-align: top; }
 div.events#show .type {
   width: 145px;
   font-size: 16px;
