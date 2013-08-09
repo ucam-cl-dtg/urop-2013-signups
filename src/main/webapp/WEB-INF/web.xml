@@ -1,6 +1,5 @@
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" [
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app [
 <!ENTITY frontend SYSTEM "frontend.xml">
 ]>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -8,7 +7,6 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
-<<<<<<< HEAD
 
 	<context-param>
 		<param-name>resteasy.servlet.mapping.prefix</param-name>
@@ -29,23 +27,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<param-name>jsFiles</param-name>
 		<param-value>http://malsup.github.com/jquery.form.js,/soy/js/3/signapp.events.js,/js/signups.js,/js/events.js</param-value>
 	</context-param>
-=======
-	
-  <context-param>
-    <param-name>cssNamespace</param-name>
-    <param-value></param-value>
-  </context-param>
-  
-  <context-param>
-    <param-name>cssFiles</param-name>
-    <param-value>/css/events.css</param-value>
-  </context-param>
-
-  <context-param>
-    <param-name>jsFiles</param-name>
-    <param-value>http://malsup.github.com/jquery.form.js,/soy/js/3/signapp.events.js,/js/signups.js,/js/events.js</param-value>
-  </context-param>
->>>>>>> 444de0d564c089c6d5e3c2f933c1d1a580f0dfd9
 
   <context-param>
     <param-name>dashboardUrl</param-name>
