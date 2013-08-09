@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -157,8 +158,8 @@ public class EventsController extends ApplicationController {
 	@POST
 	@Path("/queryTypes")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ImmutableMap<String, ?>> generateTypeSuggestions(String q) {
-		return Type.findSimilar(q.substring(2), initialiseUser(), "global");
+	public List<ImmutableMap<String, ?>> generateTypeSuggestions(@FormParam("q") String q) {
+		return Type.findSimilar(q, initialiseUser(), "global");
 	}
 
 	// Query rooms
@@ -175,11 +176,11 @@ public class EventsController extends ApplicationController {
 	@POST
 	@Path("/queryCRSID")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ImmutableMap<String, String>> queryCRSId(String q) {
+	public List<ImmutableMap<String, String>> queryCRSId(@FormParam("q") String q) {
 		// Perform LDAP search
 		@SuppressWarnings("unchecked")
 		ArrayList<ImmutableMap<String, String>> matches = (ArrayList<ImmutableMap<String, String>>) LDAPQueryHelper
-		    .queryCRSID(q.substring(2));
+		    .queryCRSID(q);
 
 		return matches;
 	}

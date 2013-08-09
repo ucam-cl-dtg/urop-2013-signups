@@ -1,4 +1,4 @@
-var BASE_PATH = "/api/";
+var BASE_PATH = "/signapp/api/";
 var ROUTER_OPTIONS = {
 	pushState : true
 };

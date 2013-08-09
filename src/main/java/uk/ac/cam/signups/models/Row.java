@@ -3,9 +3,12 @@ package uk.ac.cam.signups.models;
 import com.google.common.collect.ImmutableMap;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.signups.util.Util;
 
+import java.beans.Transient;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
@@ -25,10 +28,15 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "ROWS")
 public class Row implements Mappable, Comparable<Row> {
+
+	@Transient
+	private Logger logger = LoggerFactory.getLogger(Row.class);
+
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
@@ -123,18 +131,18 @@ public class Row implements Mappable, Comparable<Row> {
 			    minuteFormatter.format(calendar.getTime()));
 			dateBuilder = dateBuilder.put("hour",
 			    hourFormatter.format(calendar.getTime()));
-			dateBuilder = dateBuilder.put(
-			    "comparativeString",
-			    "" + calendar.get(Calendar.YEAR) + calendar.get(Calendar.MONTH)
-			        + calendar.get(Calendar.DAY_OF_MONTH)
-			        + hourFormatter.format(calendar.getTime())
-			        + minuteFormatter.format(calendar.getTime()));
+			String comparativeString = "" + calendar.get(Calendar.YEAR)
+			    + calendar.get(Calendar.MONTH) + calendar.get(Calendar.DAY_OF_MONTH)
+			    + hourFormatter.format(calendar.getTime())
+			    + minuteFormatter.format(calendar.getTime());
+			logger.error("Comparative time string is " + comparativeString);
+			dateBuilder = dateBuilder.put("comparativeString", comparativeString);
 
 			// Date display
 			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d kk:mm");
 			String dateString = formatter.format(calendar.getTime());
 			builder = builder.put("dateDisplay", dateString);
-			
+
 			builder = builder.put("date", dateBuilder.build());
 		}
 
