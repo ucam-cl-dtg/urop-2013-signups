@@ -6,4 +6,7 @@ Gemfile
 Gemfile.lock
 *.rb
 Guardfile
-Gemfile
+.classpath
+.project
+.settings
+
