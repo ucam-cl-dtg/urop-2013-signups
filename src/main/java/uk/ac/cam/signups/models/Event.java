@@ -39,10 +39,10 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "EVENTS")
 public class Event implements Mappable {
-	
+
 	@Transient
 	private Logger logger = LoggerFactory.getLogger(Event.class);
-	
+
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
@@ -163,15 +163,9 @@ public class Event implements Mappable {
 	public Map<String, ?> toMap() {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
 		builder = builder.put("id", id);
-		Calendar currentCal = new GregorianCalendar();
-		SimpleDateFormat minuteFormatter = new SimpleDateFormat("mm");
-		SimpleDateFormat hourFormatter = new SimpleDateFormat("kk");
-		builder = builder.put(
-		    "currentDate",
-		    "" + +currentCal.get(Calendar.YEAR) + currentCal.get(Calendar.MONTH)
-		        + currentCal.get(Calendar.DAY_OF_MONTH)
-		        + hourFormatter.format(currentCal.getTime())
-		        + minuteFormatter.format(currentCal.getTime()));
+		SimpleDateFormat comparativeFormatter = new SimpleDateFormat("yyyy MM dd hh mm");
+		String currentDate = comparativeFormatter.format((new GregorianCalendar()).getTime());
+		builder = builder.put("currentDate", currentDate);
 		builder = builder.put("title", title);
 		builder = builder.put("location", location);
 		builder = builder.put("room", room);

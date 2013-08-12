@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.signups.util.Util;
 
-import java.beans.Transient;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
@@ -123,6 +122,7 @@ public class Row implements Mappable, Comparable<Row> {
 		if (calendar != null) {
 			SimpleDateFormat minuteFormatter = new SimpleDateFormat("mm");
 			SimpleDateFormat hourFormatter = new SimpleDateFormat("kk");
+			SimpleDateFormat comparativeFormatter = new SimpleDateFormat("yyyy MM dd hh mm");
 			ImmutableMap.Builder<String, Object> dateBuilder = new ImmutableMap.Builder<String, Object>();
 			dateBuilder = dateBuilder.put("day", calendar.get(Calendar.DAY_OF_MONTH));
 			dateBuilder = dateBuilder.put("month", calendar.get(Calendar.MONTH));
@@ -131,11 +131,7 @@ public class Row implements Mappable, Comparable<Row> {
 			    minuteFormatter.format(calendar.getTime()));
 			dateBuilder = dateBuilder.put("hour",
 			    hourFormatter.format(calendar.getTime()));
-			String comparativeString = "" + calendar.get(Calendar.YEAR)
-			    + calendar.get(Calendar.MONTH) + calendar.get(Calendar.DAY_OF_MONTH)
-			    + hourFormatter.format(calendar.getTime())
-			    + minuteFormatter.format(calendar.getTime());
-			logger.error("Comparative time string is " + comparativeString);
+			String comparativeString = comparativeFormatter.format(calendar.getTime());
 			dateBuilder = dateBuilder.put("comparativeString", comparativeString);
 
 			// Date display

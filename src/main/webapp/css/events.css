@@ -1,3 +1,10 @@
+div.events#index .created-event {
+  width: 100%;
+  text-align: left;
+  font-weight: 400;
+  background-color: #b3d0f4;
+  color: black; }
+
 div.events#new ul.error {
   background-color: rgba(198, 15, 19, 0.1);
   border-color: #C60F13; }

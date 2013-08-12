@@ -9,52 +9,54 @@
  * 
  */
 {template .index}
-<div class="row">
-  <div class="columns large-3">
-    <h3>Events you created</h3> 
-    {foreach $event in $eventsCreated.data}
-      <div class="row">
-        <div class="columns large-12">
-          <div class="created-event">
-            <a href="/signapp/events/{$event.id}">{$event.title}</a>
+<div class="events" id="index">
+  <div class="row">
+    <div class="columns large-3">
+      <h3>Events you created</h3> 
+      {foreach $event in $eventsCreated.data}
+        <div class="row">
+          <div class="columns large-12">
+            <a href="signapp/events/{$event.id}" class="button medium radius created-event">
+              {$event.title}
+            </a>
           </div>
         </div>
-      </div>
-    {/foreach}
+      {/foreach}
+      
+      {call .loadMore}
+        {param exhausted: $eventsCreated.exhausted/}
+        {param className: 'load-created'/}
+      {/call}
+    </div>
     
-    {call .loadMore}
-      {param exhausted: $eventsCreated.exhausted/}
-      {param className: 'load-created'/}
-    {/call}
-  </div>
-  
-  <div class="columns large-3">
-    <h3>Upcoming events</h3> 
-    {call .eventsCollection}{param events: $eventsSignedUp.data /}{/call}
-    {call .loadMore}
-      {param exhausted: $eventsSignedUp.exhausted/}
-      {param className: 'load-signed-up'/}
-    {/call}
-  </div>
-  
-  <div class="columns large-3">
-    <h3>Events without time</h3> 
-    {call .eventsCollection}{param events: $eventsNoTime.data /}{/call}
-    {call .loadMore}
-      {param exhausted: $eventsNoTime.exhausted/}
-      {param className: 'load-no-time'/}
-    {/call}
-  </div>
-  
-  <div class="columns large-3">
-    <h3>Archived events</h3> 
-    {call .eventsCollection}{param events: $eventsArchived.data /}{/call}
-    {call .loadMore}
-      {param exhausted: $eventsArchived.exhausted/}
-      {param className: 'load-archived'/}
-    {/call}
-  </div>
-</div> 
+    <div class="columns large-3">
+      <h3>Upcoming events</h3> 
+      {call .eventsCollection}{param events: $eventsSignedUp.data /}{/call}
+      {call .loadMore}
+        {param exhausted: $eventsSignedUp.exhausted/}
+        {param className: 'load-signed-up'/}
+      {/call}
+    </div>
+    
+    <div class="columns large-3">
+      <h3>Events without time</h3> 
+      {call .eventsCollection}{param events: $eventsNoTime.data /}{/call}
+      {call .loadMore}
+        {param exhausted: $eventsNoTime.exhausted/}
+        {param className: 'load-no-time'/}
+      {/call}
+    </div>
+    
+    <div class="columns large-3">
+      <h3>Archived events</h3> 
+      {call .eventsCollection}{param events: $eventsArchived.data /}{/call}
+      {call .loadMore}
+        {param exhausted: $eventsArchived.exhausted/}
+        {param className: 'load-archived'/}
+      {/call}
+    </div>
+  </div> 
+</div>
 {/template}
 
 /**
@@ -64,12 +66,12 @@
   {foreach $row in $events}
     <div class="row">
       <div class="columns large-12">
-        <div class="signed-up-row">
-          <div><a href="/signapp/events/{$row.eventSummary.id}">{$row.eventSummary.title}</a></div> 
+        <a href="signapp/events/{$row.eventSummary.id}" class="button medium radius created-event">
+          <div>{$row.eventSummary.title}</div> 
           {if $row.date}
             <div>{if $row.date}{$row.dateDisplay}{/if}</div>
           {/if}
-        </div>
+        </a>
       </div>
     </div>
   {/foreach}

@@ -146,6 +146,11 @@ public class EventForm {
 			errors.put("eventType", "At least one event type is needed.");
 		} else {
 			String[] types = typeNames.split(",");
+
+			if (types.length > 20) {
+				errors.put("eventType", "You cannot set more than 20 events.");
+			}
+
 			for (String type : types) {
 				if (type.length() > 40) {
 					errors.put("eventType",
@@ -198,7 +203,8 @@ public class EventForm {
 						errors.put("datetime", "No date can be empty.");
 						break;
 					} else if (!availableDate.matches("\\d\\d\\/\\d\\d\\/\\d\\d\\d\\d")) {
-						errors.put("datetime", "Date field shoud be in the form of dd/mm/yy.");
+						errors.put("datetime",
+						    "Date field shoud be in the form of dd/mm/yy.");
 						break;
 					}
 				}

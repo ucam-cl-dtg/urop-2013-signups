@@ -1,5 +1,20 @@
 //
-// Create new supervision
+// Index of events
+//
+
+div.events#index {
+	
+	 .created-event {
+	   width: 100%;
+	   text-align: left;
+	   font-weight: 400;
+	   background-color: #b3d0f4;
+	   color: black;
+	 }	
+}
+
+//
+// Create new event 
 //
 
 div.events#new {
