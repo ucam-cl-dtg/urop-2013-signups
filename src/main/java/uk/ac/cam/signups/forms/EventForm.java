@@ -217,6 +217,22 @@ public class EventForm {
 					    "Number of time slots cannot be more than 200.");
 				}
 			}
+
+			if (!errors.containsKey("datetime")) {
+				Calendar currentTime = new GregorianCalendar();
+				Calendar timeAtHand;
+				for (int i = 0; i < availableDates.length; i++) {
+					String[] date = availableDates[i].split("/");
+					timeAtHand = new GregorianCalendar(Integer.parseInt(date[0]),
+					    Integer.parseInt(date[1]), Integer.parseInt(date[2]),
+					    Integer.parseInt(availableHours[i]),
+					    Integer.parseInt(availableMinutes[i]));
+					if (timeAtHand.compareTo(currentTime) > 0) {
+						errors.put("datetime", "You cannot add a date that is in the past.");
+						break;
+					}
+				}
+			}
 		}
 
 		return errors;

@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.signups.models.User;
-import uk.ac.cam.signups.util.UserLookupManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
@@ -12,9 +11,6 @@ import javax.ws.rs.core.Context;
 public class ApplicationController {
 	// Logger
 	private static Logger log = LoggerFactory.getLogger(ApplicationController.class);
-	
-	// UserLookupManager for this user
-	protected UserLookupManager ulm;
 	
 	// Raven session
 	@Context
@@ -26,21 +22,12 @@ public class ApplicationController {
 		log.debug("Getting crsid from raven");	
 		String crsid = (String) sRequest.getSession().getAttribute("RavenRemoteUser");
 		
-		// Create UserLookupManager for this user
-		log.debug("Creating userLookupManager");	
-		ulm = UserLookupManager.getUserLookupManager(crsid);
-		
 		// Register or return the user
 		return User.registerUser(crsid);
 	}
 	
 	// temporary for testing
 	protected User initialiseSpecifiedUser(String crsid) {
-		
-		// Create UserLookupManager for this user
-		log.debug("Creating userLookupManager");	
-		ulm = UserLookupManager.getUserLookupManager(crsid);
-		
 		// Register or return the user
 		return User.registerUser(crsid);
 	}

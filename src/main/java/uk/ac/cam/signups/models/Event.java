@@ -168,7 +168,7 @@ public class Event implements Mappable {
 		builder = builder.put("currentDate", currentDate);
 		builder = builder.put("title", title);
 		builder = builder.put("location", location);
-		builder = builder.put("room", room);
+		builder = builder.put("room", room == null ? "" : room);
 		builder = builder.put("sheetType", sheetType);
 		builder = builder.put("owner", owner.toMap());
 		builder = builder.put("types", Util.getImmutableCollection(types));

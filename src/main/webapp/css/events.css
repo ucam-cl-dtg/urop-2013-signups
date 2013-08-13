@@ -1,9 +1,17 @@
 div.events#index .created-event {
-  width: 100%;
+  min-height: 60px;
   text-align: left;
   font-weight: 400;
-  background-color: #b3d0f4;
-  color: black; }
+  background-color: #c4dbf8;
+  color: black;
+  font-size: 16px; }
+div.events#index .button {
+  width: 100%; }
+div.events#index .date {
+  font-size: 12px;
+  font-style: italic;
+  padding-top: 5px;
+  color: #646464; }
 
 div.events#new ul.error {
   background-color: rgba(198, 15, 19, 0.1);

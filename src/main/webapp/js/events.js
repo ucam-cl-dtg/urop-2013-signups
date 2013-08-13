@@ -257,5 +257,53 @@ moduleScripts['signapp']['events'] = {
 		  		}
 		  	});
 		  }
+		],
+		
+		'index' :
+			[
+			 function() {
+				 $("#load-archived, #load-created, #load-signed-up, #load-no-time").click(function(e) {
+					 e.preventDefault();
+					 var idName = $(this).attr("id");
+
+					 var mode;
+					 if (idName == "load-created") {
+						 mode = "created"
+					 } else if (idName == "load-arvhived") {
+						 mode = "archive"
+					 } else if (idName == "load-signed-up") {
+						 mode = "contemporary"
+					 } else if (idName == "load-no-time") {
+						 mode = "no-time"
+					 }
+					 
+					 var page = parseInt($(this).parent().parent().parent().find(".button.medium.radius").length / 10);
+					 var target = $(this).parent().parent();
+					 var cloneOuter = target.prev().clone().get(0).outerHTML;
+					 var clone;
+
+					 $.getJSON(prepareURL("signapp/events/queryEvents"), {mode: mode, page: page}).done(function(data) {
+
+						 $.each(data["data"], function(index, obj) {
+							 clone = $(cloneOuter);
+							 if (mode == "created") {
+								 clone.find("a").attr("href","signapp/events/" + obj["id"]).text(obj["title"]);
+							 } else {
+								 clone.find("a").attr("href", "signapp/events/" + obj["eventSummary"]["id"]).find(".title").text(obj["eventSummary"]["title"]);
+							 }
+							 
+							 if (mode == "contemporary" || mode == "archive") {
+								 clone.find("div.date").text(obj["dateDisplay"]);
+							 }
+
+							 target.before(clone);
+						 });
+						 
+						 if (data["exhausted"]) {
+							 target.slideUp("fast", function() {$(this).remove()});
+						 }
+					 });
+				 });
+			 }
 		]
 }

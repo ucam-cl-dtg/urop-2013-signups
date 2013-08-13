@@ -8,9 +8,10 @@ import org.jboss.resteasy.annotations.Form;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
+import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
 import uk.ac.cam.signups.forms.EventForm;
 import uk.ac.cam.signups.forms.FillSlot;
-import uk.ac.cam.signups.helpers.LDAPQueryHelper;
 import uk.ac.cam.signups.models.Event;
 import uk.ac.cam.signups.models.Row;
 import uk.ac.cam.signups.models.Type;
@@ -19,6 +20,7 @@ import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 import uk.ac.cam.signups.util.Util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,9 +56,9 @@ public class EventsController extends ApplicationController {
 		    .getRowsSignedUp(0, "no-time");
 		ImmutableMappableExhaustedPair<Event> eventsCreated = initialiseUser()
 		    .getMyEvents(0);
-		
+
 		Map<String, ?> immutableSignedUp = ImmutableMap.of("data",
-				Util.getImmutableCollection(eventsSignedUp.getMappableList()),
+		    Util.getImmutableCollection(eventsSignedUp.getMappableList()),
 		    "exhausted", eventsSignedUp.getExhausted());
 
 		Map<String, ?> immutableCreated = ImmutableMap.of("data",
@@ -71,7 +73,7 @@ public class EventsController extends ApplicationController {
 		    Util.getImmutableCollection(eventsNoTime.getMappableList()),
 		    "exhausted", eventsNoTime.getExhausted());
 
-		return ImmutableMap.of("eventsSignedUp", immutableSignedUp, 
+		return ImmutableMap.of("eventsSignedUp", immutableSignedUp,
 		    "eventsCreated", immutableCreated, "eventsArchived", immutableArchived,
 		    "eventsNoTime", immutableNoTime);
 	}
@@ -129,11 +131,24 @@ public class EventsController extends ApplicationController {
 	 * Queries for various suggestions and completions
 	 */
 
-	// Query more events created inside events
+	// Query delegator
 	@GET
-	@Path("/queryEventsCreated")
+	@Path("/queryEvents")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, ?> generateMyEvents(@QueryParam("page") int page) {
+	public Map<String, ?> generateEvents(@QueryParam("page") int page,
+	    @QueryParam("mode") String mode) {
+		if (mode.equals("created")) {
+			return generateMyEvents(page);
+		} else if (mode.equals("archive") || mode.equals("no-time")
+		    || mode.equals("contemporary")) {
+			return generateAssociatedRows(page, mode);
+		}
+
+		return null;
+	}
+
+	// Query more events created inside events
+	public Map<String, ?> generateMyEvents(int page) {
 		ImmutableMappableExhaustedPair<Event> events = initialiseUser()
 		    .getMyEvents(page);
 		return ImmutableMap.of("data",
@@ -142,11 +157,7 @@ public class EventsController extends ApplicationController {
 	}
 
 	// Query more rows created user is associated with
-	@GET
-	@Path("/queryAssociatedRows")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, ?> generateAssociatedRows(@QueryParam("page") int page,
-	    @QueryParam("mode") String mode) {
+	public Map<String, ?> generateAssociatedRows(int page, String mode) {
 		ImmutableMappableExhaustedPair<Row> rows = initialiseUser()
 		    .getRowsSignedUp(page, mode);
 		return ImmutableMap.of("data",
@@ -158,7 +169,8 @@ public class EventsController extends ApplicationController {
 	@POST
 	@Path("/queryTypes")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ImmutableMap<String, ?>> generateTypeSuggestions(@FormParam("q") String q) {
+	public List<ImmutableMap<String, ?>> generateTypeSuggestions(
+	    @FormParam("q") String q) {
 		return Type.findSimilar(q, initialiseUser(), "global");
 	}
 
@@ -176,11 +188,14 @@ public class EventsController extends ApplicationController {
 	@POST
 	@Path("/queryCRSID")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ImmutableMap<String, String>> queryCRSId(@FormParam("q") String q) {
+	public List<HashMap<String, String>> queryCRSId(@FormParam("q") String q) {
 		// Perform LDAP search
-		@SuppressWarnings("unchecked")
-		ArrayList<ImmutableMap<String, String>> matches = (ArrayList<ImmutableMap<String, String>>) LDAPQueryHelper
-		    .queryCRSID(q);
+    List<HashMap<String, String>> matches;
+    try {
+	    matches = LDAPPartialQuery.partialUserByCrsid(q);
+    } catch (LDAPObjectNotFoundException e) {
+    	return new ArrayList<HashMap<String,String>>();
+    }
 
 		return matches;
 	}

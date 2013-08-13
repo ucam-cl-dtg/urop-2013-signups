@@ -10,7 +10,8 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.cam.signups.helpers.LDAPQueryHelper;
+import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
+import uk.ac.cam.cl.dtg.ldap.LDAPQueryManager;
 import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 
@@ -51,7 +52,11 @@ public class User {
 	}
 
 	public String getName() {
-		return LDAPQueryHelper.getRegisteredName(crsid);
+		try {
+	    return LDAPQueryManager.getUser(crsid).getcName();
+    } catch (LDAPObjectNotFoundException e) {
+    	return "John Doe";
+    }
 	}
 
 	public String getCrsid() {
@@ -79,26 +84,32 @@ public class User {
 		// Query rows that the user has signed up
 		Session session = HibernateUtil.getTransactionSession();
 		Calendar now = new GregorianCalendar();
-		Criteria q = session.createCriteria(Row.class).createAlias("slots","slots").createAlias("event","event").add(Restrictions.eq("slots.owner",this));
+		Criteria q = session.createCriteria(Row.class)
+		    .createAlias("slots", "slots").createAlias("event", "event")
+		    .add(Restrictions.eq("slots.owner", this));
 		if (mode.equals("contemporary")) {
-			q = q.add(Restrictions.ge("calendar", now)).addOrder(Order.asc("calendar"));
+			q = q.add(Restrictions.ge("calendar", now)).addOrder(
+			    Order.asc("calendar"));
 		} else if (mode.equals("archive")) {
-			q = q.add(Restrictions.lt("calendar", now)).addOrder(Order.desc("calendar"));
+			q = q.add(Restrictions.lt("calendar", now)).addOrder(
+			    Order.desc("calendar"));
 		} else if (mode.equals("no-time")) {
-			q = q.add(Restrictions.eq("event.sheetType", "manual")).addOrder(Order.desc("id"));
+			q = q.add(Restrictions.eq("event.sheetType", "manual")).addOrder(
+			    Order.desc("id"));
 		}
 
 		// Check if the row list is exhausted
-		Boolean exhausted = false;
-		if (session
-		    .createQuery(
-		        "from Row as row, in (row.slots) sls where sls.owner = :user")
-		    .setParameter("user", this).setFirstResult(offset + 10)
-		    .setMaxResults(1).list().isEmpty())
-			exhausted = true;
+		List<Row> rows = (List<Row>) q.setMaxResults(10).setFirstResult(offset)
+		    .list();
 
-		return new ImmutableMappableExhaustedPair<Row>((List<Row>) q.list(),
-		    exhausted);
+		Boolean exhausted = false;
+		if (rows.size() % 10 != 0) {
+			exhausted = true;
+		} else if (q.setFirstResult(offset + 10).setMaxResults(1).list().size() == 0) {
+			exhausted = true;
+		}
+
+		return new ImmutableMappableExhaustedPair<Row>(rows, exhausted);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -146,9 +157,12 @@ public class User {
 
 		// If no, check if they exist in LDAP and create them if so
 		if (user == null) {
-			if (LDAPQueryHelper.checkCRSID(crsid) == null) {
+			try {
+				LDAPQueryManager.getUser(crsid);
+			} catch (LDAPObjectNotFoundException e) {
 				return null;
 			}
+			
 			User newUser = new User(crsid);
 			session.save(newUser);
 			return newUser;

@@ -5,12 +5,24 @@
 div.events#index {
 	
 	 .created-event {
-	   width: 100%;
+	   min-height: 60px;
 	   text-align: left;
 	   font-weight: 400;
-	   background-color: #b3d0f4;
+	   background-color: #c4dbf8;
 	   color: black;
+	   font-size: 16px;
 	 }	
+	 
+	 .button {
+	   width: 100%; 
+	 }
+	 
+	 .date {
+	   font-size: 12px;
+	   font-style: italic;
+	   padding-top: 5px;
+	   color: #646464;
+	 }
 }
 
 //
