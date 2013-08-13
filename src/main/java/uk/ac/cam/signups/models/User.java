@@ -142,6 +142,14 @@ public class User {
 	public void addSlots(Set<Slot> slots) {
 		this.slots.addAll(slots);
 	}
+	
+	// Check if the given user is a DoS
+	public boolean isDos() {
+		if (Dos.findByCrsid(crsid) != null) {
+			return true;
+		}
+		return false;
+	}
 
 	// Register user from CRSID
 	public static User registerUser(String crsid) {
