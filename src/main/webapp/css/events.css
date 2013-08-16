@@ -15,9 +15,19 @@ div.events#index .date {
 
 div.events#new ul.error {
   background-color: rgba(198, 15, 19, 0.1);
-  border-color: #C60F13; }
-  div.events#new ul.error input {
-    background-color: inherit; }
+  border-color: #c60f13; }
+  div.events#new ul.error input, div.events#new ul.error input#token-input- {
+    background-color: inherit !important; }
+div.events#new .big-errors-box ul {
+  list-style-position: none;
+  width: 100%;
+  background: #c60f13;
+  border: 1px solid #c60f13;
+  color: white;
+  font-weight: 700;
+  font-size: 0.75em;
+  padding: 5px;
+  margin-top: 5px; }
 div.events#new .form_table {
   width: 100%; }
 div.events#new .form_table td, div.events#new .form_table th {

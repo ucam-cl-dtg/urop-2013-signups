@@ -52,6 +52,7 @@ public class Event implements Mappable {
 	private String room;
 	private String title;
 	private String sheetType;
+	private Calendar expiryDate;
 
 	@ManyToOne
 	@JoinColumn(name = "USER_CRSID")
@@ -118,6 +119,14 @@ public class Event implements Mappable {
 	public void setSheetType(String sheetType) {
 		this.sheetType = sheetType;
 	}
+	
+	public Calendar getExpiryDate() {
+		return this.expiryDate;
+	}
+	
+	public void setExpiryDate(Calendar expiryDate) {
+		this.expiryDate = expiryDate;
+	}
 
 	public User getOwner() {
 		return this.owner;
@@ -163,9 +172,6 @@ public class Event implements Mappable {
 	public Map<String, ?> toMap() {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
 		builder = builder.put("id", id);
-		SimpleDateFormat comparativeFormatter = new SimpleDateFormat("yyyy MM dd hh mm");
-		String currentDate = comparativeFormatter.format((new GregorianCalendar()).getTime());
-		builder = builder.put("currentDate", currentDate);
 		builder = builder.put("title", title);
 		builder = builder.put("location", location);
 		builder = builder.put("room", room == null ? "" : room);
@@ -173,6 +179,22 @@ public class Event implements Mappable {
 		builder = builder.put("owner", owner.toMap());
 		builder = builder.put("types", Util.getImmutableCollection(types));
 		builder = builder.put("lastRow", rows.last().toMap());
+
+		// Current date generator
+		SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
+		    "yyyy MM dd hh mm");
+		String currentDate = comparativeFormatter.format((new GregorianCalendar())
+		    .getTime());
+		builder = builder.put("currentDate", currentDate);
+
+		// Expiry date generator (pretty print and comparative)
+		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d kk:mm");
+		String comparativeExpiry = comparativeFormatter
+		    .format(expiryDate.getTime());
+		String prettyExpiry = formatter.format(expiryDate.getTime());
+		Map<String, String> expiryDateMap = ImmutableMap.of("comparative",
+		    comparativeExpiry, "pretty", prettyExpiry);
+		builder = builder.put("expiryDate", expiryDateMap);
 
 		if (sheetType.equals("datetime")) {
 			// Make row hierarchy with dates
@@ -199,7 +221,6 @@ public class Event implements Mappable {
 				int month = Integer.parseInt(dateArray[1]);
 				int day = Integer.parseInt(dateArray[2]);
 				Calendar cal = new GregorianCalendar(year, month, day);
-				SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d");
 				String date = formatter.format(cal.getTime());
 
 				dates.add(ImmutableMap.of("date", date, "rows",

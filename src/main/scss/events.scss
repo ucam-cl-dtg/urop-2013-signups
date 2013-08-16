@@ -30,13 +30,31 @@ div.events#index {
 //
 
 div.events#new {
+	$errors-dark: #C60F13;
+	$errors-background: rgba(198, 15, 19, 0.1);
+	
   ul.error {
-    background-color: rgba(198, 15, 19, 0.1);
-    border-color: #C60F13;
+    background-color: $errors-background;
+    border-color: $errors-dark;
 
-    input {
-      background-color: inherit;
+    input, input#token-input-{
+      background-color: inherit !important;
     }
+  }
+  
+  .big-errors-box {
+
+    ul {
+      list-style-position: none;
+      width: 100%;
+	    background: $errors-dark;
+	    border: 1px solid $errors-dark;
+	    color: white;
+	    font-weight: 700;
+	    font-size: 0.75em;
+	    padding: 5px;
+	    margin-top: 5px;
+    } 
   }
 
   .form_table {

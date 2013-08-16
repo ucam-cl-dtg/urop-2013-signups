@@ -48,6 +48,29 @@
 		    </div>
 		  </div>
 		  <div class="row">
+		    <div class="columns large-2 small-4 field-label">Expiry Date</div> 
+		    <div class="columns large-10 small-8">
+		      <div class="row">
+		        <div class="columns large-12">
+		          {if $errors and $errors.expiryDate}{call .bigErrorsBox}{param errors: $errors.expiryDate/}{/call}{/if}
+              <div class="row">
+      		      {if $errors != 'undefined' and $data.expiryDate} 
+      		        {call .singleSlot data="all"}
+      		          {param datetime: $data.expiryDate /}
+      		          {param timestampType: 'expiryDate' /}
+      		         {/call}
+      		      {else}
+      		        {call .singleSlot data="all"}
+      		          {param datetime: 'undefined' /}
+      		          {param timestampType: 'expiryDate' /}
+      		         {/call}
+      		      {/if}
+      		    </div>
+      		  </div>
+  		    </div>
+		    </div>
+		  </div>
+		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Group size</div>
 		    <div class="columns large-10 small-8 {if $errors != 'undefined' and $errors.columns}error{/if}">
 		      <input type="number" placeholder="Group size" min="1" value="{if $data != 'undefined' and $data.columns}{$data.columns}{else}1{/if}" name="n_of_columns"/>
@@ -75,79 +98,23 @@
 		  <div class="row" id="datetime">
 		    <div class="columns large-2 small-4 field-label">Times</div>
 		    <div class="columns large-10 small-8">
+		      {if $errors and $errors.datetime}{call .bigErrorsBox}{param errors: $errors.datetime/}{/call}{/if}
 		      <div class="time-controls-wrapper row">
 		        {if $errors != 'undefined' and $data.datetimes }
 		          {foreach $datetime in $data.datetimes}
-		            {call .singleSlot data="all"}{param datetime: $datetime/}{/call} 
+		            {call .singleSlot data="all"}
+		              {param datetime: $datetime/}
+		              {param timestampType: 'datetime'/}
+		            {/call} 
 		          {/foreach}
 		        {else}
-		          {call .singleSlot data="all"}{param datetime: 'undefined'/}{/call}
+		          {call .singleSlot data="all"}
+		            {param datetime: 'undefined'/}
+                {param timestampType: 'datetime'/}
+		          {/call}
 		        {/if}
 		      </div>
-		      <div class="row hide range-controls">
-            <div class="columns large-2">
-              <div>
-                <label>Number of slots</label>
-              </div>
-              <div>
-                <input type="number" id="number_of_slots" min="1" value="1"/>
-              </div>
-            </div>
-            <div class="columns large-4">
-              <div>
-                <label>Start date/time</label>
-              </div>
-              <div class="row">
-                <div class="columns large-4 small-4">
-                  <input type="text" class="datepicker" placeholder="Date" id="date">
-                </div>
-                <div class="columns large-4 small-4">
-                  <select class="medium" id="hour">
-                    {for $i in range(6,24)}
-                      <option>{$i}</option>
-                    {/for}
-                  </select>
-                </div>
-                <div class="columns large-4 small-4">
-                  <select class="medium" id="minute">
-                    {for $i in range(60)}
-                      <option>{$i}</option>
-                    {/for}
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="columns large-2 small-6">
-              <div>
-                <label>Duration (mins)</label>
-              </div>
-              <div>
-                <select class="medium" id="duration">
-                  {for $i in range(60)}
-                    <option>{$i}</option>
-                  {/for}
-                </select>
-              </div>
-            </div>
-            <div class="columns large-2 small-6">
-              <div>
-                  <label>Break (mins)</label>
-              </div>
-              <div>
-	                <select class="medium" id="break">
-	                  {for $i in range(60)}
-	                    <option>{$i}</option>
-	                  {/for}
-	                </select>
-              </div>
-            </div>
-            <div class="columns large-2">
-              <div class="empty"></div>
-              <div>
-                <a class="button medium full-width generate-slots">Generate</a>
-              </div>
-            </div>
-		      </div>
+		      {call .rangeControls/}
 		      <div class="row">
 		        <div class="columns large-6 small-6">
 		          <a class="button medium full-width form-button form-control-option-button new-slot" data-element-to-clone="single-slot-controls" data-target="time-controls-wrapper">Add Single slot</a>
@@ -190,18 +157,35 @@
 {/template}
 
 /**
+ * Template for big red errors box
+ * @param errors
+ */
+{template .bigErrorsBox}
+  <div class="row big-errors-box">
+    <div class="columns large-12">
+      <ul> 
+        {foreach $error in $errors} 
+          <li>{$error}</li> 
+        {/foreach}
+      </ul>
+    </div>
+  </div>
+{/template}
+
+/**
  * Single slot template
  * @param datetime
+ * @param timestampType
  *
  */
 {template .singleSlot}
   <div class="single-slot-controls columns large-12 small-12">
     <div class="row">
       <div class="columns large-6">
-        <input type="text" {if $datetime != 'undefined' and $datetime.date}value="{$datetime.date}"{/if} class="datepicker" name="available_dates[]" placeholder="Date" />
+        <input type="text" {if $datetime != 'undefined' and $datetime.date}value="{$datetime.date}"{/if} class="datepicker" name="{$timestampType == 'datetime' ? 'available_dates[]' : 'expiry_date_date'}" placeholder="Date" />        
       </div>
       <div class="columns large-2 small-4">
-        <select class="medium" name="available_hours[]">
+        <select class="medium" name="{$timestampType =='datetime' ? 'available_hours[]' : 'expiry_date_hour'}">
           {for $i in range(6,24)}
             <option value="{$i}" {if $datetime != 'undefined' and $datetime.hour == $i }selected{/if}>{$i}</option>
           {/for}
@@ -209,15 +193,88 @@
         </select>
       </div>
       <div class="columns large-2 small-4">
-        <select class="medium" name="available_minutes[]">
+        <select class="medium" name="{$timestampType == 'datetime' ? 'available_minutes[]' : 'expiry_date_minute'}">
           {for $i in range(60)}
             <option value="{$i}" {if $datetime != 'undefined' and $datetime.minute == $i}selected{/if}>{$i}</option>
           {/for}
         </select>
       </div>
       <div class="columns large-2 small-4">
-        <a class="button medium full-width delete-time-slot disabled">Delete</a>
+        {if $timestampType == 'datetime'}
+          <a class="button medium full-width delete-time-slot disabled">Delete</a>
+        {/if}
       </div>
     </div>
   </div> 
+{/template}
+
+/**
+ * Template for javascript widget used to create range of times
+ * 
+ */
+{template .rangeControls}
+  <div class="row hide range-controls">
+    <div class="columns large-2">
+      <div>
+        <label>Number of slots</label>
+      </div>
+      <div>
+        <input type="number" id="number_of_slots" min="1" value="1"/>
+      </div>
+    </div>
+    <div class="columns large-4">
+      <div>
+        <label>Start date/time</label>
+      </div>
+      <div class="row">
+        <div class="columns large-4 small-4">
+          <input type="text" class="datepicker" placeholder="Date" id="date">
+        </div>
+        <div class="columns large-4 small-4">
+          <select class="medium" id="hour">
+            {for $i in range(6,24)}
+              <option>{$i}</option>
+            {/for}
+          </select>
+        </div>
+        <div class="columns large-4 small-4">
+          <select class="medium" id="minute">
+            {for $i in range(60)}
+              <option>{$i}</option>
+            {/for}
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="columns large-2 small-6">
+      <div>
+        <label>Duration (mins)</label>
+      </div>
+      <div>
+        <select class="medium" id="duration">
+          {for $i in range(60)}
+            <option>{$i}</option>
+          {/for}
+        </select>
+      </div>
+    </div>
+    <div class="columns large-2 small-6">
+      <div>
+          <label>Break (mins)</label>
+      </div>
+      <div>
+          <select class="medium" id="break">
+            {for $i in range(60)}
+              <option>{$i}</option>
+            {/for}
+          </select>
+      </div>
+    </div>
+    <div class="columns large-2">
+      <div class="empty"></div>
+      <div>
+        <a class="button medium full-width generate-slots">Generate</a>
+      </div>
+    </div>
+  </div>
 {/template}

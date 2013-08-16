@@ -12,9 +12,11 @@ import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
 import uk.ac.cam.signups.forms.EventForm;
 import uk.ac.cam.signups.forms.FillSlot;
+import uk.ac.cam.signups.models.Dos;
 import uk.ac.cam.signups.models.Event;
 import uk.ac.cam.signups.models.Row;
 import uk.ac.cam.signups.models.Type;
+import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 import uk.ac.cam.signups.util.Util;
@@ -76,6 +78,20 @@ public class EventsController extends ApplicationController {
 		return ImmutableMap.of("eventsSignedUp", immutableSignedUp,
 		    "eventsCreated", immutableCreated, "eventsArchived", immutableArchived,
 		    "eventsNoTime", immutableNoTime);
+	}
+	
+	// Walker Zone
+	@GET
+	@Path("/walker_vision")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Map<String, ?> enterWalkerZone() {
+		User currentUser;
+		if ((currentUser = initialiseUser()) != null && currentUser.isDos()) {
+			Dos currentDos = Dos.findByCrsid(currentUser.getCrsid());
+			return ImmutableMap.of("pupils", Util.getImmutableCollection(currentDos.getPupils()));
+		} else {
+			return ImmutableMap.of("pupils", "unauthorised");
+		}
 	}
 
 	// New
@@ -163,6 +179,11 @@ public class EventsController extends ApplicationController {
 		return ImmutableMap.of("data",
 		    Util.getImmutableCollection(rows.getMappableList()), "exhausted",
 		    rows.getExhausted());
+	}
+	
+	// Query rows for individual's rows through DoS interface
+	public Map<String, ?> generateIndividualsRows(int page) {
+	  return null;	
 	}
 
 	// Query types

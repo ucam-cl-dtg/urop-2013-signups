@@ -45,10 +45,16 @@ public class EventForm {
 	String[] availableHours;
 	@FormParam("available_minutes[]")
 	String[] availableMinutes;
+	@FormParam("expiry_date_date")
+	String expiryDateDate;
+	@FormParam("expiry_date_hour")
+	String expiryDateHour;
+	@FormParam("expiry_date_minute")
+	String expiryDateMinute;
 
 	ArrayListMultimap<String, String> errors;
 
-	Logger log = LoggerFactory.getLogger(EventForm.class);
+	Logger logger = LoggerFactory.getLogger(EventForm.class);
 
 	public Event handle(User currentUser) {
 		Session session = HibernateUtil.getTransactionSession();
@@ -58,6 +64,16 @@ public class EventForm {
 		event.setRoom(room);
 		event.setTitle(title);
 		event.setSheetType(sheetType);
+
+		// Set expiry date
+		String[] expiryDateComponents = expiryDateDate.split("/");
+		int expYear = Integer.parseInt(expiryDateComponents[2]);
+		int expMonth = Integer.parseInt(expiryDateComponents[1]) - 1;
+		int expDay = Integer.parseInt(expiryDateComponents[0]);
+		int expHour = Integer.parseInt(expiryDateHour);
+		int expMinute = Integer.parseInt(expiryDateMinute);
+		event.setExpiryDate(new GregorianCalendar(expYear, expMonth, expDay,
+		    expHour, expMinute));
 
 		// Set owner of the user to current user
 		event.setOwner(currentUser);
@@ -134,6 +150,9 @@ public class EventForm {
 	public ArrayListMultimap<String, String> validate() {
 		errors = ArrayListMultimap.create();
 
+		Calendar currentTime = new GregorianCalendar(); // Necessary for checking
+		                                                // datetime related fields.
+
 		// Title
 		if (title.equals("") || title == null) {
 			errors.put("title", "Title field cannot be empty.");
@@ -170,6 +189,29 @@ public class EventForm {
 			errors.put("room", "Room name cannot be more than 90 characters.");
 		}
 
+		// Expiry date
+		if (expiryDateDate.equals("")) {
+			errors.put("expiryDate", "Expiry date cannot be empty.");
+		} else if (!expiryDateDate.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")) {
+			errors.put("expiryDate",
+			    "Expiry date should be in the form of dd/mm/yyyy");
+		}
+
+		if (!errors.containsKey("expiryDate")) {
+			String[] expiryDateComponents = expiryDateDate.split("/");
+			int expYear = Integer.parseInt(expiryDateComponents[2]);
+			int expMonth = Integer.parseInt(expiryDateComponents[1]) - 1;
+			int expDay = Integer.parseInt(expiryDateComponents[0]);
+			int expHour = Integer.parseInt(expiryDateHour);
+			int expMinute = Integer.parseInt(expiryDateMinute);
+			Calendar expAtHand = new GregorianCalendar(expYear, expMonth, expDay,
+			    expHour, expMinute);
+			if (expAtHand.compareTo(currentTime) < 0) {
+				errors.put("expiryDate",
+				    "Expiry date cannot be earlier than the current date.");
+			}
+		}
+
 		// Number of columns
 		if (nOfColumns < 1) {
 			errors.put("columns", "Group size cannot be less than 1.");
@@ -199,12 +241,12 @@ public class EventForm {
 				}
 
 				for (String availableDate : availableDates) {
-					if (availableDate == "") {
+					if (availableDate.equals("")) {
 						errors.put("datetime", "No date can be empty.");
 						break;
 					} else if (!availableDate.matches("\\d\\d\\/\\d\\d\\/\\d\\d\\d\\d")) {
 						errors.put("datetime",
-						    "Date field shoud be in the form of dd/mm/yy.");
+						    "Date field shoud be in the form of dd/mm/yyyy.");
 						break;
 					}
 				}
@@ -216,20 +258,20 @@ public class EventForm {
 					errors.put("datetime",
 					    "Number of time slots cannot be more than 200.");
 				}
-			}
 
-			if (!errors.containsKey("datetime")) {
-				Calendar currentTime = new GregorianCalendar();
-				Calendar timeAtHand;
-				for (int i = 0; i < availableDates.length; i++) {
-					String[] date = availableDates[i].split("/");
-					timeAtHand = new GregorianCalendar(Integer.parseInt(date[0]),
-					    Integer.parseInt(date[1]), Integer.parseInt(date[2]),
-					    Integer.parseInt(availableHours[i]),
-					    Integer.parseInt(availableMinutes[i]));
-					if (timeAtHand.compareTo(currentTime) > 0) {
-						errors.put("datetime", "You cannot add a date that is in the past.");
-						break;
+				if (!errors.containsKey("datetime")) {
+					Calendar timeAtHand;
+					for (int i = 0; i < availableDates.length; i++) {
+						String[] date = availableDates[i].split("/");
+						timeAtHand = new GregorianCalendar(Integer.parseInt(date[2]),
+						    Integer.parseInt(date[1]) - 1, Integer.parseInt(date[0]),
+						    Integer.parseInt(availableHours[i]),
+						    Integer.parseInt(availableMinutes[i]));
+						if (timeAtHand.compareTo(currentTime) < 0) {
+							errors
+							    .put("datetime", "You cannot add a date that is in the past.");
+							break;
+						}
 					}
 				}
 			}
@@ -247,6 +289,9 @@ public class EventForm {
 		builder.put("columns", nOfColumns);
 		builder.put("manualRows", nOfRows);
 		builder.put("sheetType", sheetType == null ? "" : sheetType);
+		Map<String, String> expiryDate = ImmutableMap.of("date", expiryDateDate,
+		    "hour", expiryDateHour, "minute", expiryDateMinute);
+		builder.put("expiryDate", expiryDate);
 
 		List<Map<String, String>> datetimes = new ArrayList<Map<String, String>>();
 		for (int i = 0; i < availableDates.length; i++) {

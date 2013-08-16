@@ -269,7 +269,7 @@ moduleScripts['signapp']['events'] = {
 					 var mode;
 					 if (idName == "load-created") {
 						 mode = "created"
-					 } else if (idName == "load-arvhived") {
+					 } else if (idName == "load-archived") {
 						 mode = "archive"
 					 } else if (idName == "load-signed-up") {
 						 mode = "contemporary"
@@ -301,6 +301,27 @@ moduleScripts['signapp']['events'] = {
 						 
 						 if (data["exhausted"]) {
 							 target.slideUp("fast", function() {$(this).remove()});
+						 }
+					 });
+				 });
+			 }
+		],
+		
+		'dos' :
+			[
+			 function() {
+				 $(".load").click(function() {
+					 var loadButton = $(this);
+					 var crsid = $(this).data("crsid");
+					 $.getJSON(prepareURL("signapp/events/queryIndividualsEvents"), {crsid: crsid}).done(function(data) {
+						 $.each(data["data"], function(i, obj) {
+							 $(loadButton).before("<a href='signapp/events/" + obj["eventSummary"]["id"] + "'>" + obj["eventSummary"]["title"] + "</a>");
+						 });
+						 
+						 if (!data["exhausted"]) {
+							 $(loadButton).slideUp("fast", function() {$(this).remove()});
+						 } else {
+							 $(loadButton).text("Load more")
 						 }
 					 });
 				 });

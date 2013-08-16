@@ -13,47 +13,63 @@
     <div class="row">
       <div class="columns large-3">
         <h3>Events you created</h3> 
-        {foreach $event in $eventsCreated.data}
-          <div class="row">
-            <div class="columns large-12">
-              <a href="signapp/events/{$event.id}" class="button medium radius created-event">
-                <div class="title">{$event.title}</div>
-              </a>
+        {if length($eventsCreated.data) != 0}
+          {foreach $event in $eventsCreated.data}
+            <div class="row">
+              <div class="columns large-12">
+                <a href="signapp/events/{$event.id}" class="button medium radius created-event">
+                  <div class="title">{$event.title}</div>
+                </a>
+              </div>
             </div>
-          </div>
-        {/foreach}
-        
-        {call .loadMore}
-          {param exhausted: $eventsCreated.exhausted/}
-          {param className: 'created'/}
-        {/call}
+          {/foreach}
+          
+          {call .loadMore}
+            {param exhausted: $eventsCreated.exhausted/}
+            {param className: 'created'/}
+          {/call}
+        {else}
+          <div>You have not created any events yet.</div> 
+        {/if}
       </div>
       
       <div class="columns large-3">
         <h3>Upcoming events</h3> 
-        {call .eventsCollection}{param events: $eventsSignedUp.data /}{/call}
-        {call .loadMore}
-          {param exhausted: $eventsSignedUp.exhausted/}
-          {param className: 'signed-up'/}
-        {/call}
+        {if length($eventsSignedUp.data) != 0}
+          {call .eventsCollection}{param events: $eventsSignedUp.data /}{/call}
+          {call .loadMore}
+            {param exhausted: $eventsSignedUp.exhausted/}
+            {param className: 'signed-up'/}
+          {/call}
+        {else}
+          <div>You do not have any upcoming events.</div> 
+        {/if}
       </div>
       
       <div class="columns large-3">
         <h3>Events without time</h3> 
-        {call .eventsCollection}{param events: $eventsNoTime.data /}{/call}
-        {call .loadMore}
-          {param exhausted: $eventsNoTime.exhausted/}
-          {param className: 'no-time'/}
-        {/call}
+        {if length($eventsNoTime.data) != 0}
+          {call .eventsCollection}{param events: $eventsNoTime.data /}{/call}
+          {call .loadMore}
+            {param exhausted: $eventsNoTime.exhausted/}
+            {param className: 'no-time'/}
+          {/call}
+        {else}
+          <div>You do not have any events with no time field.</div> 
+        {/if}
       </div>
       
       <div class="columns large-3">
         <h3>Archived events</h3> 
-        {call .eventsCollection}{param events: $eventsArchived.data /}{/call}
-        {call .loadMore}
-          {param exhausted: $eventsArchived.exhausted/}
-          {param className: 'archived'/}
-        {/call}
+        {if length($eventsArchived.data) != 0}
+          {call .eventsCollection}{param events: $eventsArchived.data /}{/call}
+          {call .loadMore}
+            {param exhausted: $eventsArchived.exhausted/}
+            {param className: 'archived'/}
+          {/call}
+        {else}
+          <div>You do not have any events in your archive.</div>
+        {/if}
       </div>
     </div> 
   </div>

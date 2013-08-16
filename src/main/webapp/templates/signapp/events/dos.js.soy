@@ -1,0 +1,49 @@
+{namespace signapp.events}
+
+/**
+ * Template for Walker Vision page
+ * @param pupils
+ */
+{template .dos}
+  <div class="row">
+    <div class="columns large-12">
+      <h3>Walker Vision</h3>
+      <h4>Director of Studies Page</h4>
+    </div>
+  </div>
+  {if $pupils == 'unauthorised'}
+    <div class="row">
+      <div class="columns large-12">
+        <p>You are not authorised to see this page.</p>
+      </div>
+    </div>
+  {else}
+    <div class="row">
+      <div class="columns large-12">
+        <p>
+          This page displays all undergraduate from your college in order of their CRSIDs. 
+          Lack of information in LDAP prevents us filter students according to their subjects. 
+          However, you can create groups with crsids of students you want to see by following 
+          the link below and use those groups to filter out students quickly.
+        </p>
+      </div>
+    </div>
+    
+    {if length($pupils) != 0}
+      <div class="row">
+        <div class="columns large-12">
+          <div class="pupil">
+            {foreach $pupil in $pupils} 
+              <h5>{$pupil.name} ({$pupil.crsid})</h5> 
+              {if $pupil.anySlots}
+                <div class="button small load" data-crsid="{$pupil.crsid}">Load events signed up</div>
+              {else}
+                <div>This student has not signed up for any event yet.</div> 
+              {/if}
+            {/foreach}
+          </div>
+        </div> 
+      </div>
+    {/if}
+  {/if}
+{/template}

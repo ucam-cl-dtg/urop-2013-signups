@@ -6,13 +6,15 @@ import org.hibernate.criterion.Restrictions;
 
 import uk.ac.cam.signups.util.HibernateUtil;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Dos")
+@Table(name = "DOSES")
 public class Dos {
 	@Id
 	private String crsid;
@@ -29,6 +31,13 @@ public class Dos {
 		} catch (NonUniqueResultException e) {
 			return null;
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+  public List<User> getPupils() {
+		Session session = HibernateUtil.getTransactionSession();
+		Criteria q = session.createCriteria(User.class).add(Restrictions.eq("instID", instID));
+		return (List<User>) q.list();
 	}
 }
 

@@ -59,6 +59,7 @@
         <mapping class="uk.ac.cam.signups.models.Row" />
         <mapping class="uk.ac.cam.signups.models.Slot" />
         <mapping class="uk.ac.cam.signups.models.Type" />
+        <mapping class="uk.ac.cam.signups.models.Dos" />
 
     </session-factory>
 

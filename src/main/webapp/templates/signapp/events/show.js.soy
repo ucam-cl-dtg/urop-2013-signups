@@ -7,7 +7,8 @@
  */
 {template .show}
   <div class="events" id="show">
-    <h3>{$data.title} {if $data.location}at {$data.location} {/if}{ $data.room == '' ? 'in ' + $data.room : ''} created by { $data.owner.crsid }</h3>
+    <h3>{$data.title} {if $data.location}at {$data.location} {/if}{ $data.room == '' ? 'in ' + $data.room : ''} created by {$data.owner.name} ({ $data.owner.crsid })</h3>
+    <h4>Deadline to fill this document is {$data.expiryDate.pretty}</h4>
     
     {if $data.room != ''}
     <div><a id="map-toggle" href="#" data-show="false" class="small button">Show on map</a></div>
@@ -60,7 +61,7 @@
         </table>
       {/if}
       </div>
-      {if ($data.sheetType == 'manual') or $data.currentDate < $data.lastRow.date.comparativeString }
+      {if ($data.sheetType == 'manual') or ($data.currentDate < $data.lastRow.date.comparativeString and $data.currentDate < $data.expiryDate.comparative)}
         <div><input type="submit" value="Save" class="small button"></div>
       {/if}
     </form>
@@ -72,11 +73,10 @@
  * @param row
  * @param data 
  *
- *
  */
 {template .slots}
   {foreach $slot in $row.slots}
-    {if ($data.sheetType == 'datetime') and $data.currentDate > $row.date.comparativeString }
+    {if ($data.sheetType == 'datetime') and ($data.currentDate > $row.date.comparativeString or $data.currentDate > $data.expiryDate.comparative)}
       <div class="established-slot"> 
         {if $slot.owner.crsid != ''}
           <div class="full-slot">
@@ -110,7 +110,7 @@
  */
 {template .types}
   <div class="type-choice">
-    {if length($data.types) != 1 and (($data.sheetType == 'manual') or ($data.currentDate  < $row.date.comparativeString)) }
+    {if length($data.types) != 1 and (($data.sheetType == 'manual') or ($data.currentDate  < $row.date.comparativeString and $data.currentData < $data.expiryDate.comparative)) }
       <select class="small" name="types[]" >
         <option value="0">Please select one</option> 
         {foreach $type in $data.types}
@@ -121,7 +121,7 @@
       {foreach $type in $data.types}
         <div class="type">{$type.name}</div>
       {/foreach}
-    {elseif ($row.type != 'no-type') and ($data.sheetType == 'datetime') and $data.currentDate > $row.date.comparativeString }
+    {elseif ($row.type != 'no-type') and ($data.sheetType == 'datetime') and ($data.currentDate > $row.date.comparativeString or $data.currentDate > $data.expiryDate.comaprative)}
       <div class="type">{$row.type.name}</div>
     {else}
       <div class="type">No type is selected</div>

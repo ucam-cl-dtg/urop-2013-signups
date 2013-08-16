@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPQueryManager;
+import uk.ac.cam.cl.dtg.ldap.LDAPUser;
 import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 
@@ -31,12 +32,15 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "USERS")
-public class User {
+public class User implements Mappable {
 	@Transient
 	private Logger logger = LoggerFactory.getLogger(User.class);
 
 	@Id
 	private String crsid;
+
+	@SuppressWarnings("unused")
+  private String instID;
 
 	@OneToMany(mappedBy = "owner")
 	private List<Event> events = new ArrayList<Event>();
@@ -47,8 +51,9 @@ public class User {
 	public User() {
 	}
 
-	public User(String crsid) {
+	public User(String crsid, String instID) {
 		this.crsid = crsid;
+		this.instID = instID;
 	}
 
 	public String getName() {
@@ -88,14 +93,16 @@ public class User {
 		    .createAlias("slots", "slots").createAlias("event", "event")
 		    .add(Restrictions.eq("slots.owner", this));
 		if (mode.equals("contemporary")) {
-			q = q.add(Restrictions.ge("calendar", now)).addOrder(
+			q = q.add(Restrictions.gt("calendar", now)).addOrder(
 			    Order.asc("calendar"));
 		} else if (mode.equals("archive")) {
-			q = q.add(Restrictions.lt("calendar", now)).addOrder(
-			    Order.desc("calendar"));
+			q = q.add(Restrictions.or(Restrictions.le("calendar", now),Restrictions.le("event.expiryDate", now))).addOrder(
+			    Order.desc("event.expiryDate"));
 		} else if (mode.equals("no-time")) {
-			q = q.add(Restrictions.eq("event.sheetType", "manual")).addOrder(
+			q = q.add(Restrictions.and(Restrictions.eq("event.sheetType", "manual"),Restrictions.gt("event.expiryDate", now))).addOrder(
 			    Order.desc("id"));
+		} else if (mode.equals("timed")) {
+			q = q.add(Restrictions.eq("sheetType", "datetime")).addOrder(Order.desc("calendar"));
 		}
 
 		// Check if the row list is exhausted
@@ -165,13 +172,20 @@ public class User {
 
 		// If no, check if they exist in LDAP and create them if so
 		if (user == null) {
+			List<String> instIDs = null;
+			String instID = null;
 			try {
-				LDAPQueryManager.getUser(crsid);
+				instIDs = LDAPQueryManager.getUser(crsid).getInstID();
+				for(String instIDTemp: instIDs) {
+					if (instIDTemp.endsWith("UG")) {
+						instID = instIDTemp;
+					}
+				}
 			} catch (LDAPObjectNotFoundException e) {
 				return null;
 			}
 			
-			User newUser = new User(crsid);
+			User newUser = new User(crsid, instID);
 			session.save(newUser);
 			return newUser;
 		}
@@ -195,6 +209,11 @@ public class User {
 	}
 
 	public Map<String, ?> toMap() {
-		return ImmutableMap.of("crsid", crsid, "name", getName());
+		return ImmutableMap.of("crsid", crsid, "name", getName(), "anySlots", getSlots().size() > 0);
 	}
+
+	@Override
+  public int getId() {
+		throw new UnsupportedOperationException();
+  }
 }
