@@ -1,7 +1,5 @@
-var BASE_PATH = "/signapp/api/";
-var ROUTER_OPTIONS = {
-	pushState : true
-};
+// Globals
+SOY_GLOBALS = {url_prefix: CONTEXT_PATH, post_prefix: CONTEXT_PATH + "/api"}
 
 /*
  * Demo Routes:
@@ -29,12 +27,12 @@ function supportRedirect(templateName) {
 
 $(document).ready(function() {
 	router = Router({
-	  "signapp" : "signapp.events.index",
-	  "signapp/events" : "signapp.events.index",
-	  "signapp/groups/:id/edit" : "signapp.groups.edit",
-	  "signapp/events/:id" : "signapp.events.show",
-	  "signapp/events/new" : "signapp.events.new",
-	  "signapp/events/walker_vision" : "signapp.events.dos"
+	  "" : "signapp.events.index",
+	  "events" : "signapp.events.index",
+	  "groups/:id/edit" : "signapp.groups.edit",
+	  "events/:id" : "signapp.events.show",
+	  "events/new" : "signapp.events.new",
+	  "events/walker_vision" : "signapp.events.dos"
 
 	// For getting params in get requests
 	// Use the last line to redirect unmatched routes to an error page

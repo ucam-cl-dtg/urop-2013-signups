@@ -17,8 +17,9 @@
           {foreach $event in $eventsCreated.data}
             <div class="row">
               <div class="columns large-12">
-                <a href="signapp/events/{$event.id}" class="button medium radius created-event">
+                <a href="{$ij.url_prefix}/events/{$event.id}" class="button medium radius created-event">
                   <div class="title">{$event.title}</div>
+                  <div class="date">Expiry date: {$event.expiryDate.pretty}</div>
                 </a>
               </div>
             </div>
@@ -36,7 +37,10 @@
       <div class="columns large-3">
         <h3>Upcoming events</h3> 
         {if length($eventsSignedUp.data) != 0}
-          {call .eventsCollection}{param events: $eventsSignedUp.data /}{/call}
+          {call .eventsCollection}
+            {param events: $eventsSignedUp.data /}
+            {param category: 'signed-up'/}   
+          {/call}
           {call .loadMore}
             {param exhausted: $eventsSignedUp.exhausted/}
             {param className: 'signed-up'/}
@@ -49,7 +53,10 @@
       <div class="columns large-3">
         <h3>Events without time</h3> 
         {if length($eventsNoTime.data) != 0}
-          {call .eventsCollection}{param events: $eventsNoTime.data /}{/call}
+          {call .eventsCollection}
+            {param events: $eventsNoTime.data /}
+            {param category: 'no-time' /}
+          {/call}
           {call .loadMore}
             {param exhausted: $eventsNoTime.exhausted/}
             {param className: 'no-time'/}
@@ -62,7 +69,10 @@
       <div class="columns large-3">
         <h3>Archived events</h3> 
         {if length($eventsArchived.data) != 0}
-          {call .eventsCollection}{param events: $eventsArchived.data /}{/call}
+          {call .eventsCollection}
+            {param events: $eventsArchived.data /}
+            {param category: 'archived'/}
+          {/call}
           {call .loadMore}
             {param exhausted: $eventsArchived.exhausted/}
             {param className: 'archived'/}
@@ -77,16 +87,21 @@
 
 /**
  * @param events
+ * @param category
  */
 {template .eventsCollection}
   {foreach $row in $events}
     <div class="row">
       <div class="columns large-12">
-        <a href="signapp/events/{$row.eventSummary.id}" class="button medium radius created-event">
+        <a href="{$ij.url_prefix}/events/{$row.eventSummary.id}" class="button medium radius created-event">
           <div class="title">{$row.eventSummary.title}</div> 
-          {if $row.date}
-            <div class="date">{if $row.date}{$row.dateDisplay}{/if}</div>
-          {/if}
+          <div class="date">
+            {if $category != 'signed-up'}
+              Expiry date: {$row.eventSummary.expiryDate.pretty}
+            {else}
+              Event date: {$row.dateDisplay} 
+            {/if}
+          </div>
         </a>
       </div>
     </div>

@@ -35,7 +35,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-@Path("/signapp/events")
+@Path("/events")
 public class EventsController extends ApplicationController {
 
 	@SuppressWarnings("unused")
@@ -113,7 +113,7 @@ public class EventsController extends ApplicationController {
 
 		if (errors.isEmpty()) {
 			Event event = eventForm.handle(initialiseUser());
-			return ImmutableMap.of("redirectTo", "signapp/events/" + event.getId());
+			return ImmutableMap.of("redirectTo", "events/" + event.getId());
 		} else {
 			return ImmutableMap.of("data", eventForm.toMap(), "errors", actualErrors);
 		}
@@ -140,7 +140,7 @@ public class EventsController extends ApplicationController {
 	    @Form FillSlot fillSlot) {
 		fillSlot.handle(id);
 
-		return ImmutableMap.of("redirectTo", "signapp/events/" + id);
+		return ImmutableMap.of("redirectTo", "events/" + id);
 	}
 
 	/*
@@ -182,8 +182,14 @@ public class EventsController extends ApplicationController {
 	}
 	
 	// Query rows for individual's rows through DoS interface
-	public Map<String, ?> generateIndividualsRows(int page) {
-	  return null;	
+	@GET
+	@Path("/queryIndividualEvents")
+	public Map<String, ?> generateIndividualsRows(@QueryParam("page") int page, @QueryParam("crsid") String crsid) {
+		if (initialiseUser().isDos()) {
+			return generateAssociatedRows(page, "dos");
+		} else {
+			return null;
+		}
 	}
 
 	// Query types

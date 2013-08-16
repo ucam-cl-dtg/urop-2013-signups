@@ -63,7 +63,7 @@ moduleScripts['signapp']['events'] = {
 					var elementToClone = $(this).attr('data-element-to-clone');
 				  var target = $(this).attr('data-target');
 			
-			    var controls = $('.' + elementToClone).clone().get(0).outerHTML;
+			    var controls = $("#datetime").find('.' + elementToClone).clone().get(0).outerHTML;
 			    var elem = $(controls).css("display","none");
 			    $('.' + target).find(".single-slot-controls").last().after(elem);
 			    $('.' + target).find(".single-slot-controls").last().slideDown("fast");
@@ -94,7 +94,7 @@ moduleScripts['signapp']['events'] = {
 			  	var hour;
 			  	var minute;
 			  	for(var i = 0; i < len; i++) {
-			  		singleSlot = $(".single-slot-controls").clone().get(0).outerHTML;
+			  		singleSlot = $("#datetime").find(".single-slot-controls").clone().get(0).outerHTML;
 			  		singleSlot = $(singleSlot);
 			  		
 			  		// Calculate times
@@ -116,7 +116,7 @@ moduleScripts['signapp']['events'] = {
 			  	}
 			  });
 			
-			  $(".event-type-input").tokenInput(prepareURL("signapp/events/queryTypes"), {
+			  $(".event-type-input").tokenInput(prepareURL("events/queryTypes"), {
 			    theme: "facebook",
 			    method: "post",
 			    tokenValue: "name",
@@ -155,13 +155,13 @@ moduleScripts['signapp']['events'] = {
 			},
 			
 			function() {
-			  $("label#datetime").click(function() {
+			  $("label#datetime-type").click(function() {
 			    $("div#manual").slideUp("fast", function() {
 			      $("div#datetime").slideDown("fast");
 			    });
 			  });
 			
-			  $("label#manual").click(function() {
+			  $("label#manual-type").click(function() {
 			    $("div#datetime").slideUp("fast", function() {
 			      $("div#manual").slideDown("fast");
 			    });
@@ -189,7 +189,7 @@ moduleScripts['signapp']['events'] = {
 		  	});
 		  	
 		  	$(".slot-field").each(function(i) {
-			  	$(this).tokenInput(prepareURL("signapp/events/queryCRSID"), {
+			  	$(this).tokenInput(prepareURL("events/queryCRSID"), {
 			  		theme: "facebook",
 			  		method: "post",
 			  		tokenValue: "crsid",
@@ -282,14 +282,14 @@ moduleScripts['signapp']['events'] = {
 					 var cloneOuter = target.prev().clone().get(0).outerHTML;
 					 var clone;
 
-					 $.getJSON(prepareURL("signapp/events/queryEvents"), {mode: mode, page: page}).done(function(data) {
+					 $.getJSON(prepareURL("events/queryEvents"), {mode: mode, page: page}).done(function(data) {
 
 						 $.each(data["data"], function(index, obj) {
 							 clone = $(cloneOuter);
 							 if (mode == "created") {
-								 clone.find("a").attr("href","signapp/events/" + obj["id"]).text(obj["title"]);
+								 clone.find("a").attr("href","events/" + obj["id"]).text(obj["title"]);
 							 } else {
-								 clone.find("a").attr("href", "signapp/events/" + obj["eventSummary"]["id"]).find(".title").text(obj["eventSummary"]["title"]);
+								 clone.find("a").attr("href", "events/" + obj["eventSummary"]["id"]).find(".title").text(obj["eventSummary"]["title"]);
 							 }
 							 
 							 if (mode == "contemporary" || mode == "archive") {
@@ -313,9 +313,9 @@ moduleScripts['signapp']['events'] = {
 				 $(".load").click(function() {
 					 var loadButton = $(this);
 					 var crsid = $(this).data("crsid");
-					 $.getJSON(prepareURL("signapp/events/queryIndividualsEvents"), {crsid: crsid}).done(function(data) {
+					 $.getJSON(prepareURL("events/queryIndividualsEvents"), {crsid: crsid}).done(function(data) {
 						 $.each(data["data"], function(i, obj) {
-							 $(loadButton).before("<a href='signapp/events/" + obj["eventSummary"]["id"] + "'>" + obj["eventSummary"]["title"] + "</a>");
+							 $(loadButton).before("<a href='events/" + obj["eventSummary"]["id"] + "'>" + obj["eventSummary"]["title"] + "</a>");
 						 });
 						 
 						 if (!data["exhausted"]) {

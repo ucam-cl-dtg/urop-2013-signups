@@ -119,10 +119,10 @@ public class Row implements Mappable, Comparable<Row> {
 
 	public Map<String, ?> toMap() {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
-		if (calendar != null) {
+		if (getEvent().getSheetType().equals("datetime")) {
 			SimpleDateFormat minuteFormatter = new SimpleDateFormat("mm");
 			SimpleDateFormat hourFormatter = new SimpleDateFormat("kk");
-			SimpleDateFormat comparativeFormatter = new SimpleDateFormat("yyyy MM dd hh mm");
+			SimpleDateFormat comparativeFormatter = new SimpleDateFormat("yyyy MM dd HH mm");
 			ImmutableMap.Builder<String, Object> dateBuilder = new ImmutableMap.Builder<String, Object>();
 			dateBuilder = dateBuilder.put("day", calendar.get(Calendar.DAY_OF_MONTH));
 			dateBuilder = dateBuilder.put("month", calendar.get(Calendar.MONTH));
@@ -150,7 +150,7 @@ public class Row implements Mappable, Comparable<Row> {
 		}
 
 		builder.put("eventSummary",
-		    ImmutableMap.of("id", event.getId(), "title", event.getTitle()));
+		    ImmutableMap.of("id", event.getId(), "title", event.getTitle(), "expiryDate", event.getExpiryDateMap()));
 		return builder.build();
 	}
 

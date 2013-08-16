@@ -9,7 +9,7 @@
 {template .new}
   <div class="events" id="new">
 	  <h3>Create new event</h3>
-		<form class="custom" action="/signapp/api/signapp/events" method="post">
+		<form class="custom" action="{$ij.post_prefix}/events" method="post">
 		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Title</div>
 		    <div class="columns large-10 small-8 {$errors != 'undefined' and $errors.title ? 'error' : ''}">
@@ -80,11 +80,11 @@
 		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Row type</div>
 		    <div class="columns large-10 small-8 {if $errors != 'undefined' and $errors.sheetType}error{/if}">
-		      <label for="sheet_type" id="datetime">
+		      <label for="sheet_type" id="datetime-type">
 		        <input name="sheet_type" id="sheet_type" type="radio" style="display:none;" value="datetime" class="hidden-field" CHECKED>
 		        <span class="custom radio checked"></span> Supply times
 		      </label>
-		      <label for="sheet_type" id="manual">
+		      <label for="sheet_type" id="manual-type">
 		        <input name="sheet_type" id="sheet_type" type="radio" style="display:none;" class="hidden-field" value="manual">
 		        <span class="custom radio"></span> Supply # of rows
 		      </label>

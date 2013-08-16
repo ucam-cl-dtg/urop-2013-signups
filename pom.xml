@@ -23,14 +23,14 @@
 		<dependency>
 			<groupId>uk.ac.cam.cl.dtg.teaching</groupId>
 			<artifactId>frontend</artifactId>
-			<version>1.0.1</version>
+			<version>1.0.2-SNAPSHOT</version>
 			<type>war</type>
 		</dependency>
 
 		<dependency>
 			<groupId>uk.ac.cam.cl.dtg.teaching</groupId>
 			<artifactId>supervision-api</artifactId>
-			<version>1.0.1</version>
+			<version>1.0.2-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
