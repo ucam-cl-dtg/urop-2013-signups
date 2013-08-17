@@ -8,6 +8,10 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>Signup Application</name>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<repositories>
 		<repository>
 			<id>htmleasy</id>
@@ -130,6 +134,10 @@
 		</dependency>
 	</dependencies>
 
+	<scm>
+		<developerConnection>scm:git:ssh://git@github.com/ucam-cl-dtg/urop-2013-signups</developerConnection>
+	</scm>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -164,4 +172,19 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+		<!-- use the following if you're not using a snapshot version. -->
+		<repository>
+			<id>dtg-code</id>
+			<name>RepositoryProxy</name>
+			<url>http://dtg-maven.cl.cam.ac.uk/content/repositories/releases</url>
+		</repository>
+		<!-- use the following if you ARE using a snapshot version. -->
+		<snapshotRepository>
+			<id>dtg-code</id>
+			<name>RepositoryProxy</name>
+			<url>http://dtg-maven.cl.cam.ac.uk/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
