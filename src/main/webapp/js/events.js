@@ -312,16 +312,21 @@ moduleScripts['signapp']['events'] = {
 			 function() {
 				 $(".load").click(function() {
 					 var loadButton = $(this);
+					 var page = parseInt($(this).parent().find("a.event").length / 10);
 					 var crsid = $(this).data("crsid");
-					 $.getJSON(prepareURL("events/queryIndividualsEvents"), {crsid: crsid}).done(function(data) {
+					 var target = (page == 0) ? loadButton : loadButton.prev();
+					 $.getJSON(prepareURL("events/queryIndividualsEvents"), {crsid: crsid, page: page}).done(function(data) {
 						 $.each(data["data"], function(i, obj) {
-							 $(loadButton).before("<a href='events/" + obj["eventSummary"]["id"] + "'>" + obj["eventSummary"]["title"] + "</a>");
+							 target.before("<a class='event' href='events/" + obj["eventSummary"]["id"] + "'>" + obj["eventSummary"]["title"] + "</a><br>");
 						 });
 						 
-						 if (!data["exhausted"]) {
-							 $(loadButton).slideUp("fast", function() {$(this).remove()});
+						 if (data["exhausted"]) {
+							 loadButton.remove();
 						 } else {
-							 $(loadButton).text("Load more")
+							 if (page == 0) {
+								 loadButton.before("<br>");
+							 }
+							 loadButton.text("Load more");
 						 }
 					 });
 				 });

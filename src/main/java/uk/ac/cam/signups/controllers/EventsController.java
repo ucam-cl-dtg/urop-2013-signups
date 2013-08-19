@@ -79,7 +79,7 @@ public class EventsController extends ApplicationController {
 		    "eventsCreated", immutableCreated, "eventsArchived", immutableArchived,
 		    "eventsNoTime", immutableNoTime);
 	}
-	
+
 	// Walker Zone
 	@GET
 	@Path("/walker_vision")
@@ -88,7 +88,8 @@ public class EventsController extends ApplicationController {
 		User currentUser;
 		if ((currentUser = initialiseUser()) != null && currentUser.isDos()) {
 			Dos currentDos = Dos.findByCrsid(currentUser.getCrsid());
-			return ImmutableMap.of("pupils", Util.getImmutableCollection(currentDos.getPupils()));
+			return ImmutableMap.of("pupils",
+			    Util.getImmutableCollection(currentDos.getPupils()));
 		} else {
 			return ImmutableMap.of("pupils", "unauthorised");
 		}
@@ -180,15 +181,23 @@ public class EventsController extends ApplicationController {
 		    Util.getImmutableCollection(rows.getMappableList()), "exhausted",
 		    rows.getExhausted());
 	}
-	
+
 	// Query rows for individual's rows through DoS interface
 	@GET
-	@Path("/queryIndividualEvents")
+	@Path("/queryIndividualsEvents")
 	public Map<String, ?> generateIndividualsRows(@QueryParam("page") int page, @QueryParam("crsid") String crsid) {
-		if (initialiseUser().isDos()) {
-			return generateAssociatedRows(page, "dos");
+		User cUser;
+		if ((cUser = initialiseUser()).isDos()) {
+			User u = initialiseSpecifiedUser(crsid);
+			boolean isHisPupil = Dos.findByCrsid(cUser.getCrsid()).isMyPupil(u);
+			if (isHisPupil) {
+				ImmutableMappableExhaustedPair<Row> rows = u.getRowsSignedUp(page, "mode");
+				return ImmutableMap.of("data", Util.getImmutableCollection(rows.getMappableList()), "exhausted", rows.getExhausted());
+			} else {
+				return ImmutableMap.of("error", "Not his pupil");
+			}
 		} else {
-			return null;
+			return ImmutableMap.of("error", "Not a DoS");
 		}
 	}
 
@@ -217,12 +226,12 @@ public class EventsController extends ApplicationController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<HashMap<String, String>> queryCRSId(@FormParam("q") String q) {
 		// Perform LDAP search
-    List<HashMap<String, String>> matches;
-    try {
-	    matches = LDAPPartialQuery.partialUserByCrsid(q);
-    } catch (LDAPObjectNotFoundException e) {
-    	return new ArrayList<HashMap<String,String>>();
-    }
+		List<HashMap<String, String>> matches;
+		try {
+			matches = LDAPPartialQuery.partialUserByCrsid(q);
+		} catch (LDAPObjectNotFoundException e) {
+			return new ArrayList<HashMap<String, String>>();
+		}
 
 		return matches;
 	}

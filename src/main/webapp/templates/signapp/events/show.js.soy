@@ -61,7 +61,7 @@
         </table>
       {/if}
       </div>
-      {if ($data.currentDate < $data.expiryDate.comparative) and ($data.sheetType == 'manual' or ($data.lastRow.dae and $data.currentDate < $data.lastRow.date.comparativeString))}
+      {if not ($data.sheetType == 'datetime' and $data.currentDate > $data.lastRow.date.comparativeString) and not ($data.currentDate > $data.expiryDate.comparative)}
         <div><input type="submit" value="Save" class="small button"></div>
       {/if}
     </form>
@@ -154,7 +154,7 @@
             </select>
           {else}
             {if $row.type == 'no-type'}
-              <div class="type">No type was selected</div>        
+              <div class="type">No type selected</div>        
             {else}
               <div class="type">{$row.type}</div>
             {/if}
@@ -169,7 +169,7 @@
         {/if}
       {else}
         {if $row.type == 'no-type'}
-          <div class="type">No type was selected</div>        
+          <div class="type">No type selected</div>        
         {else}
           <div class="type">{$row.type}</div>
         {/if}

@@ -32,16 +32,16 @@
     {if length($pupils) != 0}
       <div class="row">
         <div class="columns large-12">
-          <div class="pupil">
-            {foreach $pupil in $pupils} 
+          {foreach $pupil in $pupils} 
+            <div class="pupil">
               <h5>{$pupil.name} ({$pupil.crsid})</h5> 
               {if $pupil.anySlots}
                 <div class="button small load" data-crsid="{$pupil.crsid}">Load events signed up</div>
               {else}
                 <div>This student has not signed up for any event yet.</div> 
               {/if}
-            {/foreach}
-          </div>
+            </div>
+          {/foreach}
         </div> 
       </div>
     {/if}

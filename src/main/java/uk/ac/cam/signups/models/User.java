@@ -63,6 +63,10 @@ public class User implements Mappable {
     	return "John Doe";
     }
 	}
+	
+	public String getInstID() {
+		return this.instID;
+	}
 
 	public String getCrsid() {
 		return crsid;

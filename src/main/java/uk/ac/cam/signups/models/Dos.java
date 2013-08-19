@@ -2,6 +2,7 @@ package uk.ac.cam.signups.models;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import uk.ac.cam.signups.util.HibernateUtil;
@@ -36,8 +37,12 @@ public class Dos {
 	@SuppressWarnings("unchecked")
   public List<User> getPupils() {
 		Session session = HibernateUtil.getTransactionSession();
-		Criteria q = session.createCriteria(User.class).add(Restrictions.eq("instID", instID));
+		Criteria q = session.createCriteria(User.class).add(Restrictions.eq("instID", instID)).addOrder(Order.asc("crsid"));
 		return (List<User>) q.list();
+	}
+	
+	public boolean isMyPupil(User u) {
+		return instID.equals(u.getInstID());
 	}
 }
 
