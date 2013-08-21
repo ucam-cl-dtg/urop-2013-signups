@@ -31,7 +31,7 @@ moduleScripts['signapp']['events'] = {
 			  		$("input[name='room']").removeAttr("disabled");
 			  }
 			  
-			  $("input[name='location'").keyup(function() {
+			  $("input[name='location']").keyup(function() {
 			  	if ($(this).val() != "") {
 			  		$("input[name='room']").removeAttr("disabled");
 			  	} else {
