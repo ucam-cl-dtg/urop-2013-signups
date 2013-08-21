@@ -9,4 +9,4 @@ Guardfile
 .classpath
 .project
 .settings
-
+.sass-cache
