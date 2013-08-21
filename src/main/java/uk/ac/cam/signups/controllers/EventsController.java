@@ -50,49 +50,44 @@ public class EventsController extends ApplicationController {
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, ?> indexEvent() {
-		ImmutableMappableExhaustedPair<Row> eventsSignedUp = initialiseUser()
-		    .getRowsSignedUp(0, "contemporary");
-		ImmutableMappableExhaustedPair<Row> eventsArchived = initialiseUser()
-		    .getRowsSignedUp(0, "archive");
-		ImmutableMappableExhaustedPair<Row> eventsNoTime = initialiseUser()
-		    .getRowsSignedUp(0, "no-time");
-		ImmutableMappableExhaustedPair<Event> eventsCreated = initialiseUser()
-		    .getMyEvents(0);
+		Map<String, ?> signedUp = generateAssociatedRows(0, "contemporary");
+		Map<String, ?> created = generateMyEvents(0);
+		Map<String, ?> archived = generateAssociatedRows(0, "archive");
+		Map<String, ?> noTime = generateAssociatedRows(0, "no-time");
 
-		Map<String, ?> immutableSignedUp = ImmutableMap.of("data",
-		    Util.getImmutableCollection(eventsSignedUp.getMappableList()),
-		    "exhausted", eventsSignedUp.getExhausted());
-
-		Map<String, ?> immutableCreated = ImmutableMap.of("data",
-		    Util.getImmutableCollection(eventsCreated.getMappableList()),
-		    "exhausted", eventsCreated.getExhausted());
-
-		Map<String, ?> immutableArchived = ImmutableMap.of("data",
-		    Util.getImmutableCollection(eventsArchived.getMappableList()),
-		    "exhausted", eventsArchived.getExhausted());
-
-		Map<String, ?> immutableNoTime = ImmutableMap.of("data",
-		    Util.getImmutableCollection(eventsNoTime.getMappableList()),
-		    "exhausted", eventsNoTime.getExhausted());
-
-		return ImmutableMap.of("eventsSignedUp", immutableSignedUp,
-		    "eventsCreated", immutableCreated, "eventsArchived", immutableArchived,
-		    "eventsNoTime", immutableNoTime);
+		return ImmutableMap.of("eventsSignedUp", signedUp,
+		    "eventsCreated", created, "eventsArchived", archived,
+		    "eventsNoTime", noTime);
 	}
 
 	// Walker Zone
 	@GET
-	@Path("/walker_vision")
+	@Path("/walkerVision")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, ?> enterWalkerZone() {
+	public Map<String, ?> enterWalkerZone(@QueryParam("partial") String partial) {
 		User currentUser;
 		if ((currentUser = initialiseUser()) != null && currentUser.isDos()) {
-			Dos currentDos = Dos.findByCrsid(currentUser.getCrsid());
-			return ImmutableMap.of("pupils",
-			    Util.getImmutableCollection(currentDos.getPupils()));
+			return queryPupils(0, partial);
 		} else {
 			return ImmutableMap.of("pupils", "unauthorised");
 		}
+	}
+	
+	// Walker Zone query for more students
+	@GET
+	@Path("/queryPupils")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Map<String, ?> queryPupils(@QueryParam("page") int page, @QueryParam("partial") String partial) {
+		Dos currentDos = Dos.findByCrsid(initialiseUser().getCrsid());
+		ImmutableMappableExhaustedPair<User> pupils = null;
+		if(partial == null) {
+			pupils = currentDos.getPupils(page);
+		} else {
+			pupils = currentDos.getPupils(page, partial);
+		}
+		return ImmutableMap.of("pupils",
+		    Util.getImmutableCollection(pupils.getMappableList()), "exhausted",
+		    pupils.getExhausted());
 	}
 
 	// New
@@ -118,19 +113,6 @@ public class EventsController extends ApplicationController {
 		} else {
 			return ImmutableMap.of("data", eventForm.toMap(), "errors", actualErrors);
 		}
-	}
-
-	// Show
-	@GET
-	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, ?> showEvent(@PathParam("id") int id) {
-		Session session = HibernateUtil.getTransactionSession();
-		Event event = (Event) session.createQuery("FROM Event WHERE id = :id")
-		    .setParameter("id", id).uniqueResult();
-
-		return ImmutableMap.of("data", event.toMap(), "errors",
-		    ArrayListMultimap.create());
 	}
 
 	// Fill Slot
@@ -185,14 +167,18 @@ public class EventsController extends ApplicationController {
 	// Query rows for individual's rows through DoS interface
 	@GET
 	@Path("/queryIndividualsEvents")
-	public Map<String, ?> generateIndividualsRows(@QueryParam("page") int page, @QueryParam("crsid") String crsid) {
+	public Map<String, ?> generateIndividualsRows(@QueryParam("page") int page,
+	    @QueryParam("crsid") String crsid) {
 		User cUser;
 		if ((cUser = initialiseUser()).isDos()) {
 			User u = initialiseSpecifiedUser(crsid);
 			boolean isHisPupil = Dos.findByCrsid(cUser.getCrsid()).isMyPupil(u);
 			if (isHisPupil) {
-				ImmutableMappableExhaustedPair<Row> rows = u.getRowsSignedUp(page, "mode");
-				return ImmutableMap.of("data", Util.getImmutableCollection(rows.getMappableList()), "exhausted", rows.getExhausted());
+				ImmutableMappableExhaustedPair<Row> rows = u.getRowsSignedUp(page,
+				    "mode");
+				return ImmutableMap.of("data",
+				    Util.getImmutableCollection(rows.getMappableList()), "exhausted",
+				    rows.getExhausted());
 			} else {
 				return ImmutableMap.of("error", "Not his pupil");
 			}
@@ -224,7 +210,7 @@ public class EventsController extends ApplicationController {
 	@POST
 	@Path("/queryCRSID")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<HashMap<String, String>> queryCRSId(@FormParam("q") String q) {
+	public List<HashMap<String, String>> queryCRSID(@FormParam("q") String q) {
 		// Perform LDAP search
 		List<HashMap<String, String>> matches;
 		try {
@@ -234,5 +220,31 @@ public class EventsController extends ApplicationController {
 		}
 
 		return matches;
+	}
+	
+	// Query CRSIDs of pupils
+	@GET
+	@Path("/queryPupilsCRSIDs")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<HashMap<String, String>> queryCRSIDsForDos(@QueryParam("q") String q) {
+		User u = initialiseUser();
+		if (u.isDos()) {
+			return Dos.findByCrsid(u.getCrsid()).getPupilCRSIDs(q);
+		} else {
+			return new ArrayList<HashMap<String,String>>();
+		}
+	}
+	
+	//Show
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Map<String, ?> showEvent(@PathParam("id") int id) {
+		Session session = HibernateUtil.getTransactionSession();
+		Event event = (Event) session.createQuery("FROM Event WHERE id = :id")
+		    .setParameter("id", id).uniqueResult();
+
+		return ImmutableMap.of("data", event.toMap(), "errors",
+		    ArrayListMultimap.create());
 	}
 }

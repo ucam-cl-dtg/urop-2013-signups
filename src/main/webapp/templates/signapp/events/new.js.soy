@@ -9,7 +9,7 @@
 {template .new}
   <div class="events" id="new">
 	  <h3>Create new event</h3>
-		<form class="custom" action="{$ij.post_prefix}/events" method="post">
+		<form class="custom" action="{$ij.api_prefix}/events" method="post">
 		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Title</div>
 		    <div class="columns large-10 small-8 {$errors != 'undefined' and $errors.title ? 'error' : ''}">

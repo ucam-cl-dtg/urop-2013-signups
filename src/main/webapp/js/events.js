@@ -43,10 +43,10 @@ moduleScripts['signapp']['events'] = {
 			  	{
 			  		minLength: 2,
 			  		source: function(request, response) {
-			  			$.getJSON(prepareURL("signapp/events/queryRooms"), 
+			  			$.getJSON(prepareURL("events/queryRooms"), 
 			  					{
 			  						"qroom": request.term, 
-			  						"qbuilding": $("input[name='location']").text()
+			  						"qbuilding": $("input[name='location']").val()
 			  					})
 			  				.done(function(data) {
 			  					response($.map(data,function(item) {
@@ -310,7 +310,15 @@ moduleScripts['signapp']['events'] = {
 		'dos' :
 			[
 			 function() {
-				 $(".load").click(function() {
+				 var partial = /\w+$/.exec(window.location.search);
+				 partial = partial ? partial[0] : null;
+				 
+				 if (partial) {
+					 $("input[name='partial']").val(partial).text(partial);
+					 $("#search").find(".columns:last").removeClass("large-9").addClass("large-8").before("<div class='columns large-1'><a class='button medium error radius' href='" + window.location.pathname + "'>Clear</a></div>")
+				 }
+				 
+				 $("#pupils").on("click", ".load", function() {
 					 var loadButton = $(this);
 					 var page = parseInt($(this).parent().find("a.event").length / 10);
 					 var crsid = $(this).data("crsid");
@@ -329,6 +337,38 @@ moduleScripts['signapp']['events'] = {
 							 loadButton.text("Load more");
 						 }
 					 });
+				 });
+				 
+				 $(".more-students").click(function() {
+					 var loadButton = $(this);
+					 var page = parseInt($(this).parent().parent().prev().find(".pupil").length / 10);
+					 $.getJSON(prepareURL("events/queryPupils"), {page: page, partial: partial}).done(function(data) {
+						 $.each(data["pupils"], function() {
+							 applyTemplate($("#pupils"), "signapp.events.pupil", {pupil: this}, "append");
+						 });
+
+						 if (data["exhausted"]) {
+							 loadButton.remove();
+						 }
+					 });
+				 });
+				 
+				 $("#search").find("input[type='text']").autocomplete({
+					 minLength: 2,
+					 source: function(request, response) {
+			  			$.getJSON(prepareURL("events/queryPupilsCRSIDs"), 
+			  					{
+			  						"q": $("#search").find("input[type='text']").val()
+			  					})
+			  				.done(function(data) {
+			  					response($.map(data,function(item) {
+			  						return {
+			  							value: item.crsid,
+			  							label: item.crsid
+			  						}
+			  					}));
+			  				});
+			  		}
 				 });
 			 }
 		]

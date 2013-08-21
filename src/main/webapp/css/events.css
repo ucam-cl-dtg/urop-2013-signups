@@ -1,3 +1,10 @@
+div.events#dos .more-students {
+  margin-bottom: 10px; }
+div.events#dos .pupil {
+  padding-bottom: 3px; }
+  div.events#dos .pupil:last-child {
+    margin-bottom: 30px; }
+
 div.events#index .created-event {
   min-height: 60px;
   text-align: left;

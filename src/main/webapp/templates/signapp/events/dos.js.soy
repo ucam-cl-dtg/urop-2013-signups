@@ -3,8 +3,10 @@
 /**
  * Template for Walker Vision page
  * @param pupils
+ * @param exhausted
  */
 {template .dos}
+  <div class="events" id="dos">
   <div class="row">
     <div class="columns large-12">
       <h3>Walker Vision</h3>
@@ -32,18 +34,49 @@
     {if length($pupils) != 0}
       <div class="row">
         <div class="columns large-12">
-          {foreach $pupil in $pupils} 
-            <div class="pupil">
-              <h5>{$pupil.name} ({$pupil.crsid})</h5> 
-              {if $pupil.anySlots}
-                <div class="button small load" data-crsid="{$pupil.crsid}">Load events signed up</div>
-              {else}
-                <div>This student has not signed up for any event yet.</div> 
-              {/if}
+          <form id="search" action="{$ij.url_prefix}/events/walkerVision" method="get">
+            <div class="row">
+              <div class="columns large-2">
+                <input type="text" name="partial"> 
+              </div>
+              <div class="columns large-1">
+                <input type="submit" class="medium radius button success" value="Search">
+              </div>
+              <div class="columns large-9"></div>
             </div>
+          </form>
+        </div>      
+      </div>
+
+      <div class="row">
+        <div class="columns large-12" id="pupils">
+          {foreach $pupil in $pupils} 
+            {call .pupil}{param pupil: $pupil/}{/call}          
           {/foreach}
         </div> 
       </div>
+      
+      {if not $exhausted}
+        <div class="row">
+          <div class="columns large-12">
+            <div class="button medium success more-students">Load more students</div> 
+          </div> 
+        </div>
+      {/if}
     {/if}
   {/if}
+{/template}
+
+/**
+ * @param pupil
+ */
+{template .pupil}
+  <div class="pupil">
+    <h5>{$pupil.name} ({$pupil.crsid})</h5> 
+    {if $pupil.anySlots}
+      <div class="button small load" data-crsid="{$pupil.crsid}">Load events signed up</div>
+    {else}
+      <div>This student has not signed up for any event yet.</div> 
+    {/if}
+  </div>
 {/template}

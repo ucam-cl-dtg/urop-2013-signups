@@ -1,5 +1,5 @@
 // Globals
-SOY_GLOBALS = {url_prefix: CONTEXT_PATH, post_prefix: CONTEXT_PATH + "/api"}
+SOY_GLOBALS = {url_prefix: CONTEXT_PATH, api_prefix: CONTEXT_PATH + "/api"}
 
 /*
  * Demo Routes:
@@ -32,7 +32,7 @@ $(document).ready(function() {
 	  "groups/:id/edit" : "signapp.groups.edit",
 	  "events/:id" : "signapp.events.show",
 	  "events/new" : "signapp.events.new",
-	  "events/walker_vision" : "signapp.events.dos"
+	  "events/walkerVision" : "signapp.events.dos"
 
 	// For getting params in get requests
 	// Use the last line to redirect unmatched routes to an error page
