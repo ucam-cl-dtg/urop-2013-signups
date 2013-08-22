@@ -107,6 +107,8 @@ public class User implements Mappable {
 			    Order.desc("id"));
 		} else if (mode.equals("timed")) {
 			q = q.add(Restrictions.eq("sheetType", "datetime")).addOrder(Order.desc("calendar"));
+		} else if (mode.equals("dos")) {
+			q.add(Restrictions.eq("event.dosVisibility", true)).addOrder(Order.desc("event.expiryDate"));
 		}
 
 		// Check if the row list is exhausted

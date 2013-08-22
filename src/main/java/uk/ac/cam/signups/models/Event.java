@@ -26,6 +26,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -53,6 +54,9 @@ public class Event implements Mappable {
 	private String title;
 	private String sheetType;
 	private Calendar expiryDate;
+
+	@Column(name="dos_visibility", nullable = false, columnDefinition = "boolean default true")
+	private boolean dosVisibility;
 
 	@ManyToOne
 	@JoinColumn(name = "USER_CRSID")
@@ -86,6 +90,14 @@ public class Event implements Mappable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public boolean getDosVisibility() {
+		return dosVisibility;
+	}
+	
+	public void setDosVisibility(boolean dosVisibility) {
+		this.dosVisibility = dosVisibility;
 	}
 
 	public String getLocation() {
@@ -243,9 +255,6 @@ public class Event implements Mappable {
 		}
 
 		Map<String, ?> eventMap = builder.build();
-		logger.error("#####Comparative deadline date is " + ((Map) eventMap.get("expiryDate")).get("comparative"));
-		logger.error("#####Comparative current date is  " + eventMap.get("currentDate"));
-		logger.error("#####Comparasion result is        " + ((String) eventMap.get("currentDate")).compareTo((String) ((Map) eventMap.get("expiryDate")).get("comparative")));
 		return eventMap; 
 	}
 }

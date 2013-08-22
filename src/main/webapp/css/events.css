@@ -52,6 +52,8 @@ div.events#new .empty {
   height: 11px; }
 div.events#new #sheet-type-error {
   margin-top: 20px; }
+div.events#new .switch.medium.radius {
+  height: 28px; }
 
 div.events#show .overflow-hidden {
   overflow: hidden;

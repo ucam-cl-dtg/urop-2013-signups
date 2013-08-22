@@ -29,7 +29,6 @@ $(document).ready(function() {
 	router = Router({
 	  "" : "signapp.events.index",
 	  "events" : "signapp.events.index",
-	  "groups/:id/edit" : "signapp.groups.edit",
 	  "events/:id" : "signapp.events.show",
 	  "events/new" : "signapp.events.new",
 	  "events/walkerVision" : "signapp.events.dos"

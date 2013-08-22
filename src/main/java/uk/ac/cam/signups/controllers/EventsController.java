@@ -175,7 +175,7 @@ public class EventsController extends ApplicationController {
 			boolean isHisPupil = Dos.findByCrsid(cUser.getCrsid()).isMyPupil(u);
 			if (isHisPupil) {
 				ImmutableMappableExhaustedPair<Row> rows = u.getRowsSignedUp(page,
-				    "mode");
+				    "dos");
 				return ImmutableMap.of("data",
 				    Util.getImmutableCollection(rows.getMappableList()), "exhausted",
 				    rows.getExhausted());

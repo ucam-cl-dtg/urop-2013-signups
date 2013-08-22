@@ -51,6 +51,8 @@ public class EventForm {
 	String expiryDateHour;
 	@FormParam("expiry_date_minute")
 	String expiryDateMinute;
+	@FormParam("dos_visibility")
+	Boolean dosVisibility;
 
 	ArrayListMultimap<String, String> errors;
 
@@ -64,6 +66,7 @@ public class EventForm {
 		event.setRoom(room);
 		event.setTitle(title);
 		event.setSheetType(sheetType);
+		event.setDosVisibility(dosVisibility);
 
 		// Set expiry date
 		String[] expiryDateComponents = expiryDateDate.split("/");
@@ -300,6 +303,8 @@ public class EventForm {
 		}
 
 		builder.put("datetimes", datetimes);
+		
+		builder.put("dosVisibility", dosVisibility.toString());
 
 		return builder.build();
 	}

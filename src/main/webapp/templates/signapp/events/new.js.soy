@@ -131,6 +131,20 @@
           <input type="text" name="n_of_rows" placeholder="# of rows" min="1" value="1">
         </div>
       </div>
+      <div class="row">
+        <div class="columns large-2 small-4">Visible to the Director of Studies?</div>
+        <div class="columns large-10 small-8">
+          <div class="switch medium radius">
+            <input id="dos-off" name="dos_visibility" type="radio" value="false"{$data.dosVisibility and $data.dosVisibility == 'false' ? ' checked' : ''}>
+            <label for="dos-off" onclick="">Invisible</label>
+          
+            <input id="dos-on" name="dos_visibility" type="radio" value= "true"{not $data.dosVisibility or $data.dosVisibility == 'true' ? ' checked' : ''}>
+            <label for="dos-on" onclick="">Visible</label>
+            
+            <span></span>
+          </div>
+        </div>
+      </div>
 		  <div class="row">
 		    <div class="columns large-12 small-12">
 		      <input type="submit" value="Create event" class="small button" />
