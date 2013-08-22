@@ -127,6 +127,7 @@ moduleScripts['signapp']['events'] = {
 			    hintText: "Add a new type",
 			    preventDuplicates: true,
 			    resultsLimit: 10,
+			    allowFreeTagging: true,
 			    resultsFormatter: function(item){ return "<li><div style='display: inline-block; padding-left: 10px;'>"+ item.name + "</div></li>" }
 			  });
 			  
