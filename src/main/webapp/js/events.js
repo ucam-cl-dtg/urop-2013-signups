@@ -2,6 +2,7 @@ moduleScripts['signapp']['events'] = {
 	'new' : 
 		[
 			function() {
+
 				$("form").ajaxForm(function(data) {
 					applyTemplate($('.main'), "signapp.events.new", data);
 				});
@@ -27,8 +28,9 @@ moduleScripts['signapp']['events'] = {
 			  			}
 			  		});
 			  
-			  if ($("input[name='location']").val() != "") {
-			  		$("input[name='room']").removeAttr("disabled");
+			  if (loc = $("input[name='location']").val()) {
+		  		$("input[name='room']").removeAttr("disabled");
+					$("iframe").attr("src", $("iframe").attr("src") + loc);
 			  }
 			  
 			  $("input[name='location']").keyup(function() {
