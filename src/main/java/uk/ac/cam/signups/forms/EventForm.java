@@ -14,6 +14,8 @@ import uk.ac.cam.signups.models.Type;
 import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.HibernateUtil;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -67,6 +69,15 @@ public class EventForm {
 		event.setTitle(title);
 		event.setSheetType(sheetType);
 		event.setDosVisibility(dosVisibility);
+		
+		// Set obfuscated id
+		SecureRandom sr = new SecureRandom();
+		String obfuscatedId;
+		
+		do {
+			obfuscatedId = new BigInteger(40, sr).toString(32);
+		} while(session.createQuery("from Event where obfuscatedId = :obfuscatedId").setParameter("obfuscatedId", obfuscatedId).list().size() > 0);
+		event.setObfuscatedId(obfuscatedId);
 
 		// Set expiry date
 		String[] expiryDateComponents = expiryDateDate.split("/");

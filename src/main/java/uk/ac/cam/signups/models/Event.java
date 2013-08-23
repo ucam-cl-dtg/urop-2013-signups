@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import org.slf4j.Logger;
@@ -55,6 +56,9 @@ public class Event implements Mappable {
 	private String sheetType;
 	private Calendar expiryDate;
 
+	@Index(name="obfuscatedIdIndex")
+	private String obfuscatedId;
+
 	@Column(name="dos_visibility", nullable = false, columnDefinition = "boolean default true")
 	private boolean dosVisibility;
 
@@ -90,6 +94,14 @@ public class Event implements Mappable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public String getObfuscatedId() {
+		return obfuscatedId;
+	}
+	
+	public void setObfuscatedId(String obfuscatedId) {
+		this.obfuscatedId = obfuscatedId;
 	}
 	
 	public boolean getDosVisibility() {
@@ -194,7 +206,7 @@ public class Event implements Mappable {
 
 	public Map<String, ?> toMap() {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
-		builder = builder.put("id", id);
+		builder = builder.put("obfuscatedId", obfuscatedId);
 		builder = builder.put("title", title);
 		builder = builder.put("location", location);
 		builder = builder.put("room", room == null ? "" : room);

@@ -29,9 +29,9 @@ $(document).ready(function() {
 	router = Router({
 	  "" : "signapp.events.index",
 	  "events" : "signapp.events.index",
-	  "events/:id" : "signapp.events.show",
+	  "events/:obfuscatedId" : "signapp.events.show",
 	  "events/new" : "signapp.events.new",
-	  "events/walkerVision" : "signapp.events.dos"
+	  "events/dos" : "signapp.events.dos"
 
 	// For getting params in get requests
 	// Use the last line to redirect unmatched routes to an error page

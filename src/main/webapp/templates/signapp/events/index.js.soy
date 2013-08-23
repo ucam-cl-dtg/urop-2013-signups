@@ -17,7 +17,7 @@
           {foreach $event in $eventsCreated.data}
             <div class="row">
               <div class="columns large-12">
-                <a href="{$ij.url_prefix}/events/{$event.id}" class="button medium radius created-event">
+                <a href="{$ij.url_prefix}/events/{$event.obfuscatedId}" class="button medium radius created-event">
                   <div class="title">{$event.title}</div>
                   <div class="date">Expiry date: {$event.expiryDate.pretty}</div>
                 </a>
@@ -93,7 +93,7 @@
   {foreach $row in $events}
     <div class="row">
       <div class="columns large-12">
-        <a href="{$ij.url_prefix}/events/{$row.eventSummary.id}" class="button medium radius created-event">
+        <a href="{$ij.url_prefix}/events/{$row.eventSummary.obfuscatedId}" class="button medium radius created-event">
           <div class="title">{$row.eventSummary.title}</div> 
           <div class="date">
             {if $category != 'signed-up'}

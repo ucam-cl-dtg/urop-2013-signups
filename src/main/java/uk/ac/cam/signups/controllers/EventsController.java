@@ -62,7 +62,7 @@ public class EventsController extends ApplicationController {
 
 	// Walker Zone
 	@GET
-	@Path("/walkerVision")
+	@Path("/dos")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, ?> enterWalkerZone(@QueryParam("partial") String partial) {
 		User currentUser;
@@ -109,7 +109,7 @@ public class EventsController extends ApplicationController {
 
 		if (errors.isEmpty()) {
 			Event event = eventForm.handle(initialiseUser());
-			return ImmutableMap.of("redirectTo", "events/" + event.getId());
+			return ImmutableMap.of("redirectTo", "events/" + event.getObfuscatedId());
 		} else {
 			return ImmutableMap.of("data", eventForm.toMap(), "errors", actualErrors);
 		}
@@ -117,13 +117,12 @@ public class EventsController extends ApplicationController {
 
 	// Fill Slot
 	@POST
-	@Path("/{id}/fill_slots")
+	@Path("/{obfuscatedId}/fill_slots")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, String> fillSlot(@PathParam("id") int id,
-	    @Form FillSlot fillSlot) {
-		fillSlot.handle(id);
+	public Map<String, String> fillSlot(@Form FillSlot fillSlot, @PathParam("obfuscatedId") String obfuscatedId) {
+		fillSlot.handle();
 
-		return ImmutableMap.of("redirectTo", "events/" + id);
+		return ImmutableMap.of("redirectTo", "events/" + obfuscatedId);
 	}
 
 	/*
@@ -237,12 +236,12 @@ public class EventsController extends ApplicationController {
 	
 	//Show
 	@GET
-	@Path("/{id}")
+	@Path("/{obfuscatedId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, ?> showEvent(@PathParam("id") int id) {
+	public Map<String, ?> showEvent(@PathParam("obfuscatedId") String obfuscatedId) {
 		Session session = HibernateUtil.getTransactionSession();
-		Event event = (Event) session.createQuery("FROM Event WHERE id = :id")
-		    .setParameter("id", id).uniqueResult();
+		Event event = (Event) session.createQuery("FROM Event WHERE obfuscatedId = :obfuscatedId")
+		    .setParameter("obfuscatedId", obfuscatedId).uniqueResult();
 
 		return ImmutableMap.of("data", event.toMap(), "errors",
 		    ArrayListMultimap.create());

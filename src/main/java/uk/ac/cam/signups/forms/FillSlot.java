@@ -20,8 +20,8 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.PathParam;
 
 public class FillSlot {
-	@PathParam("id")
-	int eventId;
+	@PathParam("obfuscatedId")
+	String obfuscatedId;
 	@FormParam("slot_crsids[]")
 	String[] crsids;
 	@FormParam("slot_ids[]")
@@ -32,7 +32,7 @@ public class FillSlot {
 	Logger log = LoggerFactory.getLogger(FillSlot.class);
 
 	@SuppressWarnings("unchecked")
-  public void handle(int id) {
+  public void handle() {
 		Session session = HibernateUtil.getTransactionSession();
 
 		Set<Integer> ids = new HashSet<Integer>();
@@ -42,8 +42,8 @@ public class FillSlot {
 		
 		List<Slot> slots = (List<Slot>) session
 		    .createQuery(
-		        "from Slot as slot where slot.row.event.id = :id and (slot.row.calendar > :calendar or slot.row.event.sheetType = 'manual')")
-		    .setParameter("id", id)
+		        "from Slot as slot where slot.row.event.obfuscatedId = :obfuscatedId and (slot.row.calendar > :calendar or slot.row.event.sheetType = 'manual')")
+		    .setParameter("obfuscatedId", obfuscatedId)
 		    .setParameter("calendar", Calendar.getInstance()).list();
 
 		int columnsSize = slots.get(0).getRow().getSlots().size();
@@ -64,8 +64,8 @@ public class FillSlot {
 				    && ((typeId = typeIds[i / columnsSize]) != 0)) {
 					type = (Type) session
 					    .createQuery(
-					        "from Type as type where type.id = :type_id AND type.event.id = :id")
-					    .setParameter("type_id", typeId).setParameter("id", id)
+					        "from Type as type where type.id = :type_id AND type.event.obfuscatedId = :obfuscatedId")
+					    .setParameter("type_id", typeId).setParameter("obfuscatedId", obfuscatedId)
 					    .uniqueResult();
 					row = slot.getRow();
 					row.setType(type);

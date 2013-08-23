@@ -150,7 +150,7 @@ public class Row implements Mappable, Comparable<Row> {
 		}
 
 		builder.put("eventSummary",
-		    ImmutableMap.of("id", event.getId(), "title", event.getTitle(), "expiryDate", event.getExpiryDateMap()));
+		    ImmutableMap.of("obfuscatedId", event.getObfuscatedId(), "title", event.getTitle(), "expiryDate", event.getExpiryDateMap()));
 		return builder.build();
 	}
 
