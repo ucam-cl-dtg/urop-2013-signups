@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>uk.ac.cam.cl.dtg</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0.1</version>
+    <relativePath></relativePath><!-- this is needed to stop maven warning that the parent pom conflicts with ../pom.xml -->
+  </parent>
+  <groupId>uk.ac.cam.cl.dtg.teaching</groupId>
+  <artifactId>signapp-backup</artifactId>
+  <packaging>pom</packaging>
+  <!-- This version number is left on SNAPSHOT because we re-run the
+       job nightly and replace the previous artifact with this one -->
+  <version>1.0.0-SNAPSHOT</version>
+  <name>Signapp Site Backup</name>
+  <description>Packages a backup of the data from a signapp installation on an Otter server.  Designed to be run at regular intervals producing SNAPSHOT versioned builds</description>
+  <properties>
+    <backup.script>${basedir}/src/main/scripts/backup.sh</backup.script>
+    <backup.host>localhost</backup.host>
+    <backup.class>testing</backup.class>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>exec-maven-plugin</artifactId>
+	<version>1.2.1</version>
+	<executions>
+	  <execution>
+	    <id>exec-backup</id>
+	    <phase>compile</phase>
+	    <goals>
+	      <goal>exec</goal>
+	    </goals>
+	  </execution>
+	</executions>
+	<configuration>
+	  <executable>bash</executable>
+	  <workingDirectory>${project.build.directory}</workingDirectory>
+	  <arguments>
+	    <argument>${backup.script}</argument>
+	    <argument>${backup.host}</argument>
+	  </arguments>
+	</configuration>
+      </plugin>
+      <plugin>
+	<artifactId>maven-assembly-plugin</artifactId>
+	<version>2.2-beta-5</version>
+	<executions>
+	  <execution>
+	    <id>zip-assembly</id>
+	    <phase>package</phase>
+	    <goals>
+	      <goal>single</goal>
+	    </goals>
+	  </execution>
+	</executions>
+	<configuration>
+	  <finalName>${project.artifactId}-${project.version}</finalName>
+	  <descriptors>
+	    <descriptor>assembly.xml</descriptor>
+	  </descriptors>
+	</configuration>
+      </plugin>	    
+    </plugins>  
+  </build>  
+</project>
