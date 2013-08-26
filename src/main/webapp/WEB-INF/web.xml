@@ -40,6 +40,11 @@
 -->
 
   <context-param>
+    <param-name>excludeFromLogger</param-name>
+    <param-value>/dashboard/api/notifications</param-value>
+  </context-param>
+
+  <context-param>
     <param-name>apiKey</param-name>
     <param-value>4870v534lmomthfssb27ho4vjtidhujlmmssasuf</param-value>
   </context-param>
