@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class Util {
-	
 	public static List<Map<String, ?>> getImmutableCollection(Iterable<? extends Mappable> raws) {
 		List<Map<String,?>> immutalizedCollection= new ArrayList<Map<String, ?>>();
 
@@ -46,5 +45,14 @@ public class Util {
 		for(T k : mm.keySet()) 
 			builder.put(k, ImmutableList.copyOf(mm.get(k)));
 		return builder.build();
+	}
+	
+	public static String join(Iterable<String> strs, String delimeter) {
+		String joined = "";
+
+		for(String str: strs)
+			joined += (str + delimeter);
+		
+		return joined.substring(0, joined.length() - 1);
 	}
 }

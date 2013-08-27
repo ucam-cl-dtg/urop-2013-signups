@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
+import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.Notification;
 import uk.ac.cam.signups.forms.EventForm;
 import uk.ac.cam.signups.forms.FillSlot;
 import uk.ac.cam.signups.models.Dos;
@@ -25,6 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -108,7 +112,7 @@ public class EventsController extends ApplicationController {
 		    .multimapToImmutableMap(errors);
 
 		if (errors.isEmpty()) {
-			Event event = eventForm.handle(initialiseUser());
+			Event event = eventForm.handle(initialiseUser(), getApiWrapper());
 			return ImmutableMap.of("redirectTo", "events/" + event.getObfuscatedId());
 		} else {
 			return ImmutableMap.of("data", eventForm.toMap(), "errors", actualErrors);
@@ -117,10 +121,10 @@ public class EventsController extends ApplicationController {
 
 	// Fill Slot
 	@POST
-	@Path("/{obfuscatedId}/fill_slots")
+	@Path("/{obfuscatedId}/fillSlots")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, String> fillSlot(@Form FillSlot fillSlot, @PathParam("obfuscatedId") String obfuscatedId) {
-		fillSlot.handle();
+		fillSlot.handle(getApiWrapper(), initialiseUser());
 
 		return ImmutableMap.of("redirectTo", "events/" + obfuscatedId);
 	}
@@ -242,8 +246,16 @@ public class EventsController extends ApplicationController {
 		Session session = HibernateUtil.getTransactionSession();
 		Event event = (Event) session.createQuery("FROM Event WHERE obfuscatedId = :obfuscatedId")
 		    .setParameter("obfuscatedId", obfuscatedId).uniqueResult();
+		
+		Set<Notification> notificationsSet = getApiWrapper()
+				.getNotificationsWithForeignId(0, 20, "signapp", event.getOwner().getCrsid(), "signapp-" + event.getId())
+				.getNotifications();
+		SortedSet<uk.ac.cam.signups.models.Notification> notificationsList = new TreeSet<uk.ac.cam.signups.models.Notification>();
+		for(Notification notification: notificationsSet) {
+			notificationsList.add(new uk.ac.cam.signups.models.Notification(notification.getMessage(), notification.getTimestamp()));
+		}
 
 		return ImmutableMap.of("data", event.toMap(), "errors",
-		    ArrayListMultimap.create());
+		    ArrayListMultimap.create(), "notifications", Util.getImmutableCollection(notificationsList));
 	}
 }

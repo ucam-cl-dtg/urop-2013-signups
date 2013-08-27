@@ -328,7 +328,7 @@ moduleScripts['signapp']['events'] = {
 					 var target = (page == 0) ? loadButton : loadButton.prev();
 					 $.getJSON(prepareURL("events/queryIndividualsEvents"), {crsid: crsid, page: page}).done(function(data) {
 						 $.each(data["data"], function(i, obj) {
-							 target.before("<a class='event' href='events/" + obj["eventSummary"]["id"] + "'>" + obj["eventSummary"]["title"] + "</a><br>");
+							 target.before("<a class='event' href='events/" + obj["eventSummary"]["obfuscatedId"] + "'>" + obj["eventSummary"]["title"] + "</a><br>");
 						 });
 						 
 						 if (data["exhausted"]) {

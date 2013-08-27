@@ -7,6 +7,8 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
+import uk.ac.cam.cl.dtg.teaching.api.NotificationException;
 import uk.ac.cam.signups.models.Event;
 import uk.ac.cam.signups.models.Row;
 import uk.ac.cam.signups.models.Slot;
@@ -60,7 +62,7 @@ public class EventForm {
 
 	Logger logger = LoggerFactory.getLogger(EventForm.class);
 
-	public Event handle(User currentUser) {
+	public Event handle(User currentUser, NotificationApiWrapper apiWrapper) {
 		Session session = HibernateUtil.getTransactionSession();
 		// Create event prototype
 		Event event = new Event();
@@ -69,14 +71,16 @@ public class EventForm {
 		event.setTitle(title);
 		event.setSheetType(sheetType);
 		event.setDosVisibility(dosVisibility);
-		
+
 		// Set obfuscated id
 		SecureRandom sr = new SecureRandom();
 		String obfuscatedId;
-		
+
 		do {
 			obfuscatedId = new BigInteger(40, sr).toString(32);
-		} while(session.createQuery("from Event where obfuscatedId = :obfuscatedId").setParameter("obfuscatedId", obfuscatedId).list().size() > 0);
+		} while (session
+		    .createQuery("from Event where obfuscatedId = :obfuscatedId")
+		    .setParameter("obfuscatedId", obfuscatedId).list().size() > 0);
 		event.setObfuscatedId(obfuscatedId);
 
 		// Set expiry date
@@ -124,7 +128,7 @@ public class EventForm {
 			                                                               // dates to
 			                                                               // avoid
 			                                                               // duplicates
-			MAIN_LOOP: for (int i = 0; i < availableDates.length; i++) {
+			for (int i = 0; i < availableDates.length; i++) {
 				// Create calendar object and parse parameters
 				String[] splitDate = availableDates[i].split("/");
 				int year = Integer.parseInt(splitDate[2]);
@@ -138,7 +142,7 @@ public class EventForm {
 
 				// Skip duplicates
 				if (duplicateCalContainer.contains(cal))
-					continue MAIN_LOOP;
+					continue;
 
 				duplicateCalContainer.add(cal);
 
@@ -156,6 +160,15 @@ public class EventForm {
 					session.save(slot);
 				}
 			}
+		}
+
+		try {
+			apiWrapper.createNotification("You have created an event named " + title
+			    + ".", "signapp", "events/" + obfuscatedId,
+			    currentUser.getCrsid());
+		} catch (NotificationException e) {
+			logger.error("Notification could not be saved.");
+			logger.error(e.getMessage());
 		}
 
 		return event;
@@ -282,8 +295,8 @@ public class EventForm {
 						    Integer.parseInt(availableHours[i]),
 						    Integer.parseInt(availableMinutes[i]));
 						if (timeAtHand.compareTo(currentTime) < 0) {
-							errors
-							    .put("datetime", "You cannot add a date that is in the past.");
+							errors.put("datetime",
+							    "You cannot add a date that is in the past.");
 							break;
 						}
 					}
@@ -314,7 +327,7 @@ public class EventForm {
 		}
 
 		builder.put("datetimes", datetimes);
-		
+
 		builder.put("dosVisibility", dosVisibility.toString());
 
 		return builder.build();
