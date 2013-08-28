@@ -55,7 +55,7 @@ public class Notification implements Mappable, Comparable<Notification> {
 
 	@Override
   public Map<String, ?> toMap() {
-		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d kk:mm");
+		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM 'at' kk:mm");
 
 		return ImmutableMap.of(
 				"message", this.message,

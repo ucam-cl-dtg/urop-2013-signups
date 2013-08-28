@@ -135,7 +135,7 @@ public class Row implements Mappable, Comparable<Row> {
 			dateBuilder = dateBuilder.put("comparativeString", comparativeString);
 
 			// Date display
-			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d kk:mm");
+			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM 'at' kk:mm");
 			String dateString = formatter.format(calendar.getTime());
 			builder = builder.put("dateDisplay", dateString);
 

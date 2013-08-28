@@ -36,13 +36,13 @@
         <div class="columns large-12">
           <form id="search" action="{$ij.url_prefix}/events/dos" method="get">
             <div class="row">
-              <div class="columns large-2">
+              <div class="columns large-3">
                 <input type="text" name="partial"> 
               </div>
-              <div class="columns large-1">
-                <input type="submit" class="medium radius button success" value="Search">
+              <div class="columns large-6">
+                <input type="submit" class="medium button success search" value="Search">
               </div>
-              <div class="columns large-9"></div>
+              <div class="columns large-3"></div>
             </div>
           </form>
         </div>      
@@ -63,6 +63,12 @@
           </div> 
         </div>
       {/if}
+    {else}
+      <div class="row">
+        <div class="columns large-12">
+          <h5>You do not have any students signed up to the application yet.</h5>
+        </div> 
+      </div> 
     {/if}
   {/if}
 {/template}

@@ -14,6 +14,15 @@ div.events#dos {
 	    margin-bottom: 30px;
 	  }
 	}
+	
+	.clear {
+	  margin-left: 10px;
+	  top: -1px;
+	}
+	
+	.search {
+	  top: -2px; 
+	}
 }
 
 //
@@ -120,17 +129,13 @@ div.events#new {
 //
 
 div.events#show {
-
-  .overflow-hidden {
-    overflow: hidden;
-    height: 0;
-    width: 100%;
-  }
-
-  .actual.row:first-child {
-    padding-top: 15px;
-  }
-
+	
+	.overflow-hidden {
+	  overflow: hidden;
+	  height: 0px;
+	  width: 100%;
+	}
+	
   .established-slot {
     display: inline-block;
     width: 145px;
@@ -140,7 +145,7 @@ div.events#show {
     vertical-align: top;
 
     .empty-slot {
-      height: 36px;
+      height: 41px;
       padding: 1px 3px 1px 3px;
       margin: 7px 3px 3px 3px;
       vertical-align: top;
@@ -153,7 +158,7 @@ div.events#show {
     }
 
     .full-slot {
-      height: 36px;
+      height: 41px;
       padding: 1px 3px 1px 3px;
       margin: 7px 3px 3px 3px;
     }
@@ -205,38 +210,66 @@ div.events#show {
     }
   }
   
-  .large-1 {
-    min-width: 55px;
-  }
+  
+  .day {
+    padding: 10px;
+    border: 1px #f4f4f4 solid;
 
-  .time-label{
-    display: inline-block;
-    font-size: 16px;
-
-    div {
-      padding: 20px 0 20px 0;
-      min-width: 80px;
-      margin-right: 10px;
-      display: inline-block;
+    &:nth-child(odd) {
+      background: #f9f9f9; 
     }
+  
+	  .time-label{
+	    font-size: 16px;
+	    height: 40px;
+	    text-align: center;
+	    padding-top: 14px;
+	  }
+	  
+	  .date-label {
+	    height: 30px;
+	    font-size: 16px;
+	    font-weight: 700;
+	  }
+	  
+	  .large-11 {
+	    padding-left: 20px;
+	  }
+  }
+  
+  .row-name {
+    text-align: center;
+    height: 40px;
+    padding-top:14px;
+  }
+  
+  input[type="submit"] {
+    margin: 10px 0 10px 0;
   }
   
   .history-item {
-    font-size: 16px;
-    padding-bottom: 3px;
+    font-size: 14px;
+    padding: 5px 0 5px 0;
+    line-height: 1.5em;
     
     .large-3 {
-      text-align: right;
+      text-align: center;
+    }
+    
+    &:nth-child(odd) {
+      background: #F4F4F4; 
     }
   }
+  
+  .actual.row {
+    padding: 10px;
+    border: 1px solid #F4F4F4;
 
-  table {
-    width: 100%;
-
-    td {
-      padding: 10px 10px 10px 10px;
-    }
+    &:nth-child(odd) {
+	    background: #F9F9F9; 
+	  }
   }
+  
 
   div.type-choice {
     display: inline-block;
@@ -246,22 +279,14 @@ div.events#show {
     line-height: 47px;
 
     .custom.dropdown {
-      max-width: 170px !important;
-      width: 170px !important;
+      max-width: 145px !important;
+      width: 145px !important;
       height: 100% !important;
 
       .current, .selector {
         margin-top: 7px;
       }
     }
-  }
-
-  td.big-table-label {
-    padding-top: 43px;
-    font-size: 16px;
-    max-width: 240px;
-    width: 240px;
-    vertical-align: top;
   }
 
   .type {

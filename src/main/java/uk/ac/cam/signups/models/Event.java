@@ -194,7 +194,7 @@ public class Event implements Mappable {
 	}
 
 	public Map<String, String> getExpiryDateMap() {
-		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d kk:mm");
+		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM 'at' kk:mm");
 		SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
 		    "yyyy MM dd HH mm");
 		String comparativeExpiry = comparativeFormatter
@@ -216,7 +216,7 @@ public class Event implements Mappable {
 		builder = builder.put("lastRow", rows.last().toMap());
 
 		// Current date generator
-		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d");
+		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM");
 		SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
 		    "yyyy MM dd HH mm");
 		String currentDate = comparativeFormatter.format((new GregorianCalendar())

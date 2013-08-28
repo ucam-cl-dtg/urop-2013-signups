@@ -318,7 +318,7 @@ moduleScripts['signapp']['events'] = {
 				 
 				 if (partial) {
 					 $("input[name='partial']").val(partial).text(partial);
-					 $("#search").find(".columns:last").removeClass("large-9").addClass("large-8").before("<div class='columns large-1'><a class='button medium error radius' href='" + window.location.pathname + "'>Clear</a></div>")
+					 $("#search").find(".columns:nth-child(2)").append("<a class='button medium clear' href='" + window.location.pathname + "'>Clear</a>");
 				 }
 				 
 				 $("#pupils").on("click", ".load", function() {

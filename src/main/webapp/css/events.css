@@ -4,6 +4,11 @@ div.events#dos .pupil {
   padding-bottom: 3px; }
   div.events#dos .pupil:last-child {
     margin-bottom: 30px; }
+div.events#dos .clear {
+  margin-left: 10px;
+  top: -1px; }
+div.events#dos .search {
+  top: -2px; }
 
 div.events#index .created-event {
   min-height: 60px;
@@ -11,7 +16,7 @@ div.events#index .created-event {
   font-weight: 400;
   background-color: #c4dbf8;
   color: black;
-  font-size: 16px; }
+  font-size: 14px; }
 div.events#index .button {
   width: 100%; }
 div.events#index .date {
@@ -19,6 +24,8 @@ div.events#index .date {
   font-style: italic;
   padding-top: 5px;
   color: #646464; }
+div.events#index h3 {
+  height: 60px; }
 
 div.events#new ul.error {
   background-color: rgba(198, 15, 19, 0.1);
@@ -57,10 +64,8 @@ div.events#new .switch.medium.radius {
 
 div.events#show .overflow-hidden {
   overflow: hidden;
-  height: 0;
+  height: 0px;
   width: 100%; }
-div.events#show .actual.row:first-child {
-  padding-top: 15px; }
 div.events#show .established-slot {
   display: inline-block;
   width: 145px;
@@ -69,7 +74,7 @@ div.events#show .established-slot {
   margin: 0 10px 15px 0;
   vertical-align: top; }
   div.events#show .established-slot .empty-slot {
-    height: 36px;
+    height: 41px;
     padding: 1px 3px 1px 3px;
     margin: 7px 3px 3px 3px;
     vertical-align: top;
@@ -78,7 +83,7 @@ div.events#show .established-slot {
       line-height: 26px;
       vertical-align: middle; }
   div.events#show .established-slot .full-slot {
-    height: 36px;
+    height: 41px;
     padding: 1px 3px 1px 3px;
     margin: 7px 3px 3px 3px; }
   div.events#show .established-slot p {
@@ -110,25 +115,41 @@ div.events#show .token-input-list-facebook {
     div.events#show .token-input-list-facebook li.token-input-input-token-facebook input {
       box-shadow: none;
       height: 47px; }
-div.events#show .large-1 {
-  min-width: 55px; }
-div.events#show .time-label {
-  display: inline-block;
-  font-size: 16px; }
-  div.events#show .time-label div {
-    color: white;
-    padding: 20px 0 20px 0;
-    min-width: 80px;
-    margin-right: 10px;
-    display: inline-block; }
+div.events#show .day {
+  padding: 10px;
+  border: 1px #f4f4f4 solid; }
+  div.events#show .day:nth-child(odd) {
+    background: #f9f9f9; }
+  div.events#show .day .time-label {
+    font-size: 16px;
+    height: 40px;
+    text-align: center;
+    padding-top: 14px; }
+  div.events#show .day .date-label {
+    height: 30px;
+    font-size: 16px;
+    font-weight: 700; }
+  div.events#show .day .large-11 {
+    padding-left: 20px; }
+div.events#show .row-name {
+  text-align: center;
+  height: 40px;
+  padding-top: 14px; }
+div.events#show input[type="submit"] {
+  margin: 10px 0 10px 0; }
 div.events#show .history-item {
   font-size: 14px;
-  color: white;
-  padding-bottom: 3px; }
-div.events#show table {
-  width: 100%; }
-  div.events#show table td {
-    padding: 10px 10px 10px 10px; }
+  padding: 5px 0 5px 0;
+  line-height: 1.5em; }
+  div.events#show .history-item .large-3 {
+    text-align: center; }
+  div.events#show .history-item:nth-child(odd) {
+    background: #F4F4F4; }
+div.events#show .actual.row {
+  padding: 10px;
+  border: 1px solid #F4F4F4; }
+  div.events#show .actual.row:nth-child(odd) {
+    background: #F9F9F9; }
 div.events#show div.type-choice {
   display: inline-block;
   margin: 0 0 5px 0;
@@ -136,17 +157,11 @@ div.events#show div.type-choice {
   vertical-align: top;
   line-height: 47px; }
   div.events#show div.type-choice .custom.dropdown {
-    max-width: 170px !important;
-    width: 170px !important;
+    max-width: 145px !important;
+    width: 145px !important;
     height: 100% !important; }
     div.events#show div.type-choice .custom.dropdown .current, div.events#show div.type-choice .custom.dropdown .selector {
       margin-top: 7px; }
-div.events#show td.big-table-label {
-  padding-top: 43px;
-  font-size: 16px;
-  max-width: 240px;
-  width: 240px;
-  vertical-align: top; }
 div.events#show .type {
   width: 145px;
   font-size: 16px;
