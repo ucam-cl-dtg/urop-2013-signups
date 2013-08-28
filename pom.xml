@@ -1,51 +1,41 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>uk.ac.cam.cl.dtg.teaching</groupId>
+	<parent>
+		<groupId>uk.ac.cam.cl.dtg.teaching</groupId>
+		<artifactId>otter-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
 	<artifactId>signapp</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.4-SNAPSHOT</version>
 	<name>Signup Application</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
-	<repositories>
-		<repository>
-			<id>htmleasy</id>
-			<url>http://htmleasy-maven.googlecode.com/svn/trunk/</url>
-		</repository>
-		<repository>
-			<id>codedance</id>
-			<url>https://github.com/codedance/maven-repository/raw/master</url>
-		</repository>
-	</repositories>
-
 	<dependencies>
 		<dependency>
 			<groupId>uk.ac.cam.cl.dtg.teaching</groupId>
 			<artifactId>frontend</artifactId>
-			<version>1.0.5</version>
+			<version>${frontend.version}</version>
 			<type>war</type>
 		</dependency>
 
 		<dependency>
 			<groupId>uk.ac.cam.cl.dtg.teaching</groupId>
 			<artifactId>supervision-api</artifactId>
-			<version>1.0.4</version>
+			<version>${supervision-api.version}</version>
 		</dependency>
-		
+
 		<dependency>
-		  <groupId>uk.ac.cam.cl.dtg</groupId>
-		  <artifactId>ldap</artifactId>
-		  <version>1.1.3</version>
+			<groupId>uk.ac.cam.cl.dtg</groupId>
+			<artifactId>ldap</artifactId>
+			<version>${ldap.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
+			<version>${servlet-api.version}</version>
 		</dependency>
 
 		<dependency>
@@ -57,43 +47,31 @@
 		<dependency>
 			<groupId>com.googlecode.htmleasy</groupId>
 			<artifactId>htmleasy</artifactId>
-			<version>0.7</version>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.5</version>
+			<version>${htmleasy.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
-			<version>2.2.1.GA</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>commons-codec</artifactId>
-					<groupId>commons-codec</groupId>
-				</exclusion>
-			</exclusions>
+			<version>${resteasy.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jackson-provider</artifactId>
-			<version>2.2.1.GA</version>
+			<version>${resteasy.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-multipart-provider</artifactId>
-			<version>2.2.1.GA</version>
+			<version>${resteasy.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.2.2.Final</version>
+			<version>${hibernate.version}</version>
 		</dependency>
 
 		<dependency>
@@ -105,18 +83,19 @@
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<version>${log4j.version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.5</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.1-901.jdbc4</version>
+			<version>${postgresql.version}</version>
 		</dependency>
 
 		<dependency>
@@ -141,16 +120,6 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<overlays>
@@ -163,12 +132,11 @@
 					</overlays>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.jasig.maven</groupId>
 				<artifactId>sass-maven-plugin</artifactId>
 				<version>1.1.0</version>
-
 				<executions>
 					<execution>
 						<phase>generate-resources</phase>
@@ -198,67 +166,17 @@
 			</plugin>
 
 			<plugin>
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-war-plugin</artifactId>
-			  <version>2.4</version>
-			  <configuration>
-			    <webResources>
-			      <resource>
-				<directory>${project.build.directory}/generated-css</directory>
-			      </resource>
-			    </webResources>
-			  </configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<webResources>
+						<resource>
+							<directory>${project.build.directory}/generated-css</directory>
+						</resource>
+					</webResources>
+				</configuration>
 			</plugin>
 		</plugins>
-   <pluginManagement>
-    	<plugins>
-    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-    		<plugin>
-    			<groupId>org.eclipse.m2e</groupId>
-    			<artifactId>lifecycle-mapping</artifactId>
-    			<version>1.0.0</version>
-    			<configuration>
-    				<lifecycleMappingMetadata>
-    					<pluginExecutions>
-    						<pluginExecution>
-    							<pluginExecutionFilter>
-    								<groupId>org.jasig.maven</groupId>
-    								<artifactId>
-    									sass-maven-plugin
-    								</artifactId>
-    								<versionRange>
-    									[1.1.0,)
-    								</versionRange>
-    								<goals>
-    									<goal>update-stylesheets</goal>
-    								</goals>
-    							</pluginExecutionFilter>
-    							<action>
-    								<execute>
-										<runOnIncremental>true</runOnIncremental>
-									</execute>
-    							</action>
-    						</pluginExecution>
-    					</pluginExecutions>
-    				</lifecycleMappingMetadata>
-    			</configuration>
-    		</plugin>
-    	</plugins>
-    </pluginManagement>
-  </build>
-
-	<distributionManagement>
-		<!-- use the following if you're not using a snapshot version. -->
-		<repository>
-			<id>dtg-code</id>
-			<name>RepositoryProxy</name>
-			<url>http://dtg-maven.cl.cam.ac.uk/content/repositories/releases</url>
-		</repository>
-		<!-- use the following if you ARE using a snapshot version. -->
-		<snapshotRepository>
-			<id>dtg-code</id>
-			<name>RepositoryProxy</name>
-			<url>http://dtg-maven.cl.cam.ac.uk/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+	</build>
 </project>
