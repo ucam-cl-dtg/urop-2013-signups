@@ -216,7 +216,7 @@ public class Event implements Mappable {
 		builder = builder.put("lastRow", rows.last().toMap());
 
 		// Current date generator
-		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d kk:mm");
+		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d");
 		SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
 		    "yyyy MM dd HH mm");
 		String currentDate = comparativeFormatter.format((new GregorianCalendar())

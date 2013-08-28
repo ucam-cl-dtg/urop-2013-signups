@@ -112,8 +112,6 @@ public class FillSlot {
 
 				if (message != null) {
 					try {
-						logger.error("Your message is " + message);
-						logger.error("Your joined crsids are " + Util.join(relatedCrsids, ","));
 	          apiWrapper.createNotificationWithForeignId(message, "signapp",
 	              "events/" + obfuscatedId, Util.join(relatedCrsids, ","),
 	              "signapp-" + event.getId());

@@ -14,13 +14,15 @@ import java.util.Map;
 public class Notification implements Mappable, Comparable<Notification> {
 	private String message;
 	private Calendar timestamp;
+	private int id;
 
 	private Logger logger = LoggerFactory.getLogger(Notification.class);
 	
-	public Notification(String message, String timestamp) {
+	public Notification(int id, String message, String timestamp) {
 		this.message = message;
+		this.id = id;
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("E M dd hh:mm:ss zzz yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 		Calendar dummyCal = new GregorianCalendar();
 		try {
 	    dummyCal.setTime(formatter.parse(timestamp));
@@ -33,13 +35,23 @@ public class Notification implements Mappable, Comparable<Notification> {
 	
 	@Override
   public int compareTo(Notification not) {
-		return timestamp.compareTo(not.timestamp);
+		int result = timestamp.compareTo(not.timestamp);
+		if (result == 0) {
+			return this.equals(not) ? 0 : -1;
+		} else {
+			return result * -1;
+		}
   }
 
 	@Override
   public int getId() {
 	  throw new UnsupportedOperationException();
   }
+	
+	@Override
+	public boolean equals(Object not) {
+		return this.id == ((Notification) not).id;
+	}
 
 	@Override
   public Map<String, ?> toMap() {

@@ -28,7 +28,7 @@ div.events#index {
 	   font-weight: 400;
 	   background-color: #c4dbf8;
 	   color: black;
-	   font-size: 16px;
+	   font-size: 14px;
 	 }	
 	 
 	 .button {
@@ -40,6 +40,10 @@ div.events#index {
 	   font-style: italic;
 	   padding-top: 5px;
 	   color: #646464;
+	 }
+	 
+	 h3 {
+	   height: 60px;
 	 }
 }
 
@@ -214,6 +218,15 @@ div.events#show {
       min-width: 80px;
       margin-right: 10px;
       display: inline-block;
+    }
+  }
+  
+  .history-item {
+    font-size: 16px;
+    padding-bottom: 3px;
+    
+    .large-3 {
+      text-align: right;
     }
   }
 

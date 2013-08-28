@@ -116,10 +116,15 @@ div.events#show .time-label {
   display: inline-block;
   font-size: 16px; }
   div.events#show .time-label div {
+    color: white;
     padding: 20px 0 20px 0;
     min-width: 80px;
     margin-right: 10px;
     display: inline-block; }
+div.events#show .history-item {
+  font-size: 14px;
+  color: white;
+  padding-bottom: 3px; }
 div.events#show table {
   width: 100%; }
   div.events#show table td {

@@ -252,7 +252,7 @@ public class EventsController extends ApplicationController {
 				.getNotifications();
 		SortedSet<uk.ac.cam.signups.models.Notification> notificationsList = new TreeSet<uk.ac.cam.signups.models.Notification>();
 		for(Notification notification: notificationsSet) {
-			notificationsList.add(new uk.ac.cam.signups.models.Notification(notification.getMessage(), notification.getTimestamp()));
+			notificationsList.add(new uk.ac.cam.signups.models.Notification(notification.getId(), notification.getMessage(), notification.getTimestamp()));
 		}
 
 		return ImmutableMap.of("data", event.toMap(), "errors",

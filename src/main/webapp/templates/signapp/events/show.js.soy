@@ -66,9 +66,10 @@
         <div><input type="submit" value="Save" class="small button"></div>
       {/if}
     </form>
+
+  {call .history data="all"/}
   </div>
   
-  {call .history data="all"/}
 {/template}
 
 /**
@@ -191,9 +192,9 @@
   <h4>History of the event</h4>
   {if $notifications}
     {foreach $notification in $notifications} 
-      <div class="row">
-        <div class="columns large-10">{$notification.message}</div>
-        <div class="columns large-2">{$notification.timestamp}</div>
+      <div class="row history-item">
+        <div class="columns large-9">{$notification.message}</div>
+        <div class="columns large-3">{$notification.timestamp}</div>
       </div> 
     {/foreach}
   {else}
