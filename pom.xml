@@ -4,7 +4,7 @@
 	<groupId>uk.ac.cam.cl.dtg.teaching</groupId>
 	<artifactId>signapp</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.3</version>
 	<name>Signup Application</name>
 
 	<properties>
