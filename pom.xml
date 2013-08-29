@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>signapp</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.5</version>
+	<version>1.0.6-SNAPSHOT</version>
 	<name>Signup Application</name>
 
 	<dependencies>
