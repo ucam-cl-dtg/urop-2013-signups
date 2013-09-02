@@ -2,24 +2,24 @@ package uk.ac.cam.signups.models;
 
 import com.google.common.collect.ImmutableMap;
 
+import java.util.Map;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
-
-import org.hibernate.annotations.GenericGenerator;
-
-import java.util.Map;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="SLOTS")
 public class Slot implements Mappable {
 	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy="increment")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="logIdSeq") 
+	@SequenceGenerator(name="logIdSeq",sequenceName="LOG_SEQ", allocationSize=1)
 	private int id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

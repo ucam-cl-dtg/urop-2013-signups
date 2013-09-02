@@ -4,13 +4,14 @@ import com.google.common.collect.ImmutableMap;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.Notification;
+import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.Util;
 
@@ -30,11 +31,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -46,8 +49,8 @@ public class Event implements Mappable {
 	private Logger logger = LoggerFactory.getLogger(Event.class);
 
 	@Id
-	@GeneratedValue(generator = "increment")
-	@GenericGenerator(name = "increment", strategy = "increment")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="logIdSeq") 
+	@SequenceGenerator(name="logIdSeq",sequenceName="LOG_SEQ", allocationSize=1)
 	private int id;
 
 	private String location;
@@ -86,6 +89,18 @@ public class Event implements Mappable {
 		this.types.addAll(types);
 		this.rows.addAll(rows);
 		this.title = title;
+	}
+	
+	public SortedSet<uk.ac.cam.signups.models.Notification> getNotifications(NotificationApiWrapper getApiWrapper, int page) {
+		Set<Notification> notificationsSet = getApiWrapper
+				.getNotificationsWithForeignId(page * 10, 10, "signapp", this.getOwner().getCrsid(), "signapp-" + this.getId())
+				.getNotifications();
+		SortedSet<uk.ac.cam.signups.models.Notification> notificationsList = new TreeSet<uk.ac.cam.signups.models.Notification>();
+		for(Notification notification: notificationsSet) {
+			notificationsList.add(new uk.ac.cam.signups.models.Notification(notification.getId(), notification.getMessage(), notification.getTimestamp()));
+		}	
+		
+		return notificationsList;
 	}
 
 	public int getId() {
