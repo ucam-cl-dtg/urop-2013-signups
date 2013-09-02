@@ -19,7 +19,7 @@
       </div>
     {/if}
 
-    <form class="custom" action="{$ij.api_prefix}/events/{$data.obfuscatedId}/fillSlots" method="post">
+    <form class="custom232" action="{$ij.api_prefix}/events/{$data.obfuscatedId}/fillSlots" method="post">
       {if $data.sheetType == 'datetime'}
         {foreach $dateGroup in $data.dates}
           <div class="row day">
@@ -113,7 +113,7 @@
  * @param slot
  */
 {template .emptySlot}
-  <input type="text" name="slot_crsids[]" class="slot-field" data-crsid="{$slot.owner.crsid}" data-name="{$slot.owner.name}">
+  <input type="text" name="slot_crsids[]" class="slot-field" data-crsid="{$slot.owner.crsid}" data-name="{$slot.owner.name}" data-existing={$slot.owner.crsid != '' ? true : false}>
   <input type="hidden" name="slot_ids[]" value="{$slot.id}">
 {/template}
 

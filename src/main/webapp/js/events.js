@@ -203,7 +203,12 @@ moduleScripts['signapp']['events'] = {
 			  		resultsLimit: 10,
 			  		tokenLimit: 1,
 			  		resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " (" + item.crsid + ")</div><div class='email'>" + item.crsid + "@cam.ac.uk</div></div></li>" },
-			      tokenFormatter: function(item) { return "<li><p>" + item.name + "<br>" + item.crsid + "</p></li>" }	
+			      tokenFormatter: function(item) { return "<li><p>" + item.name + "<br>" + item.crsid + "</p></li>" },
+			      onAdd: function(item) {
+			      	if (!$(this).data("existing")) {
+			      		$(this).prev().css("background", "#f5ffbe");
+			      	}
+			      }
 			  	});
 
 			  	if($(this).data("crsid") != "") {
@@ -269,7 +274,7 @@ moduleScripts['signapp']['events'] = {
 		  					applyTemplate($("#load-history"), "signapp.events.historyItem", {notification: this}, "before");
 		  				});
 		  				
-		  				if (data["exhausted"]) {
+		  				if (data["echausted"]) {
 		  					$("#load-history").remove();
 		  				}
 		  			});
