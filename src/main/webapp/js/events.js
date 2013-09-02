@@ -259,6 +259,21 @@ moduleScripts['signapp']['events'] = {
 		  			$(this).effect("highlight", 700);
 		  		}
 		  	});
+		  	
+		  	$("#load-history").click(function() {
+		  		var page = parseInt($(".history-item").length / 10);
+		  		var obfuscatedId = /events\/(\w+)/.exec(window.location.pathname)[1];
+		  		$.getJSON(prepareURL("events/queryEventHistory"), {page: page, id: obfuscatedId})
+		  			.done(function(data) {
+		  				$.each(data["list"], function() {
+		  					applyTemplate($("#load-history"), "signapp.events.historyItem", {notification: this}, "before");
+		  				});
+		  				
+		  				if (data["exhausted"]) {
+		  					$("#load-history").remove();
+		  				}
+		  			});
+		  	});
 		  }
 		],
 		

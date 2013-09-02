@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.Notification;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.signups.util.HibernateUtil;
+import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 import uk.ac.cam.signups.util.Util;
 
 import java.text.SimpleDateFormat;
@@ -91,7 +92,7 @@ public class Event implements Mappable {
 		this.title = title;
 	}
 	
-	public SortedSet<uk.ac.cam.signups.models.Notification> getNotifications(NotificationApiWrapper getApiWrapper, int page) {
+	public ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification> getNotifications(NotificationApiWrapper getApiWrapper, int page) {
 		Set<Notification> notificationsSet = getApiWrapper
 				.getNotificationsWithForeignId(page * 10, 10, "signapp", this.getOwner().getCrsid(), "signapp-" + this.getId())
 				.getNotifications();
@@ -100,7 +101,20 @@ public class Event implements Mappable {
 			notificationsList.add(new uk.ac.cam.signups.models.Notification(notification.getId(), notification.getMessage(), notification.getTimestamp()));
 		}	
 		
-		return notificationsList;
+		boolean exhausted = false;
+		
+		if (notificationsSet.size() % 10 != 0) {
+			exhausted = true;
+		} else if (getApiWrapper
+				.getNotificationsWithForeignId(page * 10 + 10, 1, 
+						"signapp", 
+						this.getOwner().getCrsid(), 
+						"signapp-" + this.getId())
+				.getNotifications().size() < 1)  {
+			exhausted = true;
+		}
+		
+		return new ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification>(notificationsList, exhausted);
 	}
 
 	public int getId() {

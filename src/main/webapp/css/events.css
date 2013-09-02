@@ -170,3 +170,5 @@ div.events#show .type {
   vertical-align: middle; }
 div.events#show hr {
   margin-top: 0; }
+div.events#show #load-history {
+  margin-top: 10px; }

@@ -4,13 +4,13 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
 
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.annotations.Form;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
-import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.Notification;
 import uk.ac.cam.signups.forms.EventForm;
 import uk.ac.cam.signups.forms.FillSlot;
 import uk.ac.cam.signups.models.Dos;
@@ -26,9 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -90,7 +88,7 @@ public class EventsController extends ApplicationController {
 			pupils = currentDos.getPupils(page, partial);
 		}
 		return ImmutableMap.of("pupils",
-		    Util.getImmutableCollection(pupils.getMappableList()), "exhausted",
+		    Util.getImmutableCollection(pupils.getMappableIterable()), "exhausted",
 		    pupils.getExhausted());
 	}
 
@@ -154,7 +152,7 @@ public class EventsController extends ApplicationController {
 		ImmutableMappableExhaustedPair<Event> events = initialiseUser()
 		    .getMyEvents(page);
 		return ImmutableMap.of("data",
-		    Util.getImmutableCollection(events.getMappableList()), "exhausted",
+		    Util.getImmutableCollection(events.getMappableIterable()), "exhausted",
 		    events.getExhausted());
 	}
 
@@ -163,7 +161,7 @@ public class EventsController extends ApplicationController {
 		ImmutableMappableExhaustedPair<Row> rows = initialiseUser()
 		    .getRowsSignedUp(page, mode);
 		return ImmutableMap.of("data",
-		    Util.getImmutableCollection(rows.getMappableList()), "exhausted",
+		    Util.getImmutableCollection(rows.getMappableIterable()), "exhausted",
 		    rows.getExhausted());
 	}
 
@@ -180,7 +178,7 @@ public class EventsController extends ApplicationController {
 				ImmutableMappableExhaustedPair<Row> rows = u.getRowsSignedUp(page,
 				    "dos");
 				return ImmutableMap.of("data",
-				    Util.getImmutableCollection(rows.getMappableList()), "exhausted",
+				    Util.getImmutableCollection(rows.getMappableIterable()), "exhausted",
 				    rows.getExhausted());
 			} else {
 				return ImmutableMap.of("error", "Not his pupil");
@@ -238,24 +236,29 @@ public class EventsController extends ApplicationController {
 		}
 	}
 	
+	// Query for history of an event
+	@GET
+	@Path("/queryEventHistory")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Map<String, ?> queryEventHistory(@QueryParam("id") String id, @QueryParam("page") int page) {
+		Session session = HibernateUtil.getTransactionSession();
+		Event event = (Event) session.createCriteria(Event.class).add(Restrictions.eq("obfuscatedId", id)).uniqueResult();
+		ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification> nots = event.getNotifications(getApiWrapper(), page);
+		
+		return ImmutableMap.of(
+				"list", Util.getImmutableCollection(nots.getMappableIterable()),
+				"exhausted", nots.getExhausted());
+	}
+	
 	//Show
 	@GET
 	@Path("/{obfuscatedId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, ?> showEvent(@PathParam("obfuscatedId") String obfuscatedId) {
 		Session session = HibernateUtil.getTransactionSession();
-		Event event = (Event) session.createQuery("FROM Event WHERE obfuscatedId = :obfuscatedId")
-		    .setParameter("obfuscatedId", obfuscatedId).uniqueResult();
-		
-		Set<Notification> notificationsSet = getApiWrapper()
-				.getNotificationsWithForeignId(0, 20, "signapp", event.getOwner().getCrsid(), "signapp-" + event.getId())
-				.getNotifications();
-		SortedSet<uk.ac.cam.signups.models.Notification> notificationsList = new TreeSet<uk.ac.cam.signups.models.Notification>();
-		for(Notification notification: notificationsSet) {
-			notificationsList.add(new uk.ac.cam.signups.models.Notification(notification.getId(), notification.getMessage(), notification.getTimestamp()));
-		}
+		Event event = (Event) session.createCriteria(Event.class).add(Restrictions.eq("obfuscatedId", obfuscatedId)).uniqueResult();
 
 		return ImmutableMap.of("data", event.toMap(), "errors",
-		    ArrayListMultimap.create(), "notifications", Util.getImmutableCollection(notificationsList));
+		    ArrayListMultimap.create(), "notifications", queryEventHistory(obfuscatedId, 0));
 	}
 }

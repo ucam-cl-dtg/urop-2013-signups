@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPQueryManager;
-import uk.ac.cam.cl.dtg.ldap.LDAPUser;
 import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 
@@ -39,7 +38,6 @@ public class User implements Mappable {
 	@Id
 	private String crsid;
 
-	@SuppressWarnings("unused")
   private String instID;
 
 	@OneToMany(mappedBy = "owner")

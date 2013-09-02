@@ -194,14 +194,28 @@
  */
 {template .history}
   <h4>History of the event</h4>
-  {if $notifications}
-    {foreach $notification in $notifications} 
-      <div class="row history-item">
-        <div class="columns large-9">{$notification.message}</div>
-        <div class="columns large-3">{$notification.timestamp}</div>
-      </div> 
+  {if $notifications.list != 'undefined'}
+    {foreach $notification in $notifications.list} 
+      {call .historyItem}{param notification: $notification /}{/call}
     {/foreach}
+    {if not $notifications.exhausted}
+      <div class="row">
+        <div class="columns large-12">
+          <a class="button small" id="load-history">Load more</a>
+        </div>
+      </div>
+    {/if}
   {else}
     <div>Nothing has happened yet.</div> 
   {/if}
+{/template}
+
+/**
+ * @param notification
+ */
+{template .historyItem}
+  <div class="row history-item">
+    <div class="columns large-9">{$notification.message}</div>
+    <div class="columns large-3">{$notification.timestamp}</div>
+  </div> 
 {/template}
