@@ -64,6 +64,10 @@ div.events#index {
 //
 
 div.events#new {
+  input[type='submit'] {
+    margin-bottom: 70px;
+	}
+	
   ul.error {
     background-color: $errors-background;
     border-color: $errors-dark;
