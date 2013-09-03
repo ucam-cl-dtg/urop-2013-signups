@@ -2,6 +2,16 @@ moduleScripts['signapp']['events'] = {
 	'new' : 
 		[
 			function() {
+				// Prevent creating event twice on double click
+				var submitted = false;
+
+				$("input[type='submit']").click(function(e) {
+					if (!submitted) {
+						submitted = true;
+					} else {
+						e.preventDefault();
+					}
+				});
 
 				$("form").ajaxForm(function(data) {
 					applyTemplate($('.main'), "signapp.events.new", data);
