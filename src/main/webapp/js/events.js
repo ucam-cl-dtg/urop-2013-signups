@@ -17,7 +17,7 @@ moduleScripts['signapp']['events'] = {
 					applyTemplate($('.main'), "signapp.events.new", data);
 				});
 				
-			  $(".datepicker").datepicker({dateFormat: "dd/mm/yy"});
+			  $(".datepicker").datepicker({dateFormat: "dd/mm/yy", showOptions: {direction: "up"}});
 			  $("input[name='location']").autocomplete(
 			  		{
 			  			minLength: 2,
