@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -106,13 +105,13 @@ public class EventsController extends ApplicationController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, ?> createEvent(@Form EventForm eventForm) {
 		ArrayListMultimap<String, String> errors = eventForm.validate();
-		ImmutableMap<String, List<String>> actualErrors = Util
-		    .multimapToImmutableMap(errors);
 
 		if (errors.isEmpty()) {
 			Event event = eventForm.handle(initialiseUser(), getApiWrapper());
 			return ImmutableMap.of("redirectTo", "events/" + event.getObfuscatedId());
 		} else {
+			ImmutableMap<String, List<String>> actualErrors = Util
+		    .multimapToImmutableMap(errors);
 			return ImmutableMap.of("data", eventForm.toMap(), "errors", actualErrors);
 		}
 	}
@@ -121,10 +120,16 @@ public class EventsController extends ApplicationController {
 	@POST
 	@Path("/{obfuscatedId}/fillSlots")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, String> fillSlot(@Form FillSlot fillSlot, @PathParam("obfuscatedId") String obfuscatedId) {
-		fillSlot.handle(getApiWrapper(), initialiseUser());
+	public Map<String, ?> fillSlot(@Form FillSlot fillSlot, @PathParam("obfuscatedId") String obfuscatedId) {
+		List<String> errors = fillSlot.validate();
 
-		return ImmutableMap.of("redirectTo", "events/" + obfuscatedId);
+		if (errors.isEmpty()) {
+			fillSlot.handle(getApiWrapper(), initialiseUser());
+			return ImmutableMap.of("redirectTo", "events/" + obfuscatedId);
+		}	else {
+			logger.error("Errorful area");
+			return showEvent(obfuscatedId, errors);
+		}
 	}
 
 	/*
@@ -249,16 +254,23 @@ public class EventsController extends ApplicationController {
 				"list", Util.getImmutableCollection(nots.getMappableIterable()),
 				"exhausted", nots.getExhausted());
 	}
-	
+
 	//Show
 	@GET
 	@Path("/{obfuscatedId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, ?> showEvent(@PathParam("obfuscatedId") String obfuscatedId) {
+	public Map<String, ?> showEvent(@PathParam("obfuscatedId") String obfuscatedId, @QueryParam("coolHack") List<String> errors) {
 		Session session = HibernateUtil.getTransactionSession();
 		Event event = (Event) session.createCriteria(Event.class).add(Restrictions.eq("obfuscatedId", obfuscatedId)).uniqueResult();
+		
+		if(errors == null) {
+			errors = new ArrayList<String>();
+		}
 
-		return ImmutableMap.of("data", event.toMap(), "errors",
-		    ArrayListMultimap.create(), "notifications", queryEventHistory(obfuscatedId, 0));
+		return ImmutableMap.of(
+				"data", event.toMap(), 
+				"errors", errors,
+				"notifications", queryEventHistory(obfuscatedId, 0)
+				);
 	}
 }

@@ -62,6 +62,16 @@ div.events#new #sheet-type-error {
 div.events#new .switch.medium.radius {
   height: 28px; }
 
+div.events#show .big-errors-box ul {
+  list-style-position: none;
+  width: 100%;
+  background: #c60f13;
+  border: 1px solid #c60f13;
+  color: white;
+  font-weight: 700;
+  font-size: 0.75em;
+  padding: 5px;
+  margin-top: 5px; }
 div.events#show .overflow-hidden {
   overflow: hidden;
   height: 0px;
