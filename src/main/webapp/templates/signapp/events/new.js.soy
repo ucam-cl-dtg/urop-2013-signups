@@ -201,7 +201,7 @@
       <div class="columns large-2 small-4">
         <select class="medium" name="{$timestampType =='datetime' ? 'available_hours[]' : 'expiry_date_hour'}">
           {for $i in range(6,24)}
-            <option value="{$i}" {if $datetime != 'undefined' and $datetime.hour == $i }selected{/if}>{$i}</option>
+            <option value="{$i < 10 ? '0' : ''}{$i}" {if $datetime != 'undefined' and $datetime.hour == $i }selected{/if}>{$i < 10 ? '0' : ''}{$i}</option>
           {/for}
           
         </select>
@@ -209,7 +209,7 @@
       <div class="columns large-2 small-4">
         <select class="medium" name="{$timestampType == 'datetime' ? 'available_minutes[]' : 'expiry_date_minute'}">
           {for $i in range(60)}
-            <option value="{$i}" {if $datetime != 'undefined' and $datetime.minute == $i}selected{/if}>{$i}</option>
+            <option value="{$i < 10 ? '0' : ''}{$i}" {if $datetime != 'undefined' and $datetime.minute == $i}selected{/if}>{$i < 10 ? '0' : ''}{$i}</option>
           {/for}
         </select>
       </div>
@@ -247,14 +247,14 @@
         <div class="columns large-4 small-4">
           <select class="medium" id="hour">
             {for $i in range(6,24)}
-              <option>{$i}</option>
+              <option>{$i < 10 ? '0' : ''}{$i}</option>
             {/for}
           </select>
         </div>
         <div class="columns large-4 small-4">
           <select class="medium" id="minute">
             {for $i in range(60)}
-              <option>{$i}</option>
+              <option>{$i < 10 ? '0' : ''}{$i}</option>
             {/for}
           </select>
         </div>

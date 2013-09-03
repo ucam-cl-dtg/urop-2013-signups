@@ -15,9 +15,11 @@ import uk.ac.cam.signups.models.Slot;
 import uk.ac.cam.signups.models.Type;
 import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.HibernateUtil;
+import uk.ac.cam.signups.util.Util;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -84,14 +86,12 @@ public class EventForm {
 		event.setObfuscatedId(obfuscatedId);
 
 		// Set expiry date
-		String[] expiryDateComponents = expiryDateDate.split("/");
-		int expYear = Integer.parseInt(expiryDateComponents[2]);
-		int expMonth = Integer.parseInt(expiryDateComponents[1]) - 1;
-		int expDay = Integer.parseInt(expiryDateComponents[0]);
-		int expHour = Integer.parseInt(expiryDateHour);
-		int expMinute = Integer.parseInt(expiryDateMinute);
-		event.setExpiryDate(new GregorianCalendar(expYear, expMonth, expDay,
-		    expHour, expMinute));
+		String expiryString = expiryDateDate + " " + expiryDateHour + ":" + expiryDateMinute;
+		try {
+	    event.setExpiryDate(Util.datepickerParser(expiryString));
+    } catch (ParseException e1) {
+	    // This is not possible since it has been dealt within the validations.
+    }
 
 		// Set owner of the user to current user
 		event.setOwner(currentUser);
@@ -122,6 +122,7 @@ public class EventForm {
 			}
 		} else if (sheetType.equals("datetime")) {
 			Calendar cal;
+			String dateString;
 			Set<Calendar> duplicateCalContainer = new HashSet<Calendar>(); // To keep
 			                                                               // track of
 			                                                               // added
@@ -130,15 +131,13 @@ public class EventForm {
 			                                                               // duplicates
 			for (int i = 0; i < availableDates.length; i++) {
 				// Create calendar object and parse parameters
-				String[] splitDate = availableDates[i].split("/");
-				int year = Integer.parseInt(splitDate[2]);
-				int month = Integer.parseInt(splitDate[1]) - 1;
-				int day = Integer.parseInt(splitDate[0]);
-				cal = new GregorianCalendar(year, month, day,
-				    Integer.parseInt(availableHours[i] != null ? availableHours[i]
-				        : "0"),
-				    Integer.parseInt(availableMinutes[i] != null ? availableMinutes[i]
-				        : "0"));
+				dateString = "" + availableDates[i] + " " + availableHours[i] + ":" + availableMinutes[i];
+				cal = null;
+				try {
+	        cal = Util.datepickerParser(dateString);
+        } catch (ParseException e) {
+        	// This is not possible because it is dealt within the validations.
+        }
 
 				// Skip duplicates
 				if (duplicateCalContainer.contains(cal))
@@ -222,21 +221,17 @@ public class EventForm {
 		} else if (!expiryDateDate.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")) {
 			errors.put("expiryDate",
 			    "Expiry date should be in the form of dd/mm/yyyy");
-		}
-
-		if (!errors.containsKey("expiryDate")) {
-			String[] expiryDateComponents = expiryDateDate.split("/");
-			int expYear = Integer.parseInt(expiryDateComponents[2]);
-			int expMonth = Integer.parseInt(expiryDateComponents[1]) - 1;
-			int expDay = Integer.parseInt(expiryDateComponents[0]);
-			int expHour = Integer.parseInt(expiryDateHour);
-			int expMinute = Integer.parseInt(expiryDateMinute);
-			Calendar expAtHand = new GregorianCalendar(expYear, expMonth, expDay,
-			    expHour, expMinute);
-			if (expAtHand.compareTo(currentTime) < 0) {
-				errors.put("expiryDate",
-				    "Expiry date cannot be earlier than the current date.");
-			}
+		} else {
+      try {
+				String expString = expiryDateDate + " " + expiryDateHour + ":" + expiryDateMinute;
+	      Calendar expAtHand = Util.datepickerParser(expString);
+				if (expAtHand.compareTo(currentTime) < 0) {
+					errors.put("expiryDate",
+					    "Expiry date cannot be earlier than the current date.");
+				}
+      } catch (ParseException e) {
+      	errors.put("expiryDate", "Expiry date is malformated.");
+      }
 		}
 
 		// Number of columns
@@ -284,19 +279,20 @@ public class EventForm {
 				} else if (availableDates.length > 200) {
 					errors.put("datetime",
 					    "Number of time slots cannot be more than 200.");
-				}
-
-				if (!errors.containsKey("datetime")) {
+				} else {
 					Calendar timeAtHand;
 					for (int i = 0; i < availableDates.length; i++) {
-						String[] date = availableDates[i].split("/");
-						timeAtHand = new GregorianCalendar(Integer.parseInt(date[2]),
-						    Integer.parseInt(date[1]) - 1, Integer.parseInt(date[0]),
-						    Integer.parseInt(availableHours[i]),
-						    Integer.parseInt(availableMinutes[i]));
-						if (timeAtHand.compareTo(currentTime) < 0) {
-							errors.put("datetime",
-							    "You cannot add a date that is in the past.");
+						try {
+							String timeString = availableDates[i] + " " + availableHours[i] + ":" + availableMinutes[i];
+							timeAtHand = Util.datepickerParser(timeString);
+							
+							if (timeAtHand.compareTo(currentTime) < 0) {
+								errors.put("datetime",
+								    "You cannot add a date that is in the past.");
+								break;
+							}
+						} catch(ParseException e) {
+							errors.put("datetime", "One of your dates is malformated.");
 							break;
 						}
 					}

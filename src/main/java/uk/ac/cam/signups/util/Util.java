@@ -6,7 +6,12 @@ import com.google.common.collect.ImmutableMap;
 
 import uk.ac.cam.signups.models.Mappable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -54,5 +59,14 @@ public class Util {
 			joined += (str + delimeter);
 		
 		return joined.substring(0, joined.length() - 1);
+	}
+	
+	public static Calendar datepickerParser(String dateString) throws ParseException {
+		SimpleDateFormat calendarFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		calendarFormatter.setLenient(false);
+		Date formattedDate = calendarFormatter.parse(dateString);
+		Calendar returnCal = new GregorianCalendar();
+		returnCal.setTime(formattedDate);
+		return returnCal;
 	}
 }
