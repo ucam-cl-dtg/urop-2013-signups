@@ -94,7 +94,7 @@ moduleScripts['signapp']['events'] = {
 			  });
 			  
 			  $(".generate-slots").click(function() {
-			  	var parentElem = $(this).parent().parent().parent();
+			  	var parentElem = $(".range-controls");
 			  	var len = parseInt(parentElem.find("#number_of_slots").val());
 			  	var date = parentElem.find("#date").val();
 			  	var startHour = parseInt(parentElem.find("#hour").val());
@@ -105,8 +105,10 @@ moduleScripts['signapp']['events'] = {
 			  	var singleSlot;
 			  	var hour;
 			  	var minute;
+			  	var minuteSet;
+			  	var hourSet;
 			  	for(var i = 0; i < len; i++) {
-			  		singleSlot = $("#datetime").find(".single-slot-controls").clone().get(0).outerHTML;
+			  		singleSlot = $($("#datetime").find(".single-slot-controls").get(0)).clone().get(0).outerHTML;
 			  		singleSlot = $(singleSlot);
 			  		
 			  		// Calculate times
@@ -119,8 +121,10 @@ moduleScripts['signapp']['events'] = {
 			  		
 			  		// Set necessary attributes
 			  		if (hour < 24) {
-			  			singleSlot.find("select[name='available_minutes[]']").val(minute).parent().find(".current").val(minute).text(minute);
-			  			singleSlot.find("select[name='available_hours[]']").val(hour).parent().find(".current").val(hour).text(hour);
+			  			minuteSet = (minute < 10 ? "0" : "") + minute;
+			  			hourSet = (hour < 10 ? "0" : "") + hour;
+			  			singleSlot.find("select[name='available_minutes[]']").val(minuteSet).parent().find(".current").val(minuteSet).text(minuteSet);
+			  			singleSlot.find("select[name='available_hours[]']").val(hourSet).parent().find(".current").val(hourSet).text(hourSet);
 			  			$(".time-controls-wrapper").find(".single-slot-controls").last().after(singleSlot);
 			  			singleSlot.find(".datepicker").removeClass("hasDatepicker").removeAttr("id").datepicker({dateFormat: "dd/mm/yy"}).val(date).text(date);
 			  		}

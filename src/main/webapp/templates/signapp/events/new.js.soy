@@ -227,31 +227,37 @@
  * 
  */
 {template .rangeControls}
-  <div class="row hide range-controls">
-    <div class="columns large-1">
-      <div>
-        <label>Slots</label>
+  <fieldset class="range-controls hide">
+  <legend>Range Generator</legend>
+  <div class="row">
+    <div class="columns large-3">
+      <div class="row">
+        <div class="columns large-12">
+          <label>Slots</label>
+        </div>
       </div>
       <div>
         <input type="number" id="number_of_slots" min="1" value="1"/>
       </div>
     </div>
-    <div class="columns large-5">
-      <div>
-        <label>Start date/time</label>
+    <div class="columns large-9">
+      <div class="row">
+        <div class="columns large-12">
+          <label>Start date/time</label>
+        </div>
       </div>
       <div class="row">
-        <div class="columns large-4 small-4">
+        <div class="columns large-6 small-4">
           <input type="text" class="datepicker" placeholder="Date" id="date">
         </div>
-        <div class="columns large-4 small-4">
+        <div class="columns large-3 small-4">
           <select class="medium" id="hour">
             {for $i in range(6,24)}
               <option>{$i < 10 ? '0' : ''}{$i}</option>
             {/for}
           </select>
         </div>
-        <div class="columns large-4 small-4">
+        <div class="columns large-3 small-4">
           <select class="medium" id="minute">
             {for $i in range(60)}
               <option>{$i < 10 ? '0' : ''}{$i}</option>
@@ -260,35 +266,38 @@
         </div>
       </div>
     </div>
-    <div class="columns large-2 small-6">
-      <div>
-        <label>Duration (mins)</label>
+  </div>
+  <div class="row">
+    <div class="columns large-3 small-6">
+      <div class="row">
+        <div class="columns large-12">
+          <label>Duration (mins)</label>
+        </div> 
       </div>
-      <div>
-        <select class="medium" id="duration">
-          {for $i in range(60)}
-            <option>{$i}</option>
-          {/for}
-        </select>
+      <div class="row">
+        <div class="columns large-12">
+          <input type="number" id="duration">
+        </div>
       </div>
     </div>
-    <div class="columns large-2 small-6">
-      <div>
+    <div class="columns large-3 small-6">
+      <div class="row">
+        <div class="columns large-12">
           <label>Break (mins)</label>
+        </div>
       </div>
-      <div>
-          <select class="medium" id="break">
-            {for $i in range(60)}
-              <option>{$i}</option>
-            {/for}
-          </select>
+      <div class="row">
+        <div class="columns large-12">
+          <input type="number" id="break">
+        </div>
       </div>
     </div>
-    <div class="columns large-2">
-      <div class="empty"></div>
+    <div class="columns large-6">
+      <div class="row"><div class="columns"><label></label></div></div>
       <div>
         <a class="button medium full-width generate-slots">Generate</a>
       </div>
     </div>
   </div>
+  </fieldset>
 {/template}

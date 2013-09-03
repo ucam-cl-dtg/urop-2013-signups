@@ -64,6 +64,10 @@ div.events#index {
 //
 
 div.events#new {
+	label {
+	  height: 22px;
+	}
+	
   input[type='submit'] {
     margin-bottom: 70px;
 	}
