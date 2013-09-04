@@ -132,6 +132,7 @@ moduleScripts['signapp']['events'] = {
 			  	}
 			  });
 			
+			  var wasFilled = false;
 			  $(".event-type-input").tokenInput(prepareURL("events/queryTypes"), {
 			    theme: "facebook",
 			    method: "post",
@@ -142,7 +143,8 @@ moduleScripts['signapp']['events'] = {
 			    preventDuplicates: true,
 			    resultsLimit: 10,
 			    allowFreeTagging: true,
-			    resultsFormatter: function(item){ return "<li><div style='display: inline-block; padding-left: 10px;'>"+ item.name + "</div></li>" }
+			    resultsFormatter: function(item){ return "<li><div style='display: inline-block; padding-left: 10px;'>"+ item.name + "</div></li>" },
+			    onAdd: function(item) {wasFilled = true;}
 			  });
 			  
 			  if (data = (target = $("input[name='types']")).data("prepopulate")) {
@@ -169,6 +171,18 @@ moduleScripts['signapp']['events'] = {
 			  		});
 			  	}
 			  });
+
+				// Fix jqueryInput bug when tab is pressed on empty field
+				// It should proceed to the next field.
+				$("input#token-input-").keydown(function(e) {
+					if (e.which == 9  && !wasFilled) {
+						$("input[name='location']").get(0).select();
+						$("input[name='location']").get(0).focus();
+						wasFilled = false;
+					} else if (e.which == 13 || e.which == 9) {
+						wasFilled = false;
+					}
+				});
 			},
 			
 			function() {
