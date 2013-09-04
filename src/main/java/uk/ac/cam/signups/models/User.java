@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPQueryManager;
+import uk.ac.cam.cl.dtg.teaching.api.DashboardApi.DashboardApiWrapper;
+import uk.ac.cam.signups.exceptions.NotADosException;
 import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 
@@ -38,7 +40,7 @@ public class User implements Mappable {
 	@Id
 	private String crsid;
 
-  private String instID;
+	private String instID;
 
 	@OneToMany(mappedBy = "owner")
 	private List<Event> events = new ArrayList<Event>();
@@ -54,14 +56,25 @@ public class User implements Mappable {
 		this.instID = instID;
 	}
 
+	public Dos getDos(DashboardApiWrapper apiWrapper) throws NotADosException {
+		@SuppressWarnings("unchecked")
+    List<String> colleges = (List<String>) apiWrapper.getUserSettings(crsid).getSettings().get("dosColleges");
+
+		if (colleges.isEmpty()) {
+			throw new NotADosException();
+		}
+
+		return new Dos(colleges);
+	}
+
 	public String getName() {
 		try {
-	    return LDAPQueryManager.getUser(crsid).getcName();
-    } catch (LDAPObjectNotFoundException e) {
-    	return "John Doe";
-    }
+			return LDAPQueryManager.getUser(crsid).getDisplayName();
+		} catch (LDAPObjectNotFoundException e) {
+			return "John Doe";
+		}
 	}
-	
+
 	public String getInstID() {
 		return this.instID;
 	}
@@ -98,15 +111,21 @@ public class User implements Mappable {
 			q = q.add(Restrictions.gt("calendar", now)).addOrder(
 			    Order.asc("calendar"));
 		} else if (mode.equals("archive")) {
-			q = q.add(Restrictions.or(Restrictions.le("calendar", now),Restrictions.le("event.expiryDate", now))).addOrder(
+			q = q.add(
+			    Restrictions.or(Restrictions.le("calendar", now),
+			        Restrictions.le("event.expiryDate", now))).addOrder(
 			    Order.desc("event.expiryDate"));
 		} else if (mode.equals("no-time")) {
-			q = q.add(Restrictions.and(Restrictions.eq("event.sheetType", "manual"),Restrictions.gt("event.expiryDate", now))).addOrder(
+			q = q.add(
+			    Restrictions.and(Restrictions.eq("event.sheetType", "manual"),
+			        Restrictions.gt("event.expiryDate", now))).addOrder(
 			    Order.desc("id"));
 		} else if (mode.equals("timed")) {
-			q = q.add(Restrictions.eq("sheetType", "datetime")).addOrder(Order.desc("calendar"));
+			q = q.add(Restrictions.eq("sheetType", "datetime")).addOrder(
+			    Order.desc("calendar"));
 		} else if (mode.equals("dos")) {
-			q.add(Restrictions.eq("event.dosVisibility", true)).addOrder(Order.desc("event.expiryDate"));
+			q.add(Restrictions.eq("event.dosVisibility", true)).addOrder(
+			    Order.desc("event.expiryDate"));
 		}
 
 		// Check if the row list is exhausted
@@ -153,14 +172,6 @@ public class User implements Mappable {
 	public void addSlots(Set<Slot> slots) {
 		this.slots.addAll(slots);
 	}
-	
-	// Check if the given user is a DoS
-	public boolean isDos() {
-		if (Dos.findByCrsid(crsid) != null) {
-			return true;
-		}
-		return false;
-	}
 
 	// Register user from CRSID
 	public static User registerUser(String crsid) {
@@ -180,7 +191,7 @@ public class User implements Mappable {
 			String instID = null;
 			try {
 				instIDs = LDAPQueryManager.getUser(crsid).getInstID();
-				for(String instIDTemp: instIDs) {
+				for (String instIDTemp : instIDs) {
 					if (instIDTemp.endsWith("UG")) {
 						instID = instIDTemp;
 					}
@@ -188,7 +199,7 @@ public class User implements Mappable {
 			} catch (LDAPObjectNotFoundException e) {
 				return null;
 			}
-			
+
 			User newUser = new User(crsid, instID);
 			session.save(newUser);
 			return newUser;
@@ -213,11 +224,12 @@ public class User implements Mappable {
 	}
 
 	public Map<String, ?> toMap() {
-		return ImmutableMap.of("crsid", crsid, "name", getName(), "anySlots", getSlots().size() > 0);
+		return ImmutableMap.of("crsid", crsid, "name", getName(), "anySlots",
+		    getSlots().size() > 0);
 	}
 
 	@Override
-  public int getId() {
+	public int getId() {
 		throw new UnsupportedOperationException();
-  }
+	}
 }

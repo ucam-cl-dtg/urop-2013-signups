@@ -3,6 +3,7 @@ package uk.ac.cam.signups.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.cam.cl.dtg.teaching.api.DashboardApi.DashboardApiWrapper;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.signups.models.User;
 
@@ -41,7 +42,11 @@ public class ApplicationController {
 		return sRequest.getSession().getServletContext().getInitParameter("apiKey");	
 	}
 	
-	public NotificationApiWrapper getApiWrapper() {
+	public NotificationApiWrapper getNotificationApiWrapper() {
 		return new NotificationApiWrapper(getDashboardUrl(), getApiKey());
+	}
+	
+	public DashboardApiWrapper getDashboardApiWrapper() {
+		return new DashboardApiWrapper(getDashboardUrl(), getApiKey());
 	}
 }

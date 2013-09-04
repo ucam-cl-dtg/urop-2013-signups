@@ -4,6 +4,7 @@
  * Template for Walker Vision page
  * @param pupils
  * @param exhausted
+ * @param error
  */
 {template .dos}
   <div class="events" id="dos">
@@ -13,7 +14,7 @@
       <h4>Director of Studies Page</h4>
     </div>
   </div>
-  {if $pupils == 'unauthorised'}
+  {if $error == 'Not a Director of Studes.'}
     <div class="row">
       <div class="columns large-12">
         <p>You are not authorised to see this page.</p>

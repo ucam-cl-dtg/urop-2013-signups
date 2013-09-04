@@ -1,5 +1,6 @@
 package uk.ac.cam.signups.models;
 
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -13,33 +14,12 @@ import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "DOSES")
 public class Dos {
-	@Id
-	private String crsid;
-	private String instID;
-
-	public Dos() {
-	}
-
-	public static Dos findByCrsid(String crsid) {
-		Session session = HibernateUtil.getTransactionSession();
-		Criteria q = session.createCriteria(Dos.class).add(
-		    Restrictions.eq("crsid", crsid));
-
-		try {
-			return (Dos) q.uniqueResult();
-		} catch (NonUniqueResultException e) {
-			return null;
-		}
+	private List<String> instIDs;
+	
+	public Dos(List<String> instIDs) {
+		this.instIDs = instIDs;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -48,7 +28,7 @@ public class Dos {
 
 		Session session = HibernateUtil.getTransactionSession();
 		Criteria q = session.createCriteria(User.class)
-		    .add(Restrictions.eq("instID", instID)).addOrder(Order.asc("crsid"));
+		    .add(Restrictions.in("instID", instIDs)).addOrder(Order.asc("crsid"));
 
 		Criteria mainq = q.setMaxResults(10).setFirstResult(offset);
 
@@ -66,7 +46,11 @@ public class Dos {
 	
 	public List<HashMap<String,String>> getPupilCRSIDs(String q) {
 		try {
-			return LDAPPartialQuery.partialUserByCrsidInInst(q, this.instID);
+			List<HashMap<String,String>> crsids = new ArrayList<HashMap<String,String>>();
+			for(String instID: instIDs)
+				crsids.addAll(LDAPPartialQuery.partialUserByCrsidInInst(q, instID));
+
+			return crsids;
 		} catch (LDAPObjectNotFoundException e) {
 			return new ArrayList<HashMap<String,String>>();
 		}
@@ -79,7 +63,7 @@ public class Dos {
 		Criteria query = session
 		    .createCriteria(User.class)
 		    .add(
-		        Restrictions.and(Restrictions.eq("instID", instID),
+		        Restrictions.and(Restrictions.in("instID", instIDs),
 		            Restrictions.ilike("crsid", partial + "%")))
 		    .addOrder(Order.asc("crsid"));
 		
@@ -97,6 +81,6 @@ public class Dos {
 	}
 
 	public boolean isMyPupil(User u) {
-		return instID.equals(u.getInstID());
+		return instIDs.contains(u.getInstID());
 	}
 }

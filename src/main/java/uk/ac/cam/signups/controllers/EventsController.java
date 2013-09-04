@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
+import uk.ac.cam.signups.exceptions.NotADosException;
 import uk.ac.cam.signups.forms.EventForm;
 import uk.ac.cam.signups.forms.FillSlot;
 import uk.ac.cam.signups.models.Dos;
@@ -39,7 +40,6 @@ import javax.ws.rs.core.MediaType;
 @Path("/events")
 public class EventsController extends ApplicationController {
 
-	@SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(EventsController.class);
 
 	/*
@@ -66,12 +66,7 @@ public class EventsController extends ApplicationController {
 	@Path("/dos")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, ?> enterWalkerZone(@QueryParam("partial") String partial) {
-		User currentUser;
-		if ((currentUser = initialiseUser()) != null && currentUser.isDos()) {
-			return queryPupils(0, partial);
-		} else {
-			return ImmutableMap.of("pupils", "unauthorised");
-		}
+		return queryPupils(0, partial);
 	}
 	
 	// Walker Zone query for more students
@@ -79,16 +74,23 @@ public class EventsController extends ApplicationController {
 	@Path("/queryPupils")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, ?> queryPupils(@QueryParam("page") int page, @QueryParam("partial") String partial) {
-		Dos currentDos = Dos.findByCrsid(initialiseUser().getCrsid());
-		ImmutableMappableExhaustedPair<User> pupils = null;
-		if(partial == null) {
-			pupils = currentDos.getPupils(page);
-		} else {
-			pupils = currentDos.getPupils(page, partial);
+		User currentUser = initialiseUser();
+		try {
+			Dos currentDos = currentUser.getDos(getDashboardApiWrapper());
+
+			ImmutableMappableExhaustedPair<User> pupils = null;
+	
+			if(partial == null) {
+				pupils = currentDos.getPupils(page);
+			} else {
+				pupils = currentDos.getPupils(page, partial);
+			}
+			return ImmutableMap.of("pupils",
+			    Util.getImmutableCollection(pupils.getMappableIterable()), "exhausted",
+			    pupils.getExhausted());
+		} catch(NotADosException e) {
+			return ImmutableMap.of("error", e.getMessage());
 		}
-		return ImmutableMap.of("pupils",
-		    Util.getImmutableCollection(pupils.getMappableIterable()), "exhausted",
-		    pupils.getExhausted());
 	}
 
 	// New
@@ -107,7 +109,7 @@ public class EventsController extends ApplicationController {
 		ArrayListMultimap<String, String> errors = eventForm.validate();
 
 		if (errors.isEmpty()) {
-			Event event = eventForm.handle(initialiseUser(), getApiWrapper());
+			Event event = eventForm.handle(initialiseUser(), getNotificationApiWrapper());
 			return ImmutableMap.of("redirectTo", "events/" + event.getObfuscatedId());
 		} else {
 			ImmutableMap<String, List<String>> actualErrors = Util
@@ -124,7 +126,7 @@ public class EventsController extends ApplicationController {
 		List<String> errors = fillSlot.validate();
 
 		if (errors.isEmpty()) {
-			fillSlot.handle(getApiWrapper(), initialiseUser());
+			fillSlot.handle(getNotificationApiWrapper(), initialiseUser());
 			return ImmutableMap.of("redirectTo", "events/" + obfuscatedId);
 		}	else {
 			logger.error("Errorful area");
@@ -175,10 +177,11 @@ public class EventsController extends ApplicationController {
 	@Path("/queryIndividualsEvents")
 	public Map<String, ?> generateIndividualsRows(@QueryParam("page") int page,
 	    @QueryParam("crsid") String crsid) {
-		User cUser;
-		if ((cUser = initialiseUser()).isDos()) {
+		try {
+			User cUser = initialiseUser();
 			User u = initialiseSpecifiedUser(crsid);
-			boolean isHisPupil = Dos.findByCrsid(cUser.getCrsid()).isMyPupil(u);
+			Dos currentDos = cUser.getDos(getDashboardApiWrapper());
+			boolean isHisPupil = currentDos.isMyPupil(u);
 			if (isHisPupil) {
 				ImmutableMappableExhaustedPair<Row> rows = u.getRowsSignedUp(page,
 				    "dos");
@@ -188,8 +191,8 @@ public class EventsController extends ApplicationController {
 			} else {
 				return ImmutableMap.of("error", "Not his pupil");
 			}
-		} else {
-			return ImmutableMap.of("error", "Not a DoS");
+		} catch (NotADosException e) {
+			return ImmutableMap.of("error", e.getMessage());
 		}
 	}
 
@@ -234,11 +237,11 @@ public class EventsController extends ApplicationController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<HashMap<String, String>> queryCRSIDsForDos(@QueryParam("q") String q) {
 		User u = initialiseUser();
-		if (u.isDos()) {
-			return Dos.findByCrsid(u.getCrsid()).getPupilCRSIDs(q);
-		} else {
-			return new ArrayList<HashMap<String,String>>();
-		}
+		try {
+      return u.getDos(getDashboardApiWrapper()).getPupilCRSIDs(q);
+    } catch (NotADosException e) {
+    	return new ArrayList<HashMap<String, String>>();
+    }
 	}
 	
 	// Query for history of an event
@@ -248,7 +251,7 @@ public class EventsController extends ApplicationController {
 	public Map<String, ?> queryEventHistory(@QueryParam("id") String id, @QueryParam("page") int page) {
 		Session session = HibernateUtil.getTransactionSession();
 		Event event = (Event) session.createCriteria(Event.class).add(Restrictions.eq("obfuscatedId", id)).uniqueResult();
-		ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification> nots = event.getNotifications(getApiWrapper(), page);
+		ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification> nots = event.getNotifications(getNotificationApiWrapper(), page);
 		
 		return ImmutableMap.of(
 				"list", Util.getImmutableCollection(nots.getMappableIterable()),
