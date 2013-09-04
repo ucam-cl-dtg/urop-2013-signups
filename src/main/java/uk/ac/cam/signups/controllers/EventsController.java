@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -249,8 +250,7 @@ public class EventsController extends ApplicationController {
 	@Path("/queryEventHistory")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, ?> queryEventHistory(@QueryParam("id") String id, @QueryParam("page") int page) {
-		Session session = HibernateUtil.getTransactionSession();
-		Event event = (Event) session.createCriteria(Event.class).add(Restrictions.eq("obfuscatedId", id)).uniqueResult();
+		Event event = Event.findById(id);
 		ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification> nots = event.getNotifications(getNotificationApiWrapper(), page);
 		
 		return ImmutableMap.of(
@@ -263,8 +263,7 @@ public class EventsController extends ApplicationController {
 	@Path("/{obfuscatedId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, ?> showEvent(@PathParam("obfuscatedId") String obfuscatedId, @QueryParam("coolHack") List<String> errors) {
-		Session session = HibernateUtil.getTransactionSession();
-		Event event = (Event) session.createCriteria(Event.class).add(Restrictions.eq("obfuscatedId", obfuscatedId)).uniqueResult();
+		Event event = Event.findById(obfuscatedId);
 		
 		if(errors == null) {
 			errors = new ArrayList<String>();

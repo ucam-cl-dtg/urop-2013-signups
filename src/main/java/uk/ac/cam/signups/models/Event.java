@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -297,5 +298,12 @@ public class Event implements Mappable {
 
 		Map<String, ?> eventMap = builder.build();
 		return eventMap; 
+	}
+	
+	public static Event findById(String obfuscatedId) {
+		Session session = HibernateUtil.getTransactionSession();
+		Event event = (Event) session.createCriteria(Event.class).add(Restrictions.eq("obfuscatedId", obfuscatedId)).uniqueResult();
+
+		return event;
 	}
 }
