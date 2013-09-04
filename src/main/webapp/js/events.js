@@ -188,6 +188,21 @@ moduleScripts['signapp']['events'] = {
 	'show' 	:	
 		[
 		  function() {
+		  	// Delete event
+		  	$("#delete-event").click(function() {
+		  		if (confirm("Are you sure you want to delete?")) {
+			  		var obfuscatedId = /events\/(\w+)/.exec(window.location.pathname)[1];
+			  		$.ajax({
+			  					url: prepareURL("events/" + obfuscatedId),
+			  					type: "DELETE"
+			  				}).done(function(data) {
+			  					if(data.error != undefined) {
+			  						errorNotification(data.error);
+			  					}
+			  				});
+		  		}
+		  	});
+
 				$("form").ajaxForm(function(data) {
 					applyTemplate($('.main'), "signapp.events.show", data);
 				});

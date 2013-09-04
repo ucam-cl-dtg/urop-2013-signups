@@ -2,6 +2,16 @@ package uk.ac.cam.signups.models;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
+import uk.ac.cam.cl.dtg.teaching.api.NotificationException;
+import uk.ac.cam.signups.util.HibernateUtil;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
 import javax.persistence.Entity;
@@ -13,10 +23,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="SLOTS")
 public class Slot implements Mappable {
+	@Transient
+	private Logger logger = LoggerFactory.getLogger(Slot.class);
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="logIdSeq") 
 	@SequenceGenerator(name="logIdSeq",sequenceName="LOG_SEQ", allocationSize=1)
@@ -57,5 +71,36 @@ public class Slot implements Mappable {
   		rOwner = ImmutableMap.of("crsid", "", "name", "");
   	}
 	  return ImmutableMap.of("id",id,"owner", rOwner);
+  }
+  
+  public void destroy(NotificationApiWrapper apiWrapper) {
+  	if (getOwner() != null) {
+	  	Row row = this.getRow();
+	  	Event event = row.getEvent();
+	  	String sheetType = event.getSheetType();
+	  	boolean sendNotification = false;
+	  	Calendar currentTime = new GregorianCalendar();
+	  	
+	  	if (sheetType.equals("datetime")) {
+	  		if (currentTime.compareTo(row.getCalendar()) < 0)
+	  			sendNotification = true;
+	  	} else if (sheetType.equals("manual")){
+	  		if (currentTime.compareTo(event.getExpiryDate()) < 0)
+	  			sendNotification = true;
+	  	}
+	  	
+	  	if (sendNotification) {
+	  		String message = event.getTitle() + " by " + event.getOwner().getCrsid() + " has been canceled.";
+		  	try {
+		      apiWrapper.createNotification(message, "signapp", "events", getOwner().getCrsid());
+	      } catch (NotificationException e) {
+	      	logger.error("Notification could not be created.");
+	      	logger.error(e.getMessage());
+	      }
+	  	}
+	  }
+  	
+  	Session session = HibernateUtil.getTransactionSession();
+  	session.delete(this);
   }
 }

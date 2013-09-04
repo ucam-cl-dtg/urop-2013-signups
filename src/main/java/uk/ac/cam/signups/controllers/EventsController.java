@@ -3,14 +3,13 @@ package uk.ac.cam.signups.controllers;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
 
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.annotations.Form;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
+import uk.ac.cam.signups.exceptions.AuthorizationException;
 import uk.ac.cam.signups.exceptions.NotADosException;
 import uk.ac.cam.signups.forms.EventForm;
 import uk.ac.cam.signups.forms.FillSlot;
@@ -19,7 +18,6 @@ import uk.ac.cam.signups.models.Event;
 import uk.ac.cam.signups.models.Row;
 import uk.ac.cam.signups.models.Type;
 import uk.ac.cam.signups.models.User;
-import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 import uk.ac.cam.signups.util.Util;
 
@@ -117,6 +115,25 @@ public class EventsController extends ApplicationController {
 		    .multimapToImmutableMap(errors);
 			return ImmutableMap.of("data", eventForm.toMap(), "errors", actualErrors);
 		}
+	}
+	
+	// Delete
+	@DELETE
+	@Path("/{obfuscatedId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Map<String, String> deleteEvent(@PathParam("obfuscatedId") String obfuscatedId) {
+		Event event = Event.findById(obfuscatedId);
+
+		try {
+			authenticate(event.getOwner());
+		} catch(AuthorizationException e) {
+			logger.warn(e.getCrsid() + " tried to delete an event without owning it.");
+			return ImmutableMap.of("error", "You cannot delete an event that you do not own.");
+		}
+
+		event.destroy(getNotificationApiWrapper());
+			
+		return ImmutableMap.of("redirectTo", "events");
 	}
 
 	// Fill Slot
@@ -270,6 +287,7 @@ public class EventsController extends ApplicationController {
 		}
 
 		return ImmutableMap.of(
+				"isOwner", initialiseUser().equals(event.getOwner()),
 				"data", event.toMap(), 
 				"errors", errors,
 				"notifications", queryEventHistory(obfuscatedId, 0)

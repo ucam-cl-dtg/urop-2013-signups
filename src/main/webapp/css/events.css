@@ -27,6 +27,10 @@ div.events#index .date {
 div.events#index h3 {
   height: 60px; }
 
+div.events#new label {
+  height: 22px; }
+div.events#new input[type='submit'] {
+  margin-bottom: 70px; }
 div.events#new ul.error {
   background-color: rgba(198, 15, 19, 0.1);
   border-color: #c60f13; }
@@ -145,8 +149,11 @@ div.events#show .row-name {
   text-align: center;
   height: 40px;
   padding-top: 14px; }
-div.events#show input[type="submit"] {
+div.events#show input[type="submit"], div.events#show #delete-event {
   margin: 10px 0 10px 0; }
+div.events#show #delete-event {
+  margin-left: 10px;
+  top: 1px; }
 div.events#show .history-item {
   font-size: 14px;
   padding: 5px 0 5px 0;

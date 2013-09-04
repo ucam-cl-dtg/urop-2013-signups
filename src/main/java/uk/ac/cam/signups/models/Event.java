@@ -306,4 +306,15 @@ public class Event implements Mappable {
 
 		return event;
 	}
+	
+	public void destroy(NotificationApiWrapper apiWrapper) {
+		for(Row row: this.getRows()) 
+			row.destroy(apiWrapper);
+		
+		for(Type type: this.getTypes())
+			type.destroy();
+		
+		Session session = HibernateUtil.getTransactionSession();
+		session.delete(this);
+	}
 }

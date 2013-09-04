@@ -5,6 +5,7 @@
  * @param data
  * @param notifications
  * @param errors
+ * @param isOwner
  * 
  */
 {template .show}
@@ -71,8 +72,11 @@
 
       {if not ($data.sheetType == 'datetime' and $data.currentDate > $data.lastRow.date.comparativeString) and not ($data.currentDate > $data.expiryDate.comparative)}
         <div class="row">
-          <div class="columns large-12">
+          <div class="columns large-122">
             <input type="submit" value="Fill Slots!" class="medium success button">
+            {if $isOwner}
+              <div class="button medium alert" id="delete-event">Delete event</div>
+            {/if}
           </div>
         </div>
       {/if}

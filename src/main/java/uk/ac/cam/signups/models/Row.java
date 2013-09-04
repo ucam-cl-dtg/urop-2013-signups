@@ -2,9 +2,12 @@ package uk.ac.cam.signups.models;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
+import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.Util;
 
 import java.text.SimpleDateFormat;
@@ -167,5 +170,13 @@ public class Row implements Mappable, Comparable<Row> {
 				return -1;
 			}
 		}
+	}
+	
+	public void destroy(NotificationApiWrapper apiWrapper) {
+		for(Slot slot: this.getSlots())
+			slot.destroy(apiWrapper);
+		
+		Session session = HibernateUtil.getTransactionSession();
+		session.delete(this);
 	}
 }

@@ -266,8 +266,13 @@ div.events#show {
     padding-top:14px;
   }
   
-  input[type="submit"] {
+  input[type="submit"], #delete-event {
     margin: 10px 0 10px 0;
+  }
+  
+  #delete-event {
+    margin-left: 10px;
+    top: 1px;
   }
   
   .history-item {

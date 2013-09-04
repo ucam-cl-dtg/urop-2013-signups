@@ -89,4 +89,9 @@ public class Type implements Mappable {
 		
 		return immutableTypes;
 	}
+	
+	public void destroy() {
+		Session session = HibernateUtil.getTransactionSession();
+		session.delete(this);
+	}
 }

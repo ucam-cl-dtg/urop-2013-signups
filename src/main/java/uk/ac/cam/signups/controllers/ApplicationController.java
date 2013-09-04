@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.teaching.api.DashboardApi.DashboardApiWrapper;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
+import uk.ac.cam.signups.exceptions.AuthorizationException;
 import uk.ac.cam.signups.models.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,19 +35,25 @@ public class ApplicationController {
 		return User.registerUser(crsid);
 	}
 	
-	public String getDashboardUrl() {
+	protected void authenticate(User u) throws AuthorizationException {
+		User cu = initialiseUser();
+		if (!cu.equals(u))
+			throw new AuthorizationException(cu);
+	}
+	
+	protected String getDashboardUrl() {
 		return sRequest.getSession().getServletContext().getInitParameter("dashboardUrl");
 	}
 	
-	public String getApiKey() {
+	protected String getApiKey() {
 		return sRequest.getSession().getServletContext().getInitParameter("apiKey");	
 	}
 	
-	public NotificationApiWrapper getNotificationApiWrapper() {
+	protected NotificationApiWrapper getNotificationApiWrapper() {
 		return new NotificationApiWrapper(getDashboardUrl(), getApiKey());
 	}
 	
-	public DashboardApiWrapper getDashboardApiWrapper() {
+	protected DashboardApiWrapper getDashboardApiWrapper() {
 		return new DashboardApiWrapper(getDashboardUrl(), getApiKey());
 	}
 }
