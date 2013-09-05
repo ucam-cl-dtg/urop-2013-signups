@@ -74,6 +74,10 @@ public class User implements Mappable {
 			return "John Doe";
 		}
 	}
+	
+	public String getNameCrsid() {
+		return getName() + " (" + getCrsid() + ")";
+	}
 
 	public String getInstID() {
 		return this.instID;
@@ -90,9 +94,28 @@ public class User implements Mappable {
 	public List<Event> getEvents() {
 		return events;
 	}
+	
+	@SuppressWarnings("unchecked")
+  public List<Event> getDatetimeEvents() {
+		Session session = HibernateUtil.getTransactionSession();
+		return (List<Event>) 
+				session.createCriteria(Event.class)
+							 .add(Restrictions.eq("sheetType", "datetime")).list();
+	}
 
 	public void addEvents(List<Event> events) {
 		this.events.addAll(events);
+	}
+	
+	@SuppressWarnings("unchecked")
+  public List<Row> getRowsWithDatetimeSignedUp() {
+		Session session = HibernateUtil.getTransactionSession();
+		return session.createCriteria(Row.class)
+					 .createAlias("event", "event")
+					 .createAlias("slots", "slots")
+					 .add(Restrictions.eq("slots.owner", this))
+					 .add(Restrictions.eq("event.sheetType", "datetime"))
+					 .list();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -106,26 +129,44 @@ public class User implements Mappable {
 		Calendar now = new GregorianCalendar();
 		Criteria q = session.createCriteria(Row.class)
 		    .createAlias("slots", "slots").createAlias("event", "event")
-		    .add(Restrictions.eq("slots.owner", this));
+		    .add(
+		    		Restrictions
+		    			.eq("slots.owner", this)
+		    		);
 		if (mode.equals("contemporary")) {
-			q = q.add(Restrictions.gt("calendar", now)).addOrder(
-			    Order.asc("calendar"));
+			q = q.add(
+						Restrictions
+							.gt("calendar", now))
+							.addOrder( Order.asc("calendar")
+					);
 		} else if (mode.equals("archive")) {
 			q = q.add(
-			    Restrictions.or(Restrictions.le("calendar", now),
-			        Restrictions.le("event.expiryDate", now))).addOrder(
-			    Order.desc("event.expiryDate"));
+			    	Restrictions
+			    		.or(
+				    		Restrictions.le("calendar", now),
+				        Restrictions.and(
+				        	Restrictions.eq("event.sheetType", "manual"),
+				        	Restrictions.le("event.expiryDate", now))))
+				      .addOrder( Order.desc("event.expiryDate")
+			    );
 		} else if (mode.equals("no-time")) {
 			q = q.add(
-			    Restrictions.and(Restrictions.eq("event.sheetType", "manual"),
-			        Restrictions.gt("event.expiryDate", now))).addOrder(
-			    Order.desc("id"));
+				    Restrictions
+				    	.and(
+				    		Restrictions.eq("event.sheetType", "manual"),
+				        Restrictions.gt("event.expiryDate", now)))
+				      .addOrder( Order.desc("id")
+			    );
 		} else if (mode.equals("timed")) {
-			q = q.add(Restrictions.eq("sheetType", "datetime")).addOrder(
-			    Order.desc("calendar"));
+			q = q.add(
+						Restrictions.eq("sheetType", "datetime"))
+						.addOrder( Order.desc("calendar")
+					);
 		} else if (mode.equals("dos")) {
-			q.add(Restrictions.eq("event.dosVisibility", true)).addOrder(
-			    Order.desc("event.expiryDate"));
+			q.add(
+				Restrictions.eq("event.dosVisibility", true))
+				.addOrder( Order.desc("event.expiryDate")
+			);
 		}
 
 		// Check if the row list is exhausted

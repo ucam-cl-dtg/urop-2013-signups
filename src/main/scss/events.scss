@@ -34,6 +34,27 @@ div.events#dos {
 
 div.events#index {
 	
+	.ribbon {
+	  position: absolute;
+	  right: 0;
+	  z-index: 100000;
+	  height: 30px;
+	  width: 240px;
+	  top: 100px;
+	  -webkit-transform: rotate(45deg);
+	  
+	  &.top {
+	    right: -102px;
+	    background: url("../img/ical-ribbon-top-2.png") transparent no-repeat;
+	  }
+	  
+	  &.bottom {
+	    right: -63px;
+	    background: url("../img/ical-ribbon-bottom-2.png") transparent no-repeat;
+	  }
+	}
+	
+	
 	 .created-event {
 	   min-height: 60px;
 	   text-align: left;

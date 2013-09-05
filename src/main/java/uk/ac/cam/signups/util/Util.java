@@ -58,7 +58,7 @@ public class Util {
 		for(String str: strs)
 			joined += (str + delimeter);
 		
-		return joined.substring(0, joined.length() - 1);
+		return joined.substring(0, joined.length() - delimeter.length());
 	}
 	
 	public static Calendar datepickerParser(String dateString) throws ParseException {

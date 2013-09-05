@@ -3,6 +3,17 @@ package uk.ac.cam.signups.controllers;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
 
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Dur;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Version;
+import net.fortuna.ical4j.util.UidGenerator;
+
 import org.jboss.resteasy.annotations.Form;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,15 +27,20 @@ import uk.ac.cam.signups.forms.FillSlot;
 import uk.ac.cam.signups.models.Dos;
 import uk.ac.cam.signups.models.Event;
 import uk.ac.cam.signups.models.Row;
+import uk.ac.cam.signups.models.Slot;
 import uk.ac.cam.signups.models.Type;
 import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 import uk.ac.cam.signups.util.Util;
 
+import java.net.SocketException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -35,6 +51,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 @Path("/events")
 public class EventsController extends ApplicationController {
@@ -292,5 +310,90 @@ public class EventsController extends ApplicationController {
 				"errors", errors,
 				"notifications", queryEventHistory(obfuscatedId, 0)
 				);
+	}
+	
+	// Calendar
+	@GET
+	@Path("/calendar")
+	@Produces("text/calendar")
+	public Object getCalendar() throws SocketException, URISyntaxException {
+		User cu = initialiseUser();
+
+		Calendar calendar = new Calendar();
+		calendar.getProperties().add(new ProdId("-//OTT//OTT 1.0//EN"));
+		calendar.getProperties().add(Version.VERSION_2_0);
+		calendar.getProperties().add(CalScale.GREGORIAN);
+
+		// Handle events you have created
+		List<Event> events = cu.getDatetimeEvents();
+		for(Event event: events) {
+			for(Row row: event.getRows()) {
+				if (row.isEmpty())
+					continue;
+				
+				java.util.Calendar cal = (java.util.Calendar) row.getCalendar().clone();
+				Date start = cal.getTime();
+				cal.add(java.util.Calendar.HOUR, 1);
+				Date end = cal.getTime();
+				Dur dur = new Dur(start,end);
+				String subject = "OTTER: " + event.getTitle() 
+													+ (row.getType() != null ? " (" + row.getType().getName() + ")" : "");
+				UidGenerator ug = new UidGenerator("1");
+				
+				DateTime eventStart = new DateTime(start);
+				VEvent ev = new VEvent(eventStart, dur, subject);
+				
+				Set<Slot> slots = row.getSlots();
+				List<String> supervisees = new ArrayList<String>();
+				for (Slot slot: slots) {
+					User slotOwner = slot.getOwner();
+					if (slotOwner != null)
+						supervisees.add(slotOwner.getNameCrsid());
+				}
+				
+				ev.getProperties().add(new Description("Event group: " + Util.join(supervisees, ", ")));
+				ev.getProperties().add(ug.generateUid());
+				calendar.getComponents().add(ev);
+			}
+		}
+		
+		// Handle events that you have joined
+		List<Row> rows = cu.getRowsWithDatetimeSignedUp();
+		for(Row row: rows) {
+			java.util.Calendar cal = (java.util.Calendar) row.getCalendar().clone();
+			Date start = cal.getTime();
+			cal.add(java.util.Calendar.HOUR, 1);
+			Date end = cal.getTime();
+			Dur dur = new Dur(start,end);
+			String subject = "OTTER: " + row.getEvent().getTitle() 
+												+ (row.getType() != null ? " (" + row.getType().getName() + ")" : "");
+			String hostMail = row.getEvent().getOwner().getCrsid() + "@cam.ac.uk";
+			UidGenerator ug = new UidGenerator("1");
+			
+			DateTime eventStart = new DateTime(start);
+			VEvent ev = new VEvent(eventStart, dur, subject);
+			ev.getProperties().add(new Organizer("MAILTO:" + hostMail));
+			ev.getProperties().add(ug.generateUid());
+			
+			Set<Slot> slots = row.getSlots();
+			List<String> supervisees = new ArrayList<String>();
+			for (Slot slot: slots) {
+				User slotOwner = slot.getOwner();
+				if (slotOwner != null)
+					supervisees.add(slotOwner.getNameCrsid());
+			}
+			
+			ev.getProperties().add(new Description("Event group: " + Util.join(supervisees, ", ")));
+			calendar.getComponents().add(ev);	
+		}
+		
+		if (rows.isEmpty() && events.isEmpty())
+			return Response.status(401).build();
+		
+		ResponseBuilder builder = Response.ok(calendar.toString());
+		builder.header("Content-Disposition",
+				"attachment; filename=events_for_" + cu.getCrsid()
+						+ ".ics");
+		return builder.build();
 	}
 }

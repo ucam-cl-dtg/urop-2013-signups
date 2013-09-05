@@ -179,4 +179,12 @@ public class Row implements Mappable, Comparable<Row> {
 		Session session = HibernateUtil.getTransactionSession();
 		session.delete(this);
 	}
+	
+	public boolean isEmpty() {
+		for(Slot slot: getSlots()) {
+			if (slot.getOwner() != null)
+				return false;
+		}
+		return true;
+	}
 }
