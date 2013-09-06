@@ -194,28 +194,77 @@
  */
 {template .singleSlot}
   <div class="single-slot-controls columns large-12 small-12">
+    /* <div class="row">
+    	<div class="columns large-6 small-12">
+    		
+    	</div>
+    	<div class="columns large-1 small-4">
+    		<label>Hour</label>
+        </div>
+    	<div class="columns large-2 small-4">
+    		<label>Minutes</label>
+        </div>
+    </div>*/
     <div class="row">
       <div class="columns large-6">
-        <input type="text" {if $datetime != 'undefined' and $datetime.date}value="{$datetime.date}"{/if} class="datepicker" name="{$timestampType == 'datetime' ? 'available_dates[]' : 'expiry_date_date'}" placeholder="Date" />        
+        <div class="row">
+        	<div class="columns large-12 small-12">
+        		<label>Date (DD/MM/YYYY)</label>
+        	</div>
+        </div>
+        <div class="row">
+        	<div class="columns large-12 small-12">
+        		<input type="text" {if $datetime != 'undefined' and $datetime.date}value="{$datetime.date}"{/if} class="datepicker" name="{$timestampType == 'datetime' ? 'available_dates[]' : 'expiry_date_date'}" placeholder="Date" />
+        	</div>
+        </div>        
       </div>
       <div class="columns large-2 small-4">
-        <select class="medium" name="{$timestampType =='datetime' ? 'available_hours[]' : 'expiry_date_hour'}">
-          {for $i in range(6,24)}
-            <option value="{$i < 10 ? '0' : ''}{$i}" {if $datetime != 'undefined' and $datetime.hour == $i }selected{/if}>{$i < 10 ? '0' : ''}{$i}</option>
-          {/for}
-          
-        </select>
+       	<div class="row">
+        	<div class="columns large-12 small-12">
+        		<label>Hour</label>
+        	</div>
+        </div>
+         <div class="row">
+        	<div class="columns large-12 small-12">
+        		<select class="medium" name="{$timestampType =='datetime' ? 'available_hours[]' : 'expiry_date_hour'}">
+		          {for $i in range(6,24)}
+		            <option value="{$i < 10 ? '0' : ''}{$i}" {if $datetime != 'undefined' and $datetime.hour == $i }selected{/if}>{$i < 10 ? '0' : ''}{$i}</option>
+		          {/for}
+		          
+		        </select>
+        	</div>
+        </div>
+      	
       </div>
       <div class="columns large-2 small-4">
-        <select class="medium" name="{$timestampType == 'datetime' ? 'available_minutes[]' : 'expiry_date_minute'}">
-          {for $i in range(60)}
-            <option value="{$i < 10 ? '0' : ''}{$i}" {if $datetime != 'undefined' and $datetime.minute == $i}selected{/if}>{$i < 10 ? '0' : ''}{$i}</option>
-          {/for}
-        </select>
+       	<div class="row">
+        	<div class="columns large-12 small-12">
+        		<label>Minutes</label>
+        	</div>
+        </div>
+         <div class="row">
+        	<div class="columns large-12 small-12">
+        		<select class="medium" name="{$timestampType == 'datetime' ? 'available_minutes[]' : 'expiry_date_minute'}">
+		          {for $i in range(60)}
+		            <option value="{$i < 10 ? '0' : ''}{$i}" {if $datetime != 'undefined' and $datetime.minute == $i}selected{/if}>{$i < 10 ? '0' : ''}{$i}</option>
+		          {/for}
+		        </select>
+        	</div>
+        </div>
+      	
       </div>
       <div class="columns large-2 small-4">
         {if $timestampType == 'datetime'}
-          <a class="button medium full-width delete-time-slot disabled">Delete</a>
+        <div class="row">
+        	<div class="columns large-12 small-12">
+        		<label>&nbsp;</label>
+        	</div>
+        </div>
+         <div class="row">
+        	<div class="columns large-12 small-12">
+        		<a class="button medium full-width delete-time-slot disabled">Delete</a>
+        	</div>
+        </div>
         {/if}
       </div>
     </div>
