@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>uk.ac.cam.cl.dtg.teaching</groupId>
 		<artifactId>otter-parent</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 	</parent>
 	<artifactId>signapp</artifactId>
 	<packaging>war</packaging>
