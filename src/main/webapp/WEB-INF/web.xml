@@ -23,31 +23,29 @@
 
 	<context-param>
 		<param-name>jsFiles</param-name>
-		<param-value>http://malsup.github.com/jquery.form.js,/soy/js/3/signapp.events.js,/js/signups.js,/js/events.js</param-value>
+		<param-value>http://malsup.github.com/jquery.form.js,/soy/js/3/signapp.events.js,/js/signups.js,/js/events.js
+		</param-value>
 	</context-param>
 
-  <!-- Online version
-  <context-param>
-    <param-name>dashboardUrl</param-name>
-    <param-value>http://www.cl.cam.ac.uk/research/dtg/berrycider/dashboard</param-value>
-  </context-param>
--->
+	<!-- Online version <context-param> <param-name>dashboardUrl</param-name> 
+		<param-value>http://www.cl.cam.ac.uk/research/dtg/berrycider/dashboard</param-value> 
+		</context-param> -->
 
-  <!-- Local dashboard -->
-  <context-param>
-    <param-name>dashboardUrl</param-name>
-    <param-value>http://localhost:8080/dashboard</param-value>
-  </context-param>
+	<!-- Local dashboard -->
+	<context-param>
+		<param-name>dashboardUrl</param-name>
+		<param-value>http://localhost:8080/dashboard</param-value>
+	</context-param>
 
-  <context-param>
-    <param-name>excludeFromLogger</param-name>
-    <param-value>/dashboard/api/notifications</param-value>
-  </context-param>
+	<context-param>
+		<param-name>excludeFromLogger</param-name>
+		<param-value>/dashboard/api/notifications</param-value>
+	</context-param>
 
-  <context-param>
-    <param-name>apiKey</param-name>
-    <param-value>4870v534lmomthfssb27ho4vjtidhujlmmssasuf</param-value>
-  </context-param>
+	<context-param>
+		<param-name>apiKey</param-name>
+		<param-value>4870v534lmomthfssb27ho4vjtidhujlmmssasuf</param-value>
+	</context-param>
 
 	<!-- Include this for the Hibernate filter -->
 	<filter>
@@ -57,26 +55,28 @@
 
 	<filter>
 		<filter-name>Htmleasy</filter-name>
-		<filter-class>com.googlecode.htmleasy.HtmleasyFilterDispatcher</filter-class>
+		<filter-class>com.googlecode.htmleasy.HtmleasyFilterDispatcher
+		</filter-class>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
 			<param-value>uk.ac.cam.signups.util.Signapps</param-value>
 		</init-param>
 	</filter>
-	
-  <filter>
-    <filter-name>apiauth</filter-name>
-    <filter-class>uk.ac.cam.cl.dtg.teaching.APIFilter</filter-class>
-    <init-param>
-      <param-name>allowGlobal</param-name>
-      <param-value>false</param-value>
-    </init-param>
-  </filter>
 
-  <filter-mapping>
-    <filter-name>apiauth</filter-name>
-    <url-pattern>/api/*</url-pattern>
-  </filter-mapping>>
+	<filter>
+		<filter-name>apiauth</filter-name>
+		<filter-class>uk.ac.cam.cl.dtg.teaching.APIFilter</filter-class>
+		<init-param>
+			<param-name>allowGlobal</param-name>
+			<param-value>false</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>apiauth</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+	>
 
 	<filter-mapping>
 		<filter-name>Hibernate</filter-name>
