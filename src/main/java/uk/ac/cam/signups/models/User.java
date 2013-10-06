@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPQueryManager;
 import uk.ac.cam.cl.dtg.teaching.api.DashboardApi.DashboardApiWrapper;
+import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
 import uk.ac.cam.signups.exceptions.NotADosException;
-import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 
 import com.google.common.collect.ImmutableMap;
@@ -97,7 +97,7 @@ public class User implements Mappable {
 	
 	@SuppressWarnings("unchecked")
   public List<Event> getDatetimeEvents() {
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		return (List<Event>) 
 				session.createCriteria(Event.class)
 							 .add(Restrictions.eq("sheetType", "datetime")).list();
@@ -109,7 +109,7 @@ public class User implements Mappable {
 	
 	@SuppressWarnings("unchecked")
   public List<Row> getRowsWithDatetimeSignedUp() {
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		return session.createCriteria(Row.class)
 					 .createAlias("event", "event")
 					 .createAlias("slots", "slots")
@@ -125,7 +125,7 @@ public class User implements Mappable {
 		int offset = page * 10;
 
 		// Query rows that the user has signed up
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		Calendar now = new GregorianCalendar();
 		Criteria q = session.createCriteria(Row.class)
 		    .createAlias("slots", "slots").createAlias("event", "event")
@@ -189,7 +189,7 @@ public class User implements Mappable {
 		int offset = page * 10;
 
 		// Query events the user has created
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		Query q = session
 		    .createQuery(
 		        "from Event as event where event.owner = :user order by id desc")
@@ -219,7 +219,7 @@ public class User implements Mappable {
 		// Add user to database if necessary
 
 		// Begin hibernate session
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 
 		// Does the user already exist?
 		Query userQuery = session.createQuery("from User where id = :id")

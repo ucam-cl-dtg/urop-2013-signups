@@ -1,6 +1,5 @@
 package uk.ac.cam.signups.models;
 
-import uk.ac.cam.signups.util.HibernateUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.Notification;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
+import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 import uk.ac.cam.signups.util.Util;
 
@@ -209,7 +209,7 @@ public class Event implements Mappable {
 	@SuppressWarnings("unchecked")
 	public static List<ImmutableMap<String, String>> suggestRooms(
 	    String qbuilding, String qroom) {
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		Query q = session
 		    .createQuery("select distinct room from Event as event where lower(event.location) like :building and lower(event.room) like :room");
 		List<String> suggestions = (List<String>) q
@@ -301,7 +301,7 @@ public class Event implements Mappable {
 	}
 	
 	public static Event findById(String obfuscatedId) {
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		Event event = (Event) session.createCriteria(Event.class).add(Restrictions.eq("obfuscatedId", obfuscatedId)).uniqueResult();
 
 		return event;
@@ -314,7 +314,7 @@ public class Event implements Mappable {
 		for(Type type: this.getTypes())
 			type.destroy();
 		
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		session.delete(this);
 	}
 }

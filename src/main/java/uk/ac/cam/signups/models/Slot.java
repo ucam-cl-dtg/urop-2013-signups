@@ -1,7 +1,5 @@
 package uk.ac.cam.signups.models;
 
-import uk.ac.cam.signups.util.HibernateUtil;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
@@ -23,6 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationException;
+import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
+
 import com.google.common.collect.ImmutableMap;
 
 @Entity
@@ -100,7 +100,7 @@ public class Slot implements Mappable {
 	  	}
 	  }
   	
-  	Session session = HibernateUtil.getTransactionSession();
+  	Session session = HibernateUtil.getInstance().getSession();
   	session.delete(this);
   }
 }

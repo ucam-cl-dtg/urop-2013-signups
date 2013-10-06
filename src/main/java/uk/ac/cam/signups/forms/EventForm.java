@@ -19,12 +19,12 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationException;
+import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
 import uk.ac.cam.signups.models.Event;
 import uk.ac.cam.signups.models.Row;
 import uk.ac.cam.signups.models.Slot;
 import uk.ac.cam.signups.models.Type;
 import uk.ac.cam.signups.models.User;
-import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.Util;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -65,7 +65,7 @@ public class EventForm {
 	Logger logger = LoggerFactory.getLogger(EventForm.class);
 
 	public Event handle(User currentUser, NotificationApiWrapper apiWrapper) {
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		// Create event prototype
 		Event event = new Event();
 		event.setLocation(location);

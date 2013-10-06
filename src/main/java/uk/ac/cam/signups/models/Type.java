@@ -1,7 +1,5 @@
 package uk.ac.cam.signups.models;
 
-import uk.ac.cam.signups.util.HibernateUtil;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +20,7 @@ import javax.persistence.Table;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -72,7 +71,7 @@ public class Type implements Mappable {
 	
 	@SuppressWarnings("unchecked")
   public static List<ImmutableMap<String,?>> findSimilar(String name, User user, String mode) {
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		List<String> types = null; 
 		if(mode.equals("local")) {
 			Query similars = session.createQuery("SELECT DISTINCT name FROM Type as type WHERE type.event.owner = :user AND lower(type.name) like :name");
@@ -92,7 +91,7 @@ public class Type implements Mappable {
 	}
 	
 	public void destroy() {
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		session.delete(this);
 	}
 }

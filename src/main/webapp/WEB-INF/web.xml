@@ -50,7 +50,8 @@
 	<!-- Include this for the Hibernate filter -->
 	<filter>
 		<filter-name>Hibernate</filter-name>
-		<filter-class>uk.ac.cam.signups.util.HibernateSessionRequestFilter</filter-class>
+		<filter-class>uk.ac.cam.cl.dtg.teaching.hibernate.HibernateSessionRequestFilter
+		</filter-class>
 	</filter>
 
 	<filter>

@@ -12,7 +12,7 @@ import org.hibernate.criterion.Restrictions;
 
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
-import uk.ac.cam.signups.util.HibernateUtil;
+import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 
 public class Dos {
@@ -26,7 +26,7 @@ public class Dos {
 	public ImmutableMappableExhaustedPair<User> getPupils(int page) {
 		int offset = 10 * page;
 
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		Criteria q = session.createCriteria(User.class)
 		    .add(Restrictions.in("instID", instIDs)).addOrder(Order.asc("crsid"));
 
@@ -59,7 +59,7 @@ public class Dos {
 	public ImmutableMappableExhaustedPair<User> getPupils(int page, String partial) {
 		int offset = 10 * page;
 
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		Criteria query = session
 		    .createCriteria(User.class)
 		    .add(

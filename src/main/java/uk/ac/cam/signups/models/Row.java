@@ -1,6 +1,5 @@
 package uk.ac.cam.signups.models;
 
-import uk.ac.cam.signups.util.HibernateUtil;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
@@ -29,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
+import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
 import uk.ac.cam.signups.util.Util;
 
 import com.google.common.collect.ImmutableMap;
@@ -176,7 +176,7 @@ public class Row implements Mappable, Comparable<Row> {
 		for(Slot slot: this.getSlots())
 			slot.destroy(apiWrapper);
 		
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 		session.delete(this);
 	}
 	

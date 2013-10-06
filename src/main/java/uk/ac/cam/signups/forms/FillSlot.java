@@ -17,12 +17,12 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationException;
+import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
 import uk.ac.cam.signups.models.Event;
 import uk.ac.cam.signups.models.Row;
 import uk.ac.cam.signups.models.Slot;
 import uk.ac.cam.signups.models.Type;
 import uk.ac.cam.signups.models.User;
-import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.Util;
 
 public class FillSlot {
@@ -44,7 +44,7 @@ public class FillSlot {
 	private Logger logger = LoggerFactory.getLogger(FillSlot.class);
 
 	public void handle(NotificationApiWrapper apiWrapper, User currentUser) {
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 
 		int columnsSize = slots.get(0).getRow().getSlots().size();
 
@@ -89,7 +89,7 @@ public class FillSlot {
 	
   @SuppressWarnings("unchecked")
   public List<String> validate() {
-		Session session = HibernateUtil.getTransactionSession();
+		Session session = HibernateUtil.getInstance().getSession();
 
 		currentTime = new GregorianCalendar(); // Necessary for checking
 		                                       // datetime related fields.
