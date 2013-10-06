@@ -52,7 +52,7 @@
 		<property name="show_sql">false</property>
 
 		<!-- Only validate the database schema on startup -->
-		<property name="hbm2ddl.auto">validate</property>
+		<property name="hbm2ddl.auto">${hibernate.hbm2ddl}</property>
 
 		<!-- Mapped classes -->
 		<mapping class="uk.ac.cam.signups.models.User" />
