@@ -1,10 +1,5 @@
 package uk.ac.cam.signups.models;
 
-import com.google.common.collect.ImmutableMap;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
-
 import uk.ac.cam.signups.util.HibernateUtil;
 
 import java.util.ArrayList;
@@ -23,6 +18,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+
+
+import com.google.common.collect.ImmutableMap;
 
 @Entity
 @Table(name="TYPES")

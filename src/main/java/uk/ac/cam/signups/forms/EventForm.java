@@ -1,7 +1,17 @@
 package uk.ac.cam.signups.forms;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableMap;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.ws.rs.FormParam;
 
 import org.hibernate.Session;
 import org.slf4j.Logger;
@@ -17,18 +27,8 @@ import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.Util;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.ws.rs.FormParam;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableMap;
 
 public class EventForm {
 	@FormParam("location")

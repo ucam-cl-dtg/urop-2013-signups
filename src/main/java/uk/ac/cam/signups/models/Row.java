@@ -1,15 +1,6 @@
 package uk.ac.cam.signups.models;
 
-import com.google.common.collect.ImmutableMap;
-
-import org.hibernate.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.signups.util.HibernateUtil;
-import uk.ac.cam.signups.util.Util;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
@@ -32,6 +23,15 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
+import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
+import uk.ac.cam.signups.util.Util;
+
+import com.google.common.collect.ImmutableMap;
 
 @Entity
 @Table(name = "ROWS")

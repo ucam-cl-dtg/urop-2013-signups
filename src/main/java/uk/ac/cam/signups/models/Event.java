@@ -1,22 +1,6 @@
 package uk.ac.cam.signups.models;
 
-import com.google.common.collect.ImmutableMap;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.annotations.Index;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
-import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.Notification;
-import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.signups.util.HibernateUtil;
-import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
-import uk.ac.cam.signups.util.Util;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,6 +26,22 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.annotations.Index;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
+import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.Notification;
+import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
+import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
+import uk.ac.cam.signups.util.Util;
+
+import com.google.common.collect.ImmutableMap;
 
 @Entity
 @Table(name = "EVENTS")

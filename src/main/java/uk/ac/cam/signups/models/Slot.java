@@ -1,13 +1,5 @@
 package uk.ac.cam.signups.models;
 
-import com.google.common.collect.ImmutableMap;
-
-import org.hibernate.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
-import uk.ac.cam.cl.dtg.teaching.api.NotificationException;
 import uk.ac.cam.signups.util.HibernateUtil;
 
 import java.util.Calendar;
@@ -24,6 +16,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
+import uk.ac.cam.cl.dtg.teaching.api.NotificationException;
+import com.google.common.collect.ImmutableMap;
 
 @Entity
 @Table(name="SLOTS")

@@ -1,5 +1,15 @@
 package uk.ac.cam.signups.forms;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.ws.rs.FormParam;
+import javax.ws.rs.PathParam;
+
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -14,16 +24,6 @@ import uk.ac.cam.signups.models.Type;
 import uk.ac.cam.signups.models.User;
 import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.Util;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.ws.rs.FormParam;
-import javax.ws.rs.PathParam;
 
 public class FillSlot {
 	@PathParam("obfuscatedId")

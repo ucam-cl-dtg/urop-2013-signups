@@ -1,6 +1,10 @@
 package uk.ac.cam.signups.models;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -10,10 +14,6 @@ import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
 import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class Dos {
 	private List<String> instIDs;

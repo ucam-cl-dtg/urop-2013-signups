@@ -1,6 +1,18 @@
 package uk.ac.cam.signups.models;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -17,19 +29,7 @@ import uk.ac.cam.signups.exceptions.NotADosException;
 import uk.ac.cam.signups.util.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import com.google.common.collect.ImmutableMap;
 
 @Entity
 @Table(name = "USERS")
