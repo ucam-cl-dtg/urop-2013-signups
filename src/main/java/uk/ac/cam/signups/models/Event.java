@@ -35,6 +35,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.cam.cl.dtg.teaching.api.ItemNotFoundException;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.Notification;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
@@ -300,10 +301,14 @@ public class Event implements Mappable {
 		return eventMap; 
 	}
 	
-	public static Event findById(String obfuscatedId) {
+	public static Event findById(String obfuscatedId) throws ItemNotFoundException {
 		Session session = HibernateUtil.getInstance().getSession();
 		Event event = (Event) session.createCriteria(Event.class).add(Restrictions.eq("obfuscatedId", obfuscatedId)).uniqueResult();
 
+		if (event == null) {
+			throw new ItemNotFoundException("Failed to find event with ID "+obfuscatedId);
+		}
+		
 		return event;
 	}
 	

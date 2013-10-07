@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
+import uk.ac.cam.cl.dtg.teaching.api.ItemNotFoundException;
 import uk.ac.cam.signups.exceptions.AuthorizationException;
 import uk.ac.cam.signups.exceptions.NotADosException;
 import uk.ac.cam.signups.forms.EventForm;
@@ -139,7 +140,7 @@ public class EventsController extends ApplicationController {
 	@DELETE
 	@Path("/{obfuscatedId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, String> deleteEvent(@PathParam("obfuscatedId") String obfuscatedId) {
+	public Map<String, String> deleteEvent(@PathParam("obfuscatedId") String obfuscatedId) throws ItemNotFoundException {
 		Event event = Event.findById(obfuscatedId);
 
 		try {
@@ -158,7 +159,7 @@ public class EventsController extends ApplicationController {
 	@POST
 	@Path("/{obfuscatedId}/fillSlots")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, ?> fillSlot(@Form FillSlot fillSlot, @PathParam("obfuscatedId") String obfuscatedId) {
+	public Map<String, ?> fillSlot(@Form FillSlot fillSlot, @PathParam("obfuscatedId") String obfuscatedId) throws ItemNotFoundException {
 		List<String> errors = fillSlot.validate();
 
 		if (errors.isEmpty()) {
@@ -284,7 +285,7 @@ public class EventsController extends ApplicationController {
 	@GET
 	@Path("/queryEventHistory")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, ?> queryEventHistory(@QueryParam("id") String id, @QueryParam("page") int page) {
+	public Map<String, ?> queryEventHistory(@QueryParam("id") String id, @QueryParam("page") int page) throws ItemNotFoundException {
 		Event event = Event.findById(id);
 		ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification> nots = event.getNotifications(getNotificationApiWrapper(), page);
 		
@@ -297,9 +298,9 @@ public class EventsController extends ApplicationController {
 	@GET
 	@Path("/{obfuscatedId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, ?> showEvent(@PathParam("obfuscatedId") String obfuscatedId, @QueryParam("coolHack") List<String> errors) {
+	public Map<String, ?> showEvent(@PathParam("obfuscatedId") String obfuscatedId, @QueryParam("coolHack") List<String> errors) throws ItemNotFoundException {
 		Event event = Event.findById(obfuscatedId);
-		
+
 		if(errors == null) {
 			errors = new ArrayList<String>();
 		}
