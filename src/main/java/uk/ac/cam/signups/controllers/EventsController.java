@@ -78,6 +78,26 @@ public class EventsController extends ApplicationController {
 				created, "eventsArchived", archived, "eventsNoTime", noTime);
 	}
 
+	// Create
+	@POST
+	@Path("/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Map<String, ?> createEvent(@Form EventForm eventForm) {
+		ArrayListMultimap<String, String> errors = eventForm.validate();
+
+		if (errors.isEmpty()) {
+			Event event = eventForm.handle(initialiseUser(),
+					getNotificationApiWrapper());
+			return ImmutableMap.of("redirectTo",
+					"events/" + event.getObfuscatedId());
+		} else {
+			ImmutableMap<String, List<String>> actualErrors = Util
+					.multimapToImmutableMap(errors);
+			return ImmutableMap.of("data", eventForm.toMap(), "errors",
+					actualErrors);
+		}
+	}
+
 	// Walker Zone
 	@GET
 	@Path("/dos")
@@ -119,24 +139,24 @@ public class EventsController extends ApplicationController {
 		return ImmutableMap.of("data", "undefined", "errors", "undefined");
 	}
 
-	// Create
-	@POST
-	@Path("/")
+	// Show
+	@GET
+	@Path("/{obfuscatedId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, ?> createEvent(@Form EventForm eventForm) {
-		ArrayListMultimap<String, String> errors = eventForm.validate();
+	public Map<String, ?> showEvent(
+			@PathParam("obfuscatedId") String obfuscatedId,
+			@QueryParam("coolHack") List<String> errors)
+			throws ItemNotFoundException {
+		Event event = Event.findById(obfuscatedId);
 
-		if (errors.isEmpty()) {
-			Event event = eventForm.handle(initialiseUser(),
-					getNotificationApiWrapper());
-			return ImmutableMap.of("redirectTo",
-					"events/" + event.getObfuscatedId());
-		} else {
-			ImmutableMap<String, List<String>> actualErrors = Util
-					.multimapToImmutableMap(errors);
-			return ImmutableMap.of("data", eventForm.toMap(), "errors",
-					actualErrors);
+		if (errors == null) {
+			errors = new ArrayList<String>();
 		}
+
+		return ImmutableMap.of("isOwner",
+				initialiseUser().equals(event.getOwner()), "data",
+				event.toMap(), "errors", errors, "notifications",
+				queryEventHistory(obfuscatedId, 0));
 	}
 
 	// Delete
@@ -305,26 +325,6 @@ public class EventsController extends ApplicationController {
 		return ImmutableMap.of("list",
 				Util.getImmutableCollection(nots.getMappableIterable()),
 				"exhausted", nots.getExhausted());
-	}
-
-	// Show
-	@GET
-	@Path("/{obfuscatedId}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, ?> showEvent(
-			@PathParam("obfuscatedId") String obfuscatedId,
-			@QueryParam("coolHack") List<String> errors)
-			throws ItemNotFoundException {
-		Event event = Event.findById(obfuscatedId);
-
-		if (errors == null) {
-			errors = new ArrayList<String>();
-		}
-
-		return ImmutableMap.of("isOwner",
-				initialiseUser().equals(event.getOwner()), "data",
-				event.toMap(), "errors", errors, "notifications",
-				queryEventHistory(obfuscatedId, 0));
 	}
 
 	// Calendar
