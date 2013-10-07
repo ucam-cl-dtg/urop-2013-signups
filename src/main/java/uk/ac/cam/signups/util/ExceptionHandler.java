@@ -1,7 +1,6 @@
 package uk.ac.cam.signups.util;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -19,12 +18,9 @@ import uk.ac.cam.cl.dtg.teaching.api.ApiFailureMessage;
 @Provider
 public class ExceptionHandler implements ExceptionMapper<Throwable> {
 
-	@Context
-	private HttpHeaders headers;
-
 	@Override
 	public Response toResponse(Throwable exception) {
 		return Response.serverError().entity(new ApiFailureMessage(exception))
-				.type(headers.getMediaType()).build();
+				.type(MediaType.APPLICATION_JSON).build();
 	}
 }
