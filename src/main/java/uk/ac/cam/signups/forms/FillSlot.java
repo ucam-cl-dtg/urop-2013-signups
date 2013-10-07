@@ -86,6 +86,8 @@ public class FillSlot {
 				session.update(row);
 			}
 		}
+		
+		HibernateUtil.getInstance().commit();
 	}
 
 	@SuppressWarnings("unchecked")

@@ -228,6 +228,7 @@ public class User implements Mappable {
 
 			User newUser = new User(crsid, instID);
 			session.save(newUser);
+			HibernateUtil.getInstance().commit();
 			return newUser;
 		}
 
