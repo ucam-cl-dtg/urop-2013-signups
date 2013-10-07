@@ -65,7 +65,7 @@ moduleScripts['signapp']['events'] = {
 			  						return {
 			  							value: item.room,
 			  							label: item.room
-			  						}
+			  						};
 			  					}));
 			  				});
 			  		}
@@ -143,7 +143,7 @@ moduleScripts['signapp']['events'] = {
 			    preventDuplicates: true,
 			    resultsLimit: 10,
 			    allowFreeTagging: true,
-			    resultsFormatter: function(item){ return "<li><div style='display: inline-block; padding-left: 10px;'>"+ item.name + "</div></li>" },
+			    resultsFormatter: function(item){ return "<li><div style='display: inline-block; padding-left: 10px;'>"+ item.name + "</div></li>"; },
 			    onAdd: function(item) {wasFilled = true;}
 			  });
 			  
@@ -163,7 +163,7 @@ moduleScripts['signapp']['events'] = {
 			  $(this).on("click", ".delete-time-slot", function() {
 			  	if ($(".delete-time-slot").length != 1) {
 			  		$(this).parent().parent().parent().slideUp("fast", function() {
-			  			$(this).remove()
+			  			$(this).remove();
 			  			
 				  		if($(".delete-time-slot").length == 1) {
 				  			$(".delete-time-slot").addClass("disabled");
@@ -248,8 +248,8 @@ moduleScripts['signapp']['events'] = {
 			  		preventDuplicates: true,
 			  		resultsLimit: 10,
 			  		tokenLimit: 1,
-			  		resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " (" + item.crsid + ")</div><div class='email'>" + item.crsid + "@cam.ac.uk</div></div></li>" },
-			      tokenFormatter: function(item) { return "<li><p>" + item.name + "<br>" + item.crsid + "</p></li>" },
+			  		resultsFormatter: function(item){ return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " (" + item.crsid + ")</div><div class='email'>" + item.crsid + "@cam.ac.uk</div></div></li>"; },
+			      tokenFormatter: function(item) { return "<li><p>" + item.name + "<br>" + item.crsid + "</p></li>"; },
 			      onAdd: function(item) {
 			      	if (!$(this).data("existing")) {
 			      		$(this).prev().css("background", "#f5ffbe");
@@ -337,13 +337,15 @@ moduleScripts['signapp']['events'] = {
 
 					 var mode;
 					 if (idName == "load-created") {
-						 mode = "created"
+						 mode = "created";
 					 } else if (idName == "load-archived") {
-						 mode = "archive"
+						 mode = "archive";
 					 } else if (idName == "load-signed-up") {
-						 mode = "contemporary"
+						 mode = "contemporary";
 					 } else if (idName == "load-no-time") {
-						 mode = "no-time"
+						 mode = "no-time";
+					 } else {
+						 mode = "created";
 					 }
 					 
 					 var page = parseInt($(this).parent().parent().parent().find(".button.medium.radius").length / 10);
@@ -369,7 +371,7 @@ moduleScripts['signapp']['events'] = {
 						 });
 						 
 						 if (data["exhausted"]) {
-							 target.slideUp("fast", function() {$(this).remove()});
+							 target.slideUp("fast", function() {$(this).remove(); });
 						 }
 					 });
 				 });
@@ -434,11 +436,11 @@ moduleScripts['signapp']['events'] = {
 			  						return {
 			  							value: item.crsid,
 			  							label: item.crsid
-			  						}
+			  						};
 			  					}));
 			  				});
 			  		}
 				 });
 			 }
 		]
-}
+};
