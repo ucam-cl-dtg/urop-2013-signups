@@ -176,7 +176,9 @@ public class EventForm {
 			logger.error("Notification could not be saved.");
 			logger.error(e.getMessage());
 		}
-
+		
+		HibernateUtil.getInstance().commit();
+		
 		return event;
 	}
 
