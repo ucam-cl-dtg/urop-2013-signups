@@ -1,5 +1,8 @@
 // Globals
-SOY_GLOBALS = {url_prefix: CONTEXT_PATH, api_prefix: CONTEXT_PATH + "/api"}
+SOY_GLOBALS = {
+	url_prefix : CONTEXT_PATH,
+	api_prefix : CONTEXT_PATH + "/api"
+}
 
 /*
  * Demo Routes:
@@ -27,11 +30,11 @@ function supportRedirect(templateName) {
 
 $(document).ready(function() {
 	router = Router({
-	  "" : "signapp.events.index",
-	  "events" : "signapp.events.index",
-	  "events/:obfuscatedId" : "signapp.events.show",
-	  "events/new" : "signapp.events.new",
-	  "events/dos" : "signapp.events.dos"
+		"" : "signapp.events.index",
+		"events" : "signapp.events.index",
+		"events/:obfuscatedId" : "signapp.events.show",
+		"events/new" : "signapp.events.new",
+		"events/dos" : "signapp.events.dos"
 
 	// For getting params in get requests
 	// Use the last line to redirect unmatched routes to an error page

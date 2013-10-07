@@ -58,7 +58,8 @@ public class User implements Mappable {
 
 	public Dos getDos(DashboardApiWrapper apiWrapper) throws NotADosException {
 		@SuppressWarnings("unchecked")
-    List<String> colleges = (List<String>) apiWrapper.getUserSettings(crsid).getSettings().get("dosColleges");
+		List<String> colleges = (List<String>) apiWrapper
+				.getUserSettings(crsid).getSettings().get("dosColleges");
 
 		if (colleges.isEmpty()) {
 			throw new NotADosException();
@@ -74,7 +75,7 @@ public class User implements Mappable {
 			return "John Doe";
 		}
 	}
-	
+
 	public String getNameCrsid() {
 		return getName() + " (" + getCrsid() + ")";
 	}
@@ -94,33 +95,30 @@ public class User implements Mappable {
 	public List<Event> getEvents() {
 		return events;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-  public List<Event> getDatetimeEvents() {
+	public List<Event> getDatetimeEvents() {
 		Session session = HibernateUtil.getInstance().getSession();
-		return (List<Event>) 
-				session.createCriteria(Event.class)
-							 .add(Restrictions.eq("sheetType", "datetime")).list();
+		return (List<Event>) session.createCriteria(Event.class)
+				.add(Restrictions.eq("sheetType", "datetime")).list();
 	}
 
 	public void addEvents(List<Event> events) {
 		this.events.addAll(events);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-  public List<Row> getRowsWithDatetimeSignedUp() {
+	public List<Row> getRowsWithDatetimeSignedUp() {
 		Session session = HibernateUtil.getInstance().getSession();
-		return session.createCriteria(Row.class)
-					 .createAlias("event", "event")
-					 .createAlias("slots", "slots")
-					 .add(Restrictions.eq("slots.owner", this))
-					 .add(Restrictions.eq("event.sheetType", "datetime"))
-					 .list();
+		return session.createCriteria(Row.class).createAlias("event", "event")
+				.createAlias("slots", "slots")
+				.add(Restrictions.eq("slots.owner", this))
+				.add(Restrictions.eq("event.sheetType", "datetime")).list();
 	}
 
 	@SuppressWarnings("unchecked")
 	public ImmutableMappableExhaustedPair<Row> getRowsSignedUp(int page,
-	    String mode) {
+			String mode) {
 		// Process page into offset
 		int offset = page * 10;
 
@@ -128,50 +126,35 @@ public class User implements Mappable {
 		Session session = HibernateUtil.getInstance().getSession();
 		Calendar now = new GregorianCalendar();
 		Criteria q = session.createCriteria(Row.class)
-		    .createAlias("slots", "slots").createAlias("event", "event")
-		    .add(
-		    		Restrictions
-		    			.eq("slots.owner", this)
-		    		);
+				.createAlias("slots", "slots").createAlias("event", "event")
+				.add(Restrictions.eq("slots.owner", this));
 		if (mode.equals("contemporary")) {
-			q = q.add(
-						Restrictions
-							.gt("calendar", now))
-							.addOrder( Order.asc("calendar")
-					);
+			q = q.add(Restrictions.gt("calendar", now)).addOrder(
+					Order.asc("calendar"));
 		} else if (mode.equals("archive")) {
 			q = q.add(
-			    	Restrictions
-			    		.or(
-				    		Restrictions.le("calendar", now),
-				        Restrictions.and(
-				        	Restrictions.eq("event.sheetType", "manual"),
-				        	Restrictions.le("event.expiryDate", now))))
-				      .addOrder( Order.desc("event.expiryDate")
-			    );
+					Restrictions.or(Restrictions.le("calendar", now),
+							Restrictions.and(Restrictions.eq("event.sheetType",
+									"manual"), Restrictions.le(
+									"event.expiryDate", now)))).addOrder(
+					Order.desc("event.expiryDate"));
 		} else if (mode.equals("no-time")) {
 			q = q.add(
-				    Restrictions
-				    	.and(
-				    		Restrictions.eq("event.sheetType", "manual"),
-				        Restrictions.gt("event.expiryDate", now)))
-				      .addOrder( Order.desc("id")
-			    );
+					Restrictions.and(
+							Restrictions.eq("event.sheetType", "manual"),
+							Restrictions.gt("event.expiryDate", now)))
+					.addOrder(Order.desc("id"));
 		} else if (mode.equals("timed")) {
-			q = q.add(
-						Restrictions.eq("sheetType", "datetime"))
-						.addOrder( Order.desc("calendar")
-					);
+			q = q.add(Restrictions.eq("sheetType", "datetime")).addOrder(
+					Order.desc("calendar"));
 		} else if (mode.equals("dos")) {
-			q.add(
-				Restrictions.eq("event.dosVisibility", true))
-				.addOrder( Order.desc("event.expiryDate")
-			);
+			q.add(Restrictions.eq("event.dosVisibility", true)).addOrder(
+					Order.desc("event.expiryDate"));
 		}
 
 		// Check if the row list is exhausted
 		List<Row> rows = (List<Row>) q.setMaxResults(10).setFirstResult(offset)
-		    .list();
+				.list();
 
 		Boolean exhausted = false;
 		if (rows.size() % 10 != 0) {
@@ -191,19 +174,21 @@ public class User implements Mappable {
 		// Query events the user has created
 		Session session = HibernateUtil.getInstance().getSession();
 		Query q = session
-		    .createQuery(
-		        "from Event as event where event.owner = :user order by id desc")
-		    .setParameter("user", this).setFirstResult(offset).setMaxResults(10);
+				.createQuery(
+						"from Event as event where event.owner = :user order by id desc")
+				.setParameter("user", this).setFirstResult(offset)
+				.setMaxResults(10);
 
 		// Check if the events list is exhausted
 		Boolean exhausted = false;
-		if (session.createQuery("from Event as event where event.owner = :user")
-		    .setParameter("user", this).setFirstResult(offset + 10)
-		    .setMaxResults(1).list().isEmpty())
+		if (session
+				.createQuery("from Event as event where event.owner = :user")
+				.setParameter("user", this).setFirstResult(offset + 10)
+				.setMaxResults(1).list().isEmpty())
 			exhausted = true;
 
-		return new ImmutableMappableExhaustedPair<Event>((List<Event>) q.list(),
-		    exhausted);
+		return new ImmutableMappableExhaustedPair<Event>(
+				(List<Event>) q.list(), exhausted);
 	}
 
 	public Set<Slot> getSlots() {
@@ -223,7 +208,7 @@ public class User implements Mappable {
 
 		// Does the user already exist?
 		Query userQuery = session.createQuery("from User where id = :id")
-		    .setParameter("id", crsid);
+				.setParameter("id", crsid);
 		User user = (User) userQuery.uniqueResult();
 
 		// If no, check if they exist in LDAP and create them if so
@@ -266,7 +251,7 @@ public class User implements Mappable {
 
 	public Map<String, ?> toMap() {
 		return ImmutableMap.of("crsid", crsid, "name", getName(), "anySlots",
-		    getSlots().size() > 0);
+				getSlots().size() > 0);
 	}
 
 	@Override

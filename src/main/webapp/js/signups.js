@@ -1,5 +1,5 @@
 moduleScripts['signapp'] = {
-  'events' : {},
-  'groups' : {},
-  'deadlines' : {}
+	'events' : {},
+	'groups' : {},
+	'deadlines' : {}
 };

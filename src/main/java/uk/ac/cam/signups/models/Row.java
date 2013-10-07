@@ -41,8 +41,8 @@ public class Row implements Mappable, Comparable<Row> {
 	private Logger logger = LoggerFactory.getLogger(Row.class);
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="logIdSeq") 
-	@SequenceGenerator(name="logIdSeq",sequenceName="LOG_SEQ", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "logIdSeq")
+	@SequenceGenerator(name = "logIdSeq", sequenceName = "LOG_SEQ", allocationSize = 1)
 	private int id;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -73,7 +73,8 @@ public class Row implements Mappable, Comparable<Row> {
 		this.event = event;
 	}
 
-	public Row(int id, Calendar calendar, Set<Slot> slots, Event event, Type type) {
+	public Row(int id, Calendar calendar, Set<Slot> slots, Event event,
+			Type type) {
 		this.id = id;
 		this.calendar = calendar;
 		this.slots.addAll(slots);
@@ -126,20 +127,26 @@ public class Row implements Mappable, Comparable<Row> {
 		if (getEvent().getSheetType().equals("datetime")) {
 			SimpleDateFormat minuteFormatter = new SimpleDateFormat("mm");
 			SimpleDateFormat hourFormatter = new SimpleDateFormat("kk");
-			SimpleDateFormat comparativeFormatter = new SimpleDateFormat("yyyy MM dd HH mm");
+			SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
+					"yyyy MM dd HH mm");
 			ImmutableMap.Builder<String, Object> dateBuilder = new ImmutableMap.Builder<String, Object>();
-			dateBuilder = dateBuilder.put("day", calendar.get(Calendar.DAY_OF_MONTH));
-			dateBuilder = dateBuilder.put("month", calendar.get(Calendar.MONTH));
+			dateBuilder = dateBuilder.put("day",
+					calendar.get(Calendar.DAY_OF_MONTH));
+			dateBuilder = dateBuilder
+					.put("month", calendar.get(Calendar.MONTH));
 			dateBuilder = dateBuilder.put("year", calendar.get(Calendar.YEAR));
 			dateBuilder = dateBuilder.put("minute",
-			    minuteFormatter.format(calendar.getTime()));
+					minuteFormatter.format(calendar.getTime()));
 			dateBuilder = dateBuilder.put("hour",
-			    hourFormatter.format(calendar.getTime()));
-			String comparativeString = comparativeFormatter.format(calendar.getTime());
-			dateBuilder = dateBuilder.put("comparativeString", comparativeString);
+					hourFormatter.format(calendar.getTime()));
+			String comparativeString = comparativeFormatter.format(calendar
+					.getTime());
+			dateBuilder = dateBuilder.put("comparativeString",
+					comparativeString);
 
 			// Date display
-			SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM 'at' kk:mm");
+			SimpleDateFormat formatter = new SimpleDateFormat(
+					"EEEE, d MMMM 'at' kk:mm");
 			String dateString = formatter.format(calendar.getTime());
 			builder = builder.put("dateDisplay", dateString);
 
@@ -153,8 +160,9 @@ public class Row implements Mappable, Comparable<Row> {
 			builder = builder.put("type", "no-type");
 		}
 
-		builder.put("eventSummary",
-		    ImmutableMap.of("obfuscatedId", event.getObfuscatedId(), "title", event.getTitle(), "expiryDate", event.getExpiryDateMap()));
+		builder.put("eventSummary", ImmutableMap.of("obfuscatedId",
+				event.getObfuscatedId(), "title", event.getTitle(),
+				"expiryDate", event.getExpiryDateMap()));
 		return builder.build();
 	}
 
@@ -171,17 +179,17 @@ public class Row implements Mappable, Comparable<Row> {
 			}
 		}
 	}
-	
+
 	public void destroy(NotificationApiWrapper apiWrapper) {
-		for(Slot slot: this.getSlots())
+		for (Slot slot : this.getSlots())
 			slot.destroy(apiWrapper);
-		
+
 		Session session = HibernateUtil.getInstance().getSession();
 		session.delete(this);
 	}
-	
+
 	public boolean isEmpty() {
-		for(Slot slot: getSlots()) {
+		for (Slot slot : getSlots()) {
 			if (slot.getOwner() != null)
 				return false;
 		}

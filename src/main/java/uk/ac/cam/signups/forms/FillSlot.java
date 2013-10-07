@@ -74,52 +74,55 @@ public class FillSlot {
 			int typeId;
 			session.update(slot);
 			if ((slot.getRow().getEvent().getTypes().size() != 1)
-			    && ((typeId = typeIds[i / columnsSize]) != 0)) {
+					&& ((typeId = typeIds[i / columnsSize]) != 0)) {
 				type = (Type) session
-				    .createQuery(
-				        "from Type as type where type.id = :type_id AND type.event.obfuscatedId = :obfuscatedId")
-				    .setParameter("type_id", typeId)
-				    .setParameter("obfuscatedId", obfuscatedId).uniqueResult();
+						.createQuery(
+								"from Type as type where type.id = :type_id AND type.event.obfuscatedId = :obfuscatedId")
+						.setParameter("type_id", typeId)
+						.setParameter("obfuscatedId", obfuscatedId)
+						.uniqueResult();
 				row = slot.getRow();
 				row.setType(type);
 				session.update(row);
 			}
 		}
 	}
-	
-  @SuppressWarnings("unchecked")
-  public List<String> validate() {
+
+	@SuppressWarnings("unchecked")
+	public List<String> validate() {
 		Session session = HibernateUtil.getInstance().getSession();
 
 		currentTime = new GregorianCalendar(); // Necessary for checking
-		                                       // datetime related fields.
+												// datetime related fields.
 
 		event = (Event) session.createCriteria(Event.class)
-		    .add(Restrictions.eq("obfuscatedId", obfuscatedId)).uniqueResult();
+				.add(Restrictions.eq("obfuscatedId", obfuscatedId))
+				.uniqueResult();
 
 		ids = new HashSet<Integer>();
 		for (int slotId : slotIds)
 			ids.add(slotId);
 
 		slots = (List<Slot>) session
-		    .createQuery(
-		        "from Slot as slot where slot.row.event.obfuscatedId = :obfuscatedId "
-		        + "and slot.row.event.expiryDate > :calendar "
-		        + "and (slot.row.calendar > :calendar or slot.row.event.sheetType = 'manual')")
-		    .setParameter("obfuscatedId", obfuscatedId)
-		    .setParameter("calendar", currentTime).list();
-		
+				.createQuery(
+						"from Slot as slot where slot.row.event.obfuscatedId = :obfuscatedId "
+								+ "and slot.row.event.expiryDate > :calendar "
+								+ "and (slot.row.calendar > :calendar or slot.row.event.sheetType = 'manual')")
+				.setParameter("obfuscatedId", obfuscatedId)
+				.setParameter("calendar", currentTime).list();
+
 		errors = new ArrayList<String>();
 
 		if (!Util.getIds(slots).equals(ids)) {
 			errors.add("You have tried to perform an unauthorised action.");
 		}
-		
+
 		return errors;
 	}
-	
+
 	// Register notification to the system.
-	private void registerNotifications(NotificationApiWrapper apiWrapper, User owner, User currentUser, Slot slot) {
+	private void registerNotifications(NotificationApiWrapper apiWrapper,
+			User owner, User currentUser, Slot slot) {
 		String message;
 		Set<String> relatedCrsids = new HashSet<String>();
 		if (owner == null) {
@@ -128,11 +131,12 @@ public class FillSlot {
 			relatedCrsids.add(currentUser.getCrsid());
 
 			message = slot.getOwner().getName() + " ("
-			    + slot.getOwner().getCrsid() + ") is deleted from "
-			    + event.getTitle(); 
-			
+					+ slot.getOwner().getCrsid() + ") is deleted from "
+					+ event.getTitle();
+
 			if (currentUser.getCrsid() != slot.getOwner().getCrsid()) {
-				message += " by " + currentUser.getName() + " (" + currentUser.getCrsid() + ").";
+				message += " by " + currentUser.getName() + " ("
+						+ currentUser.getCrsid() + ").";
 			} else {
 				message += ".";
 			}
@@ -141,10 +145,12 @@ public class FillSlot {
 			relatedCrsids.add(event.getOwner().getCrsid());
 			relatedCrsids.add(owner.getCrsid());
 			relatedCrsids.add(currentUser.getCrsid());
-			
-			message = owner.getName() + " (" + owner.getCrsid()  + ") is signed up to " + event.getTitle();
+
+			message = owner.getName() + " (" + owner.getCrsid()
+					+ ") is signed up to " + event.getTitle();
 			if (currentUser.getCrsid() != owner.getCrsid()) {
-				message += " by " + currentUser.getName() + " (" + currentUser.getCrsid() + ").";
+				message += " by " + currentUser.getName() + " ("
+						+ currentUser.getCrsid() + ").";
 			} else {
 				message += ".";
 			}
@@ -154,19 +160,23 @@ public class FillSlot {
 			relatedCrsids.add(slot.getOwner().getCrsid());
 			relatedCrsids.add(owner.getCrsid());
 			relatedCrsids.add(currentUser.getCrsid());
-			
-			message = owner.getName() + " (" + owner.getCrsid() + ") has taken " + slot.getOwner().getName() + "'s place. Exchange is made by " + currentUser.getName() + " (" + currentUser.getCrsid() + ").";
+
+			message = owner.getName() + " (" + owner.getCrsid()
+					+ ") has taken " + slot.getOwner().getName()
+					+ "'s place. Exchange is made by " + currentUser.getName()
+					+ " (" + currentUser.getCrsid() + ").";
 		}
 
 		if (message != null) {
 			try {
-        apiWrapper.createNotificationWithForeignId(message, "signapp",
-            "events/" + obfuscatedId, Util.join(relatedCrsids, ","),
-            "signapp-" + event.getId());
-      } catch (NotificationException e) {
-      	logger.error("Notification could not be saved.");
-      	logger.error(e.getMessage());
-      }
+				apiWrapper.createNotificationWithForeignId(message, "signapp",
+						"events/" + obfuscatedId,
+						Util.join(relatedCrsids, ","),
+						"signapp-" + event.getId());
+			} catch (NotificationException e) {
+				logger.error("Notification could not be saved.");
+				logger.error(e.getMessage());
+			}
 		}
 	}
 }

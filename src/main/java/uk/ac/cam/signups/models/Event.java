@@ -52,8 +52,8 @@ public class Event implements Mappable {
 	private Logger logger = LoggerFactory.getLogger(Event.class);
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="logIdSeq") 
-	@SequenceGenerator(name="logIdSeq",sequenceName="LOG_SEQ", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "logIdSeq")
+	@SequenceGenerator(name = "logIdSeq", sequenceName = "LOG_SEQ", allocationSize = 1)
 	private int id;
 
 	private String location;
@@ -62,10 +62,10 @@ public class Event implements Mappable {
 	private String sheetType;
 	private Calendar expiryDate;
 
-	@Index(name="obfuscatedIdIndex")
+	@Index(name = "obfuscatedIdIndex")
 	private String obfuscatedId;
 
-	@Column(name="dos_visibility", nullable = false, columnDefinition = "boolean default true")
+	@Column(name = "dos_visibility", nullable = false, columnDefinition = "boolean default true")
 	private boolean dosVisibility;
 
 	@ManyToOne
@@ -85,7 +85,7 @@ public class Event implements Mappable {
 	}
 
 	public Event(int id, String location, String title, User owner,
-	    Set<Row> rows, Set<Type> types) {
+			Set<Row> rows, Set<Type> types) {
 		this.id = id;
 		this.location = location;
 		this.owner = owner;
@@ -93,30 +93,33 @@ public class Event implements Mappable {
 		this.rows.addAll(rows);
 		this.title = title;
 	}
-	
-	public ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification> getNotifications(NotificationApiWrapper getApiWrapper, int page) {
+
+	public ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification> getNotifications(
+			NotificationApiWrapper getApiWrapper, int page) {
 		Set<Notification> notificationsSet = getApiWrapper
-				.getNotificationsWithForeignId(page * 10, 10, "signapp", this.getOwner().getCrsid(), "signapp-" + this.getId())
+				.getNotificationsWithForeignId(page * 10, 10, "signapp",
+						this.getOwner().getCrsid(), "signapp-" + this.getId())
 				.getNotifications();
 		SortedSet<uk.ac.cam.signups.models.Notification> notificationsList = new TreeSet<uk.ac.cam.signups.models.Notification>();
-		for(Notification notification: notificationsSet) {
-			notificationsList.add(new uk.ac.cam.signups.models.Notification(notification.getId(), notification.getMessage(), notification.getTimestamp()));
-		}	
-		
+		for (Notification notification : notificationsSet) {
+			notificationsList.add(new uk.ac.cam.signups.models.Notification(
+					notification.getId(), notification.getMessage(),
+					notification.getTimestamp()));
+		}
+
 		boolean exhausted = false;
-		
+
 		if (notificationsSet.size() % 10 != 0) {
 			exhausted = true;
 		} else if (getApiWrapper
-				.getNotificationsWithForeignId(page * 10 + 10, 1, 
-						"signapp", 
-						this.getOwner().getCrsid(), 
-						"signapp-" + this.getId())
-				.getNotifications().size() < 1)  {
+				.getNotificationsWithForeignId(page * 10 + 10, 1, "signapp",
+						this.getOwner().getCrsid(), "signapp-" + this.getId())
+				.getNotifications().size() < 1) {
 			exhausted = true;
 		}
-		
-		return new ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification>(notificationsList, exhausted);
+
+		return new ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification>(
+				notificationsList, exhausted);
 	}
 
 	public int getId() {
@@ -126,19 +129,19 @@ public class Event implements Mappable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getObfuscatedId() {
 		return obfuscatedId;
 	}
-	
+
 	public void setObfuscatedId(String obfuscatedId) {
 		this.obfuscatedId = obfuscatedId;
 	}
-	
+
 	public boolean getDosVisibility() {
 		return dosVisibility;
 	}
-	
+
 	public void setDosVisibility(boolean dosVisibility) {
 		this.dosVisibility = dosVisibility;
 	}
@@ -209,14 +212,14 @@ public class Event implements Mappable {
 
 	@SuppressWarnings("unchecked")
 	public static List<ImmutableMap<String, String>> suggestRooms(
-	    String qbuilding, String qroom) {
+			String qbuilding, String qroom) {
 		Session session = HibernateUtil.getInstance().getSession();
 		Query q = session
-		    .createQuery("select distinct room from Event as event where lower(event.location) like :building and lower(event.room) like :room");
+				.createQuery("select distinct room from Event as event where lower(event.location) like :building and lower(event.room) like :room");
 		List<String> suggestions = (List<String>) q
-		    .setParameter("building", "%" + qbuilding.toLowerCase() + "%")
-		    .setParameter("room", "%" + qroom.toLowerCase() + "%")
-		    .setMaxResults(10).list();
+				.setParameter("building", "%" + qbuilding.toLowerCase() + "%")
+				.setParameter("room", "%" + qroom.toLowerCase() + "%")
+				.setMaxResults(10).list();
 		List<ImmutableMap<String, String>> suggestionsMap = new ArrayList<ImmutableMap<String, String>>();
 		for (String suggestion : suggestions)
 			suggestionsMap.add(ImmutableMap.of("room", suggestion));
@@ -225,14 +228,15 @@ public class Event implements Mappable {
 	}
 
 	public Map<String, String> getExpiryDateMap() {
-		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM 'at' kk:mm");
+		SimpleDateFormat formatter = new SimpleDateFormat(
+				"EEEE, d MMMM 'at' kk:mm");
 		SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
-		    "yyyy MM dd HH mm");
-		String comparativeExpiry = comparativeFormatter
-		    .format(expiryDate.getTime());
+				"yyyy MM dd HH mm");
+		String comparativeExpiry = comparativeFormatter.format(expiryDate
+				.getTime());
 		String prettyExpiry = formatter.format(expiryDate.getTime());
 		return ImmutableMap.of("comparative", comparativeExpiry, "pretty",
-		    prettyExpiry);
+				prettyExpiry);
 	}
 
 	public Map<String, ?> toMap() {
@@ -249,9 +253,9 @@ public class Event implements Mappable {
 		// Current date generator
 		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM");
 		SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
-		    "yyyy MM dd HH mm");
-		String currentDate = comparativeFormatter.format((new GregorianCalendar())
-		    .getTime());
+				"yyyy MM dd HH mm");
+		String currentDate = comparativeFormatter
+				.format((new GregorianCalendar()).getTime());
 		builder = builder.put("currentDate", currentDate);
 
 		// Expiry date generator (pretty print and comparative)
@@ -264,7 +268,8 @@ public class Event implements Mappable {
 			for (Row row : rows) {
 				Calendar cal = row.getCalendar();
 				String key = "" + cal.get(Calendar.YEAR) + ":"
-				    + cal.get(Calendar.MONTH) + ":" + cal.get(Calendar.DAY_OF_MONTH);
+						+ cal.get(Calendar.MONTH) + ":"
+						+ cal.get(Calendar.DAY_OF_MONTH);
 				if (temp.containsKey(key)) {
 					temp.get(key).add(row);
 				} else {
@@ -285,40 +290,47 @@ public class Event implements Mappable {
 				String date = formatter.format(cal.getTime());
 
 				dates.add(ImmutableMap.of("date", date, "rows",
-				    Util.getImmutableCollection(temp.get(key))));
+						Util.getImmutableCollection(temp.get(key))));
 			}
 
 			builder = builder.put("dates", dates);
-			builder = builder.put("rows", new ArrayList<ImmutableMap<String, ?>>());
-			
+			builder = builder.put("rows",
+					new ArrayList<ImmutableMap<String, ?>>());
+
 		} else if (sheetType.equals("manual")) {
-			builder = builder.put("dates", new ArrayList<ImmutableMap<String, ?>>());
-			List<Map<String, ?>> immutableRows = Util.getImmutableCollection(rows);
+			builder = builder.put("dates",
+					new ArrayList<ImmutableMap<String, ?>>());
+			List<Map<String, ?>> immutableRows = Util
+					.getImmutableCollection(rows);
 			builder = builder.put("rows", immutableRows);
 		}
 
 		Map<String, ?> eventMap = builder.build();
-		return eventMap; 
+		return eventMap;
 	}
-	
-	public static Event findById(String obfuscatedId) throws ItemNotFoundException {
+
+	public static Event findById(String obfuscatedId)
+			throws ItemNotFoundException {
 		Session session = HibernateUtil.getInstance().getSession();
-		Event event = (Event) session.createCriteria(Event.class).add(Restrictions.eq("obfuscatedId", obfuscatedId)).uniqueResult();
+		Event event = (Event) session.createCriteria(Event.class)
+				.add(Restrictions.eq("obfuscatedId", obfuscatedId))
+				.uniqueResult();
 
 		if (event == null) {
-			throw new ItemNotFoundException("Failed to find event with ID "+obfuscatedId);
+			throw new ItemNotFoundException("Failed to find event with ID "
+					+ obfuscatedId);
 		}
-		
+
 		return event;
 	}
-	
+
 	public void destroy(NotificationApiWrapper apiWrapper) {
-		for(Row row: this.getRows()) 
+		for (Row row : this.getRows())
 			row.destroy(apiWrapper);
-		
-		for(Type type: this.getTypes())
+
+		for (Type type : this.getTypes())
 			type.destroy();
-		
+
 		Session session = HibernateUtil.getInstance().getSession();
 		session.delete(this);
 	}
