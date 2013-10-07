@@ -2,7 +2,7 @@
 SOY_GLOBALS = {
 	url_prefix : CONTEXT_PATH,
 	api_prefix : CONTEXT_PATH + "/api"
-}
+};
 
 /*
  * Demo Routes:
@@ -25,7 +25,7 @@ function supportRedirect(templateName) {
 				trigger : true
 			});
 		return templateName;
-	}
+	};
 }
 
 $(document).ready(function() {
