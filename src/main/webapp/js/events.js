@@ -12,8 +12,13 @@ moduleScripts['signapp']['events'] = {
 					}
 				});
 
-				$("form").ajaxForm(function(data) {
-					applyTemplate($('.main'), "signapp.events.new", data);
+				$("form").ajaxForm({
+					success : function(data) {
+						applyTemplate($('.main'), "signapp.events.new", data);
+					},
+					error : function(data) {
+						displayError(data, $('.main'));
+					}
 				});
 
 				$(".datepicker").datepicker({
