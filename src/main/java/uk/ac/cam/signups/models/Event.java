@@ -333,4 +333,15 @@ public class Event implements Mappable {
 		Session session = HibernateUtil.getInstance().getSession();
 		session.delete(this);
 	}
+
+	/**
+	 * An event is active if the current time is before the deadline and there
+	 * are some slots which are not in the past
+	 */
+	public boolean isActive() {
+		Date currentTime = new Date();
+		if (currentTime.after(expiryDate)) return false;
+		if (SHEETTYPE_DATETIME.equals(sheetType) && currentTime.after(rows.last().getTime())) return false;
+		return true;
+	}
 }

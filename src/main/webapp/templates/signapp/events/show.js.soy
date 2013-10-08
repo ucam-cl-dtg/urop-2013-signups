@@ -6,17 +6,24 @@
  * @param notifications
  * @param errors
  * @param isOwner
+ * @param isActive
  * 
  */
 {template .show}
   <div class="events" id="show">
-    <h3>{$data.title} {if $data.location}at {$data.location} {/if}{ $data.room ? 'in ' + $data.room : ''} created by {$data.owner.name} ({ $data.owner.crsid })</h3>
-    <h4>Deadline to fill this document is {$data.expiryDate.pretty}</h4>
-    
-    {if $data.location != ''}
-      <div><a id="map-toggle" href="#" data-show="false" class="small button">Show on map</a></div>
-
-      <div id="iframe-wrapper" class="overflow-hidden">
+    <h3>{$data.title}</h3>
+    <p>
+    {if $data.location}
+    Location: {$data.location}{ $data.room ? ' in ' + $data.room : '' }
+    {' '}
+    (<a id="map-toggle" href="#" data-show="false">Show on map</a>)<br/>
+    {/if} 
+    Created by: {$data.owner.name} ({ $data.owner.crsid })<br/>
+    Closing date for sign-up: {$data.expiryDate.pretty}
+    </p>
+        
+    {if $data.location}
+          <div id="iframe-wrapper" class="overflow-hidden">
         <iframe width="99.9%" height="500px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://map.cam.ac.uk/{$data.location}"></iframe><br /><br />
       </div>
     {/if}
@@ -26,6 +33,19 @@
   	{/if}
 
     <form class="custom" action="{$ij.api_prefix}/events/{$data.obfuscatedId}/fillSlots" method="post">
+      {if $isActive or $isOwner}
+        <div class="row">
+          <div class="columns large-122">
+            {if $isActive}
+            	<input type="submit" value="Save changes" class="medium success button">
+            {/if}
+            {if $isOwner}
+              <div class="button medium alert" id="delete-event">Delete event</div>
+            {/if}
+          </div>
+        </div>
+      {/if}
+
       {if $data.sheetType == 'datetime'}
         {foreach $dateGroup in $data.dates}
           <div class="row day">
@@ -70,10 +90,12 @@
         {/foreach} 
       {/if}
 
-      {if not ($data.sheetType == 'datetime' and $data.currentDate > $data.lastRow.date.comparativeString) and not ($data.currentDate > $data.expiryDate.comparative)}
+      {if $isActive or $isOwner}
         <div class="row">
           <div class="columns large-122">
-            <input type="submit" value="Fill Slots!" class="medium success button">
+            {if $isActive}
+            	<input type="submit" value="Save changes" class="medium success button">
+            {/if}
             {if $isOwner}
               <div class="button medium alert" id="delete-event">Delete event</div>
             {/if}
@@ -144,7 +166,7 @@
     {else}
       <div class="empty-slot">
         <div>
-          <p>Left Empty</p>
+          <p>Unavailable</p>
         </div>
       </div>
     {/if}

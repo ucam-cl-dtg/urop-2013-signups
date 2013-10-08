@@ -153,10 +153,11 @@ public class EventsController extends ApplicationController {
 			errors = new ArrayList<String>();
 		}
 
-		return ImmutableMap.of("isOwner",
-				initialiseUser().equals(event.getOwner()), "data",
-				event.toMap(), "errors", errors, "notifications",
-				queryEventHistory(obfuscatedId, 0));
+		boolean isOwner = initialiseUser().equals(event.getOwner());
+
+		return ImmutableMap.of("isOwner", isOwner, "isActive",
+				event.isActive(), "data", event.toMap(), "errors", errors,
+				"notifications", queryEventHistory(obfuscatedId, 0));
 	}
 
 	// Delete
