@@ -150,11 +150,13 @@ moduleScripts['signapp']['events'] = {
 									var startHour = parseInt(parentElem.find(
 											"#hour").val());
 									var startMinute = parseInt(parentElem.find(
-											"#minute").val());
+											"#minute").val()); 
+									// set default duration to 15
 									var duration = parseInt(parentElem.find(
-											"#duration").val());
+											"#duration").val()) || 15;
+									// set default break to 0
 									var breakDuration = parseInt(parentElem
-											.find("#break").val());
+											.find("#break").val()) || 0;
 
 									var singleSlot;
 									var hour;
