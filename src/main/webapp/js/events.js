@@ -170,10 +170,11 @@ moduleScripts['signapp']['events'] = {
 									for (var i = 0; i < len; i++) {
 										singleSlot = templateElement.clone();
 
-										// Calculate times						
+										// Calculate times
 										minute = startMinute
 												+ ((duration + breakDuration) * i);
-										hour = startHour + Math.floor(minute / 60);
+										hour = startHour
+												+ Math.floor(minute / 60);
 										minute %= 60;
 
 										// Set necessary attributes
@@ -257,14 +258,11 @@ moduleScripts['signapp']['events'] = {
 								function() {
 									if ($(".delete-time-slot").length != 1) {
 										$(this)
-												.parent()
-												.parent()
-												.parent()
+												.parents(".single-slot-controls")
 												.slideUp(
 														"fast",
 														function() {
 															$(this).remove();
-
 															if ($(".delete-time-slot").length == 1) {
 																$(
 																		".delete-time-slot")
