@@ -150,7 +150,7 @@ moduleScripts['signapp']['events'] = {
 									var startHour = parseInt(parentElem.find(
 											"#hour").val());
 									var startMinute = parseInt(parentElem.find(
-											"#minute").val()); 
+											"#minute").val());
 									// set default duration to 15
 									var duration = parseInt(parentElem.find(
 											"#duration").val()) || 15;
@@ -163,22 +163,18 @@ moduleScripts['signapp']['events'] = {
 									var minute;
 									var minuteSet;
 									var hourSet;
-									for ( var i = 0; i < len; i++) {
-										singleSlot = $(
-												$("#datetime")
-														.find(
-																".single-slot-controls")
-														.get(0)).clone().get(0).outerHTML;
-										singleSlot = $(singleSlot);
 
-										// Calculate times
+									var templateElement = $("#datetime").find(
+											".single-slot-controls").first();
+
+									for (var i = 0; i < len; i++) {
+										singleSlot = templateElement.clone();
+
+										// Calculate times						
 										minute = startMinute
 												+ ((duration + breakDuration) * i);
-										hour = startHour;
-										while (minute >= 60) {
-											minute -= 60;
-											hour++;
-										}
+										hour = startHour + Math.floor(minute / 60);
+										minute %= 60;
 
 										// Set necessary attributes
 										if (hour < 24) {
