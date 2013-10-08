@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
+import uk.ac.cam.cl.dtg.teaching.api.FormValidationException;
 import uk.ac.cam.cl.dtg.teaching.api.ItemNotFoundException;
 import uk.ac.cam.signups.exceptions.AuthorizationException;
 import uk.ac.cam.signups.exceptions.NotADosException;
@@ -189,14 +190,13 @@ public class EventsController extends ApplicationController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, ?> fillSlot(@Form FillSlot fillSlot,
 			@PathParam("obfuscatedId") String obfuscatedId)
-			throws ItemNotFoundException {
-		List<String> errors = fillSlot.validate();
+			throws ItemNotFoundException, FormValidationException {
 
-		if (errors.isEmpty()) {
-			fillSlot.handle(getNotificationApiWrapper(), initialiseUser());
+		List<String> errors = fillSlot.handle(getNotificationApiWrapper(), initialiseUser()); 
+
+		if (errors.isEmpty()) {			
 			return ImmutableMap.of("redirectTo", "events/" + obfuscatedId);
 		} else {
-			logger.error("Errorful area");
 			return showEvent(obfuscatedId, errors);
 		}
 	}

@@ -145,6 +145,7 @@
  */
 {template .emptySlot}
   <input type="text" name="slot_crsids[]" class="slot-field" data-crsid="{$slot.owner.crsid}" data-name="{$slot.owner.name}" data-existing={$slot.owner.crsid != '' ? true : false}>
+  <input type="hidden" name="slot_original_crsids[]" value="{$slot.owner.crsid}">
   <input type="hidden" name="slot_ids[]" value="{$slot.id}">
 {/template}
 
@@ -182,38 +183,26 @@
 {template .types}
   <div class="type-choice">
     {if length($data.types) > 1}
-      {if $data.currentDate < $data.expiryDate.comparative} 
-        {if $data.sheetType == 'datetime'} 
-          {if $data.currentDate < $row.date.comparativeString}
-            <select class="small" name="types[]" >
-              <option value="0">Please select</option> 
-              {foreach $type in $data.types}
-                <option value="{$type.id}" {if $type.id == $row.type.id}selected{/if}>{$type.name}</option>
-              {/foreach}
-            </select>
-          {else}
-            {if $row.type == 'no-type'}
-              <div class="type">No type selected</div>        
-            {else}
-              <div class="type">{$row.type.name}</div>
-            {/if}
-          {/if} 
-        {elseif $data.sheetType == 'manual'}
-          <select class="small" name="types[]" >
-            <option value="0">Please select one</option> 
-            {foreach $type in $data.types}
-              <option value="{$type.id}" {if $type.id == $row.type.id}selected{/if}>{$type.name}</option>
-            {/foreach}
-          </select>
-        {/if}
+      {if $data.currentDate < $data.expiryDate.comparative and (($data.sheetType == 'datetime' and $data.currentDate < $row.date.comparativeString) or $data.sheetType == 'manual')} 
+		 <input type="hidden" name="row_ids[]" value="{$row.id}">
+		 <input type="hidden" name="original_types[]" value="{$row.type.id ? $row.type.id : 0}">
+         <select class="small" name="types[]" >
+  	       <option value="0">Choose type</option> 
+    	   {foreach $type in $data.types}
+        	  <option value="{$type.id}" {if $type.id == $row.type.id}selected{/if}>{$type.name}</option>
+       		{/foreach}
+         </select>
       {else}
         {if $row.type == 'no-type'}
-          <div class="type">No type selected</div>        
+           <div class="type">No type selected</div>        
         {else}
-          <div class="type">{$row.type.name}</div>
+           <div class="type">{$row.type.name}</div>
         {/if}
-      {/if}
+      {/if} 
     {elseif length($data.types) == 1}
+      <input type="hidden" name="row_ids[]" value="{$row.id}">
+	  <input type="hidden" name="original_types[]" value="{$row.type.id ? $row.type.id : 0}">
+	  <input type="hidden" name="types[]" value="{$row.type.id ? $row.type.id : 0}">
       <div class="type">{$row.type.name}</div>  
     {/if}
   </div>

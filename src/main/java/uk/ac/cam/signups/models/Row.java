@@ -146,10 +146,11 @@ public class Row implements Mappable, Comparable<Row> {
 					"EEEE, d MMMM 'at' kk:mm");
 			String dateString = formatter.format(time);
 			builder = builder.put("dateDisplay", dateString);
-
+			
 			builder = builder.put("date", dateBuilder.build());
 		}
-
+		
+		builder = builder.put("id",id);
 		builder = builder.put("slots", Util.getImmutableCollection(slots));
 		if (type != null) {
 			builder = builder.put("type", type.toMap());
