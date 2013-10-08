@@ -1,8 +1,7 @@
 package uk.ac.cam.signups.models;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -124,16 +123,16 @@ public class User implements Mappable {
 
 		// Query rows that the user has signed up
 		Session session = HibernateUtil.getInstance().getSession();
-		Calendar now = new GregorianCalendar();
+		Date now = new Date();
 		Criteria q = session.createCriteria(Row.class)
 				.createAlias("slots", "slots").createAlias("event", "event")
 				.add(Restrictions.eq("slots.owner", this));
 		if (mode.equals("contemporary")) {
-			q = q.add(Restrictions.gt("calendar", now)).addOrder(
-					Order.asc("calendar"));
+			q = q.add(Restrictions.gt("time", now)).addOrder(
+					Order.asc("time"));
 		} else if (mode.equals("archive")) {
 			q = q.add(
-					Restrictions.or(Restrictions.le("calendar", now),
+					Restrictions.or(Restrictions.le("time", now),
 							Restrictions.and(Restrictions.eq("event.sheetType",
 									"manual"), Restrictions.le(
 									"event.expiryDate", now)))).addOrder(
@@ -146,7 +145,7 @@ public class User implements Mappable {
 					.addOrder(Order.desc("id"));
 		} else if (mode.equals("timed")) {
 			q = q.add(Restrictions.eq("sheetType", "datetime")).addOrder(
-					Order.desc("calendar"));
+					Order.desc("time"));
 		} else if (mode.equals("dos")) {
 			q.add(Restrictions.eq("event.dosVisibility", true)).addOrder(
 					Order.desc("event.expiryDate"));

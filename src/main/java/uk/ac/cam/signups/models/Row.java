@@ -1,7 +1,7 @@
 package uk.ac.cam.signups.models;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -47,7 +47,7 @@ public class Row implements Mappable, Comparable<Row> {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ROW_DATE")
-	private Calendar calendar;
+	private Date time;
 
 	@ManyToOne
 	@JoinColumn(name = "EVENT_ID")
@@ -68,15 +68,14 @@ public class Row implements Mappable, Comparable<Row> {
 		this.event = event;
 	}
 
-	public Row(Calendar calendar, Event event) {
-		this.calendar = calendar;
+	public Row(Date time, Event event) {
+		this.time = time;
 		this.event = event;
 	}
 
-	public Row(int id, Calendar calendar, Set<Slot> slots, Event event,
-			Type type) {
+	public Row(int id, Date time, Set<Slot> slots, Event event, Type type) {
 		this.id = id;
-		this.calendar = calendar;
+		this.time = time;
 		this.slots.addAll(slots);
 		this.event = event;
 		this.type = type;
@@ -90,12 +89,12 @@ public class Row implements Mappable, Comparable<Row> {
 		this.id = id;
 	}
 
-	public Calendar getCalendar() {
-		return this.calendar;
+	public Date getTime() {
+		return this.time;
 	}
 
-	public void setCalendar(Calendar calendar) {
-		this.calendar = calendar;
+	public void setTime(Date time) {
+		this.time = time;
 	}
 
 	public Set<Slot> getSlots() {
@@ -125,29 +124,27 @@ public class Row implements Mappable, Comparable<Row> {
 	public Map<String, ?> toMap() {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
 		if (getEvent().getSheetType().equals("datetime")) {
-			SimpleDateFormat minuteFormatter = new SimpleDateFormat("mm");
-			SimpleDateFormat hourFormatter = new SimpleDateFormat("kk");
 			SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
 					"yyyy MM dd HH mm");
+			String comparativeString = comparativeFormatter.format(this.time);
 			ImmutableMap.Builder<String, Object> dateBuilder = new ImmutableMap.Builder<String, Object>();
+			dateBuilder = dateBuilder.put("year",
+					comparativeString.substring(0, 4));
+			dateBuilder = dateBuilder.put("month",
+					comparativeString.substring(5, 7));
 			dateBuilder = dateBuilder.put("day",
-					calendar.get(Calendar.DAY_OF_MONTH));
-			dateBuilder = dateBuilder
-					.put("month", calendar.get(Calendar.MONTH));
-			dateBuilder = dateBuilder.put("year", calendar.get(Calendar.YEAR));
-			dateBuilder = dateBuilder.put("minute",
-					minuteFormatter.format(calendar.getTime()));
+					comparativeString.substring(8, 10));
 			dateBuilder = dateBuilder.put("hour",
-					hourFormatter.format(calendar.getTime()));
-			String comparativeString = comparativeFormatter.format(calendar
-					.getTime());
+					comparativeString.substring(11, 13));
+			dateBuilder = dateBuilder.put("minute",
+					comparativeString.substring(14, 16));
 			dateBuilder = dateBuilder.put("comparativeString",
 					comparativeString);
 
 			// Date display
 			SimpleDateFormat formatter = new SimpleDateFormat(
 					"EEEE, d MMMM 'at' kk:mm");
-			String dateString = formatter.format(calendar.getTime());
+			String dateString = formatter.format(time);
 			builder = builder.put("dateDisplay", dateString);
 
 			builder = builder.put("date", dateBuilder.build());
@@ -167,8 +164,8 @@ public class Row implements Mappable, Comparable<Row> {
 	}
 
 	public int compareTo(Row row) {
-		if (row.calendar != null) {
-			return this.calendar.compareTo(row.calendar);
+		if (row.time != null) {
+			return this.time.compareTo(row.time);
 		} else {
 			if (this.id > row.getId()) {
 				return 1;

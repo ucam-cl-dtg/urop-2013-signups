@@ -1,23 +1,34 @@
 package uk.ac.cam.signups.util;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-
-import uk.ac.cam.signups.models.Mappable;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import uk.ac.cam.signups.models.Mappable;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
 public class Util {
+	
+	public static Date convertToDay(Date time) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(time);
+		cal.set(Calendar.MILLISECOND,0);
+		cal.set(Calendar.SECOND,0);
+		cal.set(Calendar.MINUTE,0);
+		cal.set(Calendar.HOUR,0);
+		return cal.getTime();
+	}
+	
+	
 	public static List<Map<String, ?>> getImmutableCollection(
 			Iterable<? extends Mappable> raws) {
 		List<Map<String, ?>> immutalizedCollection = new ArrayList<Map<String, ?>>();
@@ -63,14 +74,11 @@ public class Util {
 		return joined.substring(0, joined.length() - delimeter.length());
 	}
 
-	public static Calendar datepickerParser(String dateString)
+	public static Date datepickerParser(String dateString)
 			throws ParseException {
 		SimpleDateFormat calendarFormatter = new SimpleDateFormat(
 				"dd/MM/yyyy HH:mm");
 		calendarFormatter.setLenient(false);
-		Date formattedDate = calendarFormatter.parse(dateString);
-		Calendar returnCal = new GregorianCalendar();
-		returnCal.setTime(formattedDate);
-		return returnCal;
+		return calendarFormatter.parse(dateString);
 	}
 }

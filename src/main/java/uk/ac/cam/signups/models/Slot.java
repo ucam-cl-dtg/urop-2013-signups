@@ -1,7 +1,6 @@
 package uk.ac.cam.signups.models;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.Map;
 
 import javax.persistence.Entity;
@@ -96,18 +95,11 @@ public class Slot implements Mappable {
 			Row row = this.getRow();
 			Event event = row.getEvent();
 			String sheetType = event.getSheetType();
-			boolean sendNotification = false;
-			Calendar currentTime = new GregorianCalendar();
+			Date currentTime = new Date();
+			Date targetTime = sheetType.equals(Event.SHEETTYPE_DATETIME) ? row
+					.getTime() : event.getExpiryDate();
 
-			if (sheetType.equals("datetime")) {
-				if (currentTime.compareTo(row.getCalendar()) < 0)
-					sendNotification = true;
-			} else if (sheetType.equals("manual")) {
-				if (currentTime.compareTo(event.getExpiryDate()) < 0)
-					sendNotification = true;
-			}
-
-			if (sendNotification) {
+			if (currentTime.compareTo(targetTime) < 0) {
 				String message = event.getTitle() + " by "
 						+ event.getOwner().getCrsid() + " has been canceled.";
 				try {

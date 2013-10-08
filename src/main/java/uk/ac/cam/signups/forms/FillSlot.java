@@ -2,7 +2,7 @@ package uk.ac.cam.signups.forms;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,7 +38,6 @@ public class FillSlot {
 	private List<String> errors;
 	private List<Slot> slots;
 	private Set<Integer> ids;
-	private Calendar currentTime;
 	private Event event;
 
 	private Logger logger = LoggerFactory.getLogger(FillSlot.class);
@@ -94,8 +93,7 @@ public class FillSlot {
 	public List<String> validate() {
 		Session session = HibernateUtil.getInstance().getSession();
 
-		currentTime = new GregorianCalendar(); // Necessary for checking
-												// datetime related fields.
+		Date currentTime = new Date();
 
 		event = (Event) session.createCriteria(Event.class)
 				.add(Restrictions.eq("obfuscatedId", obfuscatedId))
@@ -108,10 +106,10 @@ public class FillSlot {
 		slots = (List<Slot>) session
 				.createQuery(
 						"from Slot as slot where slot.row.event.obfuscatedId = :obfuscatedId "
-								+ "and slot.row.event.expiryDate > :calendar "
-								+ "and (slot.row.calendar > :calendar or slot.row.event.sheetType = 'manual')")
+								+ "and slot.row.event.expiryDate > :time "
+								+ "and (slot.row.time > :time or slot.row.event.sheetType = 'manual')")
 				.setParameter("obfuscatedId", obfuscatedId)
-				.setParameter("calendar", currentTime).list();
+				.setParameter("time", currentTime).list();
 
 		errors = new ArrayList<String>();
 

@@ -4,8 +4,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -109,61 +108,44 @@ public class EventForm {
 		}
 
 		// Create rows and associated slots
-		Row row;
 		if (sheetType.equals("manual")) {
 			for (int i = 0; i < nOfRows; i++) {
-				row = new Row(event);
+				Row row = new Row(event);
 				if (types.length == 1)
 					row.setType(type);
 				session.save(row);
-				Slot slot;
 				for (int j = 0; j < nOfColumns; j++) {
-					slot = new Slot(row);
-					session.save(slot);
+					session.save(new Slot(row));
 				}
 			}
 		} else if (sheetType.equals("datetime")) {
-			Calendar cal;
-			String dateString;
-			Set<Calendar> duplicateCalContainer = new HashSet<Calendar>(); // To
-																			// keep
-																			// track
-																			// of
-																			// added
-																			// dates
-																			// to
-																			// avoid
-																			// duplicates
+
+			Set<Date> timesIssued = new HashSet<Date>();
+
 			for (int i = 0; i < availableDates.length; i++) {
-				// Create calendar object and parse parameters
-				dateString = "" + availableDates[i] + " " + availableHours[i]
-						+ ":" + availableMinutes[i];
-				cal = null;
 				try {
-					cal = Util.datepickerParser(dateString);
+					String dateString = availableDates[i] + " "
+							+ availableHours[i] + ":" + availableMinutes[i];
+					Date time = Util.datepickerParser(dateString);
+
+					if (!timesIssued.contains(time)) {
+						timesIssued.add(time);
+
+						Row row = new Row(time, event);
+						// Set type for rows if there is only one type for the
+						// event
+						if (types.length == 1)
+							row.setType(type);
+						session.save(row);
+						// Create slots
+						for (int j = 0; j < nOfColumns; j++) {
+							session.save(new Slot(row));
+						}
+					}
 				} catch (ParseException e) {
 					// This is not possible because it is dealt within the
 					// validations.
-				}
-
-				// Skip duplicates
-				if (duplicateCalContainer.contains(cal))
-					continue;
-
-				duplicateCalContainer.add(cal);
-
-				row = new Row(cal, event);
-
-				// Set type for rows if there is only one type for the event
-				if (types.length == 1)
-					row.setType(type);
-				session.save(row);
-
-				// Create slots
-				Slot slot;
-				for (int j = 0; j < nOfColumns; j++) {
-					slot = new Slot(row);
-					session.save(slot);
+					throw new Error("Impossible exception", e);
 				}
 			}
 		}
@@ -176,19 +158,16 @@ public class EventForm {
 			logger.error("Notification could not be saved.");
 			logger.error(e.getMessage());
 		}
-		
+
 		HibernateUtil.getInstance().commit();
-		
+
 		return event;
 	}
 
 	public ArrayListMultimap<String, String> validate() {
 		errors = ArrayListMultimap.create();
 
-		Calendar currentTime = new GregorianCalendar(); // Necessary for
-														// checking
-														// datetime related
-														// fields.
+		Date currentTime = new Date();
 
 		// Title
 		if (title.equals("") || title == null) {
@@ -238,7 +217,7 @@ public class EventForm {
 			try {
 				String expString = expiryDateDate + " " + expiryDateHour + ":"
 						+ expiryDateMinute;
-				Calendar expAtHand = Util.datepickerParser(expString);
+				Date expAtHand = Util.datepickerParser(expString);
 				if (expAtHand.compareTo(currentTime) < 0) {
 					errors.put("expiryDate",
 							"Expiry date cannot be earlier than the current date.");
@@ -297,13 +276,12 @@ public class EventForm {
 					errors.put("datetime",
 							"Number of time slots cannot be more than 200.");
 				} else {
-					Calendar timeAtHand;
 					for (int i = 0; i < availableDates.length; i++) {
 						try {
 							String timeString = availableDates[i] + " "
 									+ availableHours[i] + ":"
 									+ availableMinutes[i];
-							timeAtHand = Util.datepickerParser(timeString);
+							Date timeAtHand = Util.datepickerParser(timeString);
 
 							if (timeAtHand.compareTo(currentTime) < 0) {
 								errors.put("datetime",

@@ -2,8 +2,7 @@ package uk.ac.cam.signups.models;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +47,10 @@ import com.google.common.collect.ImmutableMap;
 @Table(name = "EVENTS")
 public class Event implements Mappable {
 
+	public static final String SHEETTYPE_MANUAL = "manual";
+
+	public static final String SHEETTYPE_DATETIME = "datetime";
+
 	@Transient
 	private Logger logger = LoggerFactory.getLogger(Event.class);
 
@@ -59,8 +62,13 @@ public class Event implements Mappable {
 	private String location;
 	private String room;
 	private String title;
+
+	/**
+	 * Indicates whether we have times attached to slots or just slots on their
+	 * own.
+	 */
 	private String sheetType;
-	private Calendar expiryDate;
+	private Date expiryDate;
 
 	@Index(name = "obfuscatedIdIndex")
 	private String obfuscatedId;
@@ -72,14 +80,17 @@ public class Event implements Mappable {
 	@JoinColumn(name = "USER_CRSID")
 	private User owner;
 
+	/**
+	 * The slots which make up the event
+	 */
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
 	@Sort(type = SortType.NATURAL)
-	@OrderBy("calendar")
-	private SortedSet<Row> rows = new TreeSet<Row>();
+	@OrderBy("time")
+	private SortedSet<Row> rows;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
 	@OrderBy("id")
-	private Set<Type> types = new TreeSet<Type>();
+	private Set<Type> types;
 
 	public Event() {
 	}
@@ -178,11 +189,11 @@ public class Event implements Mappable {
 		this.sheetType = sheetType;
 	}
 
-	public Calendar getExpiryDate() {
+	public Date getExpiryDate() {
 		return this.expiryDate;
 	}
 
-	public void setExpiryDate(Calendar expiryDate) {
+	public void setExpiryDate(Date expiryDate) {
 		this.expiryDate = expiryDate;
 	}
 
@@ -254,50 +265,38 @@ public class Event implements Mappable {
 		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM");
 		SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
 				"yyyy MM dd HH mm");
-		String currentDate = comparativeFormatter
-				.format((new GregorianCalendar()).getTime());
+		String currentDate = comparativeFormatter.format(new Date());
 		builder = builder.put("currentDate", currentDate);
 
 		// Expiry date generator (pretty print and comparative)
 		builder = builder.put("expiryDate", getExpiryDateMap());
 
-		if (sheetType.equals("datetime")) {
-			// Make row hierarchy with dates
-			SortedMap<String, Set<Row>> temp = new TreeMap<String, Set<Row>>();
-			SortedSet<Row> rowContainer;
+		if (sheetType.equals(SHEETTYPE_DATETIME)) {
+			// Map dates to sets of slots on that date
+			SortedMap<Date, SortedSet<Row>> dateMap = new TreeMap<Date, SortedSet<Row>>();
+
 			for (Row row : rows) {
-				Calendar cal = row.getCalendar();
-				String key = "" + cal.get(Calendar.YEAR) + ":"
-						+ cal.get(Calendar.MONTH) + ":"
-						+ cal.get(Calendar.DAY_OF_MONTH);
-				if (temp.containsKey(key)) {
-					temp.get(key).add(row);
-				} else {
+				Date day = Util.convertToDay(row.getTime());
+				SortedSet<Row> rowContainer = dateMap.get(day);
+				if (rowContainer == null) {
 					rowContainer = new TreeSet<Row>();
-					rowContainer.add(row);
-					temp.put(key, rowContainer);
+					dateMap.put(day, rowContainer);
 				}
+				rowContainer.add(row);
 			}
 
 			List<ImmutableMap<String, ?>> dates = new ArrayList<ImmutableMap<String, ?>>();
-			for (String key : temp.keySet()) {
-				// Parse date nicely
-				String[] dateArray = key.split(":");
-				int year = Integer.parseInt(dateArray[0]);
-				int month = Integer.parseInt(dateArray[1]);
-				int day = Integer.parseInt(dateArray[2]);
-				Calendar cal = new GregorianCalendar(year, month, day);
-				String date = formatter.format(cal.getTime());
-
+			for (Date key : dateMap.keySet()) {
+				String date = formatter.format(key);
 				dates.add(ImmutableMap.of("date", date, "rows",
-						Util.getImmutableCollection(temp.get(key))));
+						Util.getImmutableCollection(dateMap.get(key))));
 			}
 
 			builder = builder.put("dates", dates);
 			builder = builder.put("rows",
 					new ArrayList<ImmutableMap<String, ?>>());
 
-		} else if (sheetType.equals("manual")) {
+		} else if (sheetType.equals(SHEETTYPE_MANUAL)) {
 			builder = builder.put("dates",
 					new ArrayList<ImmutableMap<String, ?>>());
 			List<Map<String, ?>> immutableRows = Util

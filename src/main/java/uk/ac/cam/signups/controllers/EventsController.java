@@ -346,11 +346,13 @@ public class EventsController extends ApplicationController {
 				if (row.isEmpty())
 					continue;
 
-				java.util.Calendar cal = (java.util.Calendar) row.getCalendar()
-						.clone();
-				Date start = cal.getTime();
+				Date start = row.getTime();
+				
+				java.util.Calendar cal = java.util.Calendar.getInstance();
+				cal.setTime(row.getTime());
 				cal.add(java.util.Calendar.HOUR, 1);
 				Date end = cal.getTime();
+				
 				Dur dur = new Dur(start, end);
 				String subject = "OTTER: "
 						+ event.getTitle()
@@ -380,9 +382,9 @@ public class EventsController extends ApplicationController {
 		// Handle events that you have joined
 		List<Row> rows = cu.getRowsWithDatetimeSignedUp();
 		for (Row row : rows) {
-			java.util.Calendar cal = (java.util.Calendar) row.getCalendar()
-					.clone();
-			Date start = cal.getTime();
+			Date start = row.getTime();
+			java.util.Calendar cal = java.util.Calendar.getInstance();
+			cal.setTime(start);
 			cal.add(java.util.Calendar.HOUR, 1);
 			Date end = cal.getTime();
 			Dur dur = new Dur(start, end);
