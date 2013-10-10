@@ -4,6 +4,23 @@ moduleScripts['signapp']['events'] = {
 				// Prevent creating event twice on double click
 				var submitted = false;
 
+				$("#map-toggle").click(function(e) {
+					e.preventDefault();
+					if ($(this).data("show") == "true") {
+						$(this).data("show", "false");
+						$("#iframe-wrapper").addClass("overflow-hidden");
+						$(this).text("Show on map");
+					} else {
+						$(this).data("show", "true");
+						$("#iframe-wrapper").removeClass("overflow-hidden");
+						$(this).text("Hide map");
+
+						// Clever hack to prevent map going blank when location is not
+						// annotated.
+						$("iframe").css("width", "100%");
+					}
+				});
+				
 				$("input[type='submit']").click(function(e) {
 					if (!submitted) {
 						submitted = true;

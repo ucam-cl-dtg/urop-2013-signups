@@ -102,6 +102,12 @@ div.events#new {
     }
   }
   
+  .overflow-hidden {
+	  overflow: hidden;
+	  height: 0px;
+	  width: 100%;
+	}
+  
   .big-errors-box {
 
     ul {
