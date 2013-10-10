@@ -19,7 +19,6 @@
     {' '}
     (<a id="map-toggle" href="#" data-show="false">Show on map</a>)<br/>
     {/if} 
-    Created by: {$data.owner.name} ({ $data.owner.crsid })<br/>
     Closing date for sign-up: {$data.expiryDate.pretty}
     </p>
         
@@ -104,6 +103,7 @@
         </div>
       {/if}
     </form>
+    Event created by: {$data.owner.name} ({ $data.owner.crsid })<br/>
   {call .history data="all"/}
   </div>
 {/template}
