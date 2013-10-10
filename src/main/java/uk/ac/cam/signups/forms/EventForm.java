@@ -24,6 +24,7 @@ import uk.ac.cam.signups.models.Row;
 import uk.ac.cam.signups.models.Slot;
 import uk.ac.cam.signups.models.Type;
 import uk.ac.cam.signups.models.User;
+import uk.ac.cam.signups.util.Signapps;
 import uk.ac.cam.signups.util.Util;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -155,7 +156,7 @@ public class EventForm {
 
 		try {
 			apiWrapper.createNotification("You have created an event named "
-					+ title + ".", "signapp", "events/" + obfuscatedId,
+					+ title + ".", Signapps.APPLICATION_NAME, "events/" + obfuscatedId,
 					currentUser.getCrsid());
 		} catch (NotificationException e) {
 			logger.error("Notification could not be saved.");

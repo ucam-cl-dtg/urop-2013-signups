@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationException;
 import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
+import uk.ac.cam.signups.util.Signapps;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -103,7 +104,7 @@ public class Slot implements Mappable {
 				String message = event.getTitle() + " by "
 						+ event.getOwner().getCrsid() + " has been canceled.";
 				try {
-					apiWrapper.createNotification(message, "signapp", "events",
+					apiWrapper.createNotification(message, Signapps.APPLICATION_NAME, "events",
 							getOwner().getCrsid());
 				} catch (NotificationException e) {
 					logger.error("Notification could not be created.");

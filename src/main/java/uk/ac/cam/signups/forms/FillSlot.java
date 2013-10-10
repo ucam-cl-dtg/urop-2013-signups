@@ -23,6 +23,7 @@ import uk.ac.cam.signups.models.Event;
 import uk.ac.cam.signups.models.Row;
 import uk.ac.cam.signups.models.Slot;
 import uk.ac.cam.signups.models.User;
+import uk.ac.cam.signups.util.Signapps;
 import uk.ac.cam.signups.util.Util;
 
 public class FillSlot {
@@ -255,7 +256,7 @@ public class FillSlot {
 
 					try {
 						apiWrapper.createNotificationWithForeignId(message,
-								"signapp", "events/" + obfuscatedId,
+								Signapps.APPLICATION_NAME, "events/" + obfuscatedId,
 								Util.join(relatedCrsids, ","), "signapp-"
 										+ event.getId());
 					} catch (NotificationException e) {

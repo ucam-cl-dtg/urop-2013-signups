@@ -15,6 +15,7 @@ import uk.ac.cam.signups.controllers.*;
 public class Signapps extends Application {
 
 	private static Logger log = LoggerFactory.getLogger(Signapps.class);
+	public static final String APPLICATION_NAME = "signups";
 
 	public Set<Class<?>> getClasses() {
 		Set<Class<?>> myServices = new HashSet<Class<?>>();
