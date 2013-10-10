@@ -10,3 +10,4 @@ Guardfile
 .project
 .settings
 .sass-cache
+/target
