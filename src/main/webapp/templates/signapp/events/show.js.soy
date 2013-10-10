@@ -12,6 +12,7 @@
 {template .show}
   <div class="events" id="show">
     <h3>{$data.title}</h3>
+    {if $data.description}<h4>{$data.description}</h4>{/if}
     <p>
     {if $data.location}
     Location: {$data.location}{ $data.room ? ' in ' + $data.room : '' }

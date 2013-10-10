@@ -18,6 +18,13 @@
 		    </div>
 		  </div>
 		  <div class="row">
+		    <div class="columns large-2 small-4 field-label">Description</div>
+		    <div class="columns large-10 small-8 {$errors != 'undefined' and $errors.title ? 'error' : ''}">
+		      <input type="text" placeholder="Description" name="description" {if $data != 'undefined' and $data.description}value="{$data.description}{/if}"/>
+		      {call .errors data="all"}{param errorsCollection: $errors.title /}{/call}
+		    </div>
+		  </div>
+		  <div class="row">
 		    <div class="columns large-2 small-4 field-label">Event type</div>
 		    <div class="columns large-10 small-8 {$errors != 'undefined' and $errors.eventType ? 'error' : ''}">
 		      <input type="text" class="event-type-input" name="types" {if $data != 'undefined' and $data.types}data-prepopulate="{$data.types}"{/if}/>

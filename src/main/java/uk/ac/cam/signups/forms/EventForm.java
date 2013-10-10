@@ -36,6 +36,8 @@ public class EventForm {
 	String room;
 	@FormParam("title")
 	String title;
+	@FormParam("description")
+	String description;
 	@FormParam("types")
 	String typeNames;
 	@FormParam("n_of_columns")
@@ -68,6 +70,7 @@ public class EventForm {
 		// Create event prototype
 		Event event = new Event();
 		event.setLocation(location);
+		event.setDescription(description);
 		event.setRoom(room);
 		event.setTitle(title);
 		event.setSheetType(sheetType);
@@ -184,7 +187,7 @@ public class EventForm {
 			String[] types = typeNames.split(",");
 
 			if (types.length > 20) {
-				errors.put("eventType", "You cannot set more than 20 events.");
+				errors.put("eventType", "You cannot set more than 20 event types.");
 			}
 
 			for (String type : types) {
@@ -251,7 +254,7 @@ public class EventForm {
 			}
 
 			// Number of rows (DATETIME sheet type)
-			if (sheetType.equals("datetime")) {
+			if (sheetType.equals(Event.SHEETTYPE_DATETIME)) {
 				if (!((availableDates.length == availableHours.length) && (availableHours.length == availableMinutes.length))) {
 					errors.put("datetimeRows",
 							"Number of dates, hours and minutes do not match.");
@@ -304,6 +307,7 @@ public class EventForm {
 	public ImmutableMap<String, ?> toMap() {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
 		builder.put("location", location);
+		builder.put("description", description);
 		builder.put("room", room == null ? "" : room);
 		builder.put("title", title);
 		builder.put("types", typeNames);

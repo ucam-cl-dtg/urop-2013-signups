@@ -79,6 +79,8 @@ public class Event implements Mappable {
 	@ManyToOne
 	@JoinColumn(name = "USER_CRSID")
 	private User owner;
+	
+	private String description;
 
 	/**
 	 * The slots which make up the event
@@ -220,6 +222,15 @@ public class Event implements Mappable {
 	public void addTypes(Set<Type> types) {
 		this.types.addAll(types);
 	}
+	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	@SuppressWarnings("unchecked")
 	public static List<ImmutableMap<String, String>> suggestRooms(
@@ -255,6 +266,7 @@ public class Event implements Mappable {
 		builder = builder.put("obfuscatedId", obfuscatedId);
 		builder = builder.put("title", title);
 		builder = builder.put("location", location);
+		builder = builder.put("description", description == null ? "" : description);
 		builder = builder.put("room", room == null ? "" : room);
 		builder = builder.put("sheetType", sheetType);
 		builder = builder.put("owner", owner.toMap());
