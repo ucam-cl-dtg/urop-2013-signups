@@ -287,29 +287,25 @@ public class EventsController extends ApplicationController {
 	@POST
 	@Path("/queryCRSID")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<HashMap<String, String>> queryCRSID(@FormParam("q") String q) {
-		// Perform LDAP search
-		List<HashMap<String, String>> matches;
+	public List<HashMap<String, Object>> queryCRSID(@FormParam("q") String q) {
 		try {
-			matches = LDAPPartialQuery.partialUserByCrsid(q);
+			return LDAPPartialQuery.partialUserByCrsid(q);
 		} catch (LDAPObjectNotFoundException e) {
-			return new ArrayList<HashMap<String, String>>();
+			return new ArrayList<HashMap<String, Object>>();
 		}
-
-		return matches;
 	}
 
 	// Query CRSIDs of pupils
 	@GET
 	@Path("/queryPupilsCRSIDs")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<HashMap<String, String>> queryCRSIDsForDos(
+	public List<HashMap<String, Object>> queryCRSIDsForDos(
 			@QueryParam("q") String q) {
 		User u = initialiseUser();
 		try {
 			return u.getDos(getDashboardApiWrapper()).getPupilCRSIDs(q);
 		} catch (NotADosException e) {
-			return new ArrayList<HashMap<String, String>>();
+			return new ArrayList<HashMap<String, Object>>();
 		}
 	}
 

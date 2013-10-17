@@ -44,16 +44,16 @@ public class Dos {
 		return new ImmutableMappableExhaustedPair<User>(users, exhausted);
 	}
 
-	public List<HashMap<String, String>> getPupilCRSIDs(String q) {
+	public List<HashMap<String, Object>> getPupilCRSIDs(String q) {
 		try {
-			List<HashMap<String, String>> crsids = new ArrayList<HashMap<String, String>>();
+			List<HashMap<String, Object>> crsids = new ArrayList<HashMap<String, Object>>();
 			for (String instID : instIDs)
 				crsids.addAll(LDAPPartialQuery.partialUserByCrsidInInst(q,
 						instID));
 
 			return crsids;
 		} catch (LDAPObjectNotFoundException e) {
-			return new ArrayList<HashMap<String, String>>();
+			return new ArrayList<HashMap<String, Object>>();
 		}
 	}
 
