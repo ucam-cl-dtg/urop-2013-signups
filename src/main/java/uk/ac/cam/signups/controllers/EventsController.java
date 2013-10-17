@@ -1,40 +1,5 @@
 package uk.ac.cam.signups.controllers;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableMap;
-
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.Description;
-import net.fortuna.ical4j.model.property.Organizer;
-import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.Version;
-import net.fortuna.ical4j.util.UidGenerator;
-
-import org.jboss.resteasy.annotations.Form;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
-import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
-import uk.ac.cam.cl.dtg.teaching.api.FormValidationException;
-import uk.ac.cam.cl.dtg.teaching.api.ItemNotFoundException;
-import uk.ac.cam.signups.exceptions.AuthorizationException;
-import uk.ac.cam.signups.exceptions.NotADosException;
-import uk.ac.cam.signups.forms.EventForm;
-import uk.ac.cam.signups.forms.FillSlot;
-import uk.ac.cam.signups.models.Dos;
-import uk.ac.cam.signups.models.Event;
-import uk.ac.cam.signups.models.Row;
-import uk.ac.cam.signups.models.Slot;
-import uk.ac.cam.signups.models.Type;
-import uk.ac.cam.signups.models.User;
-import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
-import uk.ac.cam.signups.util.Util;
-
 import java.net.SocketException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -55,6 +20,42 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Dur;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Version;
+import net.fortuna.ical4j.util.UidGenerator;
+
+import org.jboss.resteasy.annotations.Form;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
+import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
+import uk.ac.cam.cl.dtg.ldap.LDAPUser;
+import uk.ac.cam.cl.dtg.teaching.api.FormValidationException;
+import uk.ac.cam.cl.dtg.teaching.api.ItemNotFoundException;
+import uk.ac.cam.signups.exceptions.AuthorizationException;
+import uk.ac.cam.signups.exceptions.NotADosException;
+import uk.ac.cam.signups.forms.EventForm;
+import uk.ac.cam.signups.forms.FillSlot;
+import uk.ac.cam.signups.models.Dos;
+import uk.ac.cam.signups.models.Event;
+import uk.ac.cam.signups.models.Row;
+import uk.ac.cam.signups.models.Slot;
+import uk.ac.cam.signups.models.Type;
+import uk.ac.cam.signups.models.User;
+import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
+import uk.ac.cam.signups.util.Util;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableMap;
 
 @Path("/events")
 public class EventsController extends ApplicationController {
@@ -289,7 +290,9 @@ public class EventsController extends ApplicationController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<HashMap<String, Object>> queryCRSID(@FormParam("q") String q) {
 		try {
-			return LDAPPartialQuery.partialUserByCrsid(q);
+			return LDAPPartialQuery.partialUserByCrsid(q, LDAPUser.INCLUDE_CRSID
+									| LDAPUser.INCLUDE_NAME | LDAPUser.INCLUDE_DISPLAYNAME
+									| LDAPUser.INCLUDE_SURNAME | LDAPUser.INCLUDE_EMAIL);
 		} catch (LDAPObjectNotFoundException e) {
 			return new ArrayList<HashMap<String, Object>>();
 		}
