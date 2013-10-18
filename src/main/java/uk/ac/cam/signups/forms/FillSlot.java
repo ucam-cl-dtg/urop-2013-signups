@@ -124,8 +124,7 @@ public class FillSlot {
 
 		handleSlotChanges(apiWrapper, currentUser, session, errors);
 		handleTypeChanges(apiWrapper, currentUser, session, errors);
-
-		HibernateUtil.getInstance().commit();
+		
 		return errors;
 	}
 
