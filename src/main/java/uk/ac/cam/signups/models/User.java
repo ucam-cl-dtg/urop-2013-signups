@@ -71,7 +71,7 @@ public class User implements Mappable {
 		try {
 			return LDAPQueryManager.getUser(crsid).getDisplayName();
 		} catch (LDAPObjectNotFoundException e) {
-			return "John Doe";
+			return "Unknown";
 		}
 	}
 
