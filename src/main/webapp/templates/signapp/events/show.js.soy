@@ -145,7 +145,7 @@
  * @param slot
  */
 {template .activeSlot}
-  <input type="text" name="slot_crsids[]" class="slot-field" data-crsid="{$slot.owner.crsid}" data-name="{$slot.owner.name}" data-existing={$slot.owner.crsid != '' ? true : false}>
+  <input type="text" name="slot_crsids[]" class="slot-field" data-collegename="{$slot.owner.collegename}" data-crsid="{$slot.owner.crsid}" data-name="{$slot.owner.name}" data-existing={$slot.owner.crsid != '' ? true : false}>
   <input type="hidden" name="slot_original_crsids[]" value="{$slot.owner.crsid}">
   <input type="hidden" name="slot_ids[]" value="{$slot.id}">
 {/template}
@@ -161,7 +161,8 @@
         <div>
           <p>
             {$slot.owner.name}<br>
-            {$slot.owner.crsid}
+            {$slot.owner.crsid}{' '}
+            {$slot.owner.collegename}
           </p>
         </div>
       </div>
@@ -239,4 +240,38 @@
     <div class="columns large-9">{$notification.message}</div>
     <div class="columns large-3">{$notification.timestamp}</div>
   </div> 
+{/template}
+
+
+/**
+ * Partial for filling the username into a slot
+ * @param name
+ * @param crsid
+ */
+{template .slotDropDownItem}
+	<li>
+		<div style='display: inline-block; padding-left: 10px;'>
+			<div class='full_name'>{$name} ({$crsid})</div>
+		</div>
+	</li>															
+{/template}
+
+
+/**
+ * Partial for filling the username into a slot
+ * @param name
+ * @param crsid
+ * @param collegename
+ */
+{template .slotValue}
+	<li>
+		<p>
+			{$name}<br/>
+		 	{$crsid}
+		 	{if $collegename != 'Unknown'}
+		 		{' '}
+	 			{$collegename}
+	 		{/if}
+		 </p>
+	</li>
 {/template}

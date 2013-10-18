@@ -67,6 +67,14 @@ public class User implements Mappable {
 		return new Dos(colleges);
 	}
 
+	public String getCollegeName() {
+		try {
+			return LDAPQueryManager.getUser(crsid).getCollegeName();
+		} catch (LDAPObjectNotFoundException e) {
+			return "Unknown";
+		}
+	}
+	
 	public String getName() {
 		try {
 			return LDAPQueryManager.getUser(crsid).getDisplayName();
@@ -197,11 +205,10 @@ public class User implements Mappable {
 	public void addSlots(Set<Slot> slots) {
 		this.slots.addAll(slots);
 	}
-
+	
 	// Register user from CRSID
 	public static User registerUser(String crsid) {
 		// Add user to database if necessary
-
 		// Begin hibernate session
 		Session session = HibernateUtil.getInstance().getSession();
 
@@ -250,7 +257,7 @@ public class User implements Mappable {
 
 	public Map<String, ?> toMap() {
 		return ImmutableMap.of("crsid", crsid, "name", getName(), "anySlots",
-				getSlots().size() > 0);
+				getSlots().size() > 0,"collegename",getCollegeName());
 	}
 
 	@Override

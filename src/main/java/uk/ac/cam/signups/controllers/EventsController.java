@@ -292,7 +292,7 @@ public class EventsController extends ApplicationController {
 		try {
 			return LDAPPartialQuery.partialUserByCrsid(q, LDAPUser.INCLUDE_CRSID
 									| LDAPUser.INCLUDE_NAME | LDAPUser.INCLUDE_DISPLAYNAME
-									| LDAPUser.INCLUDE_SURNAME | LDAPUser.INCLUDE_EMAIL);
+									| LDAPUser.INCLUDE_SURNAME | LDAPUser.INCLUDE_EMAIL | LDAPUser.INCLUDE_COLLEGENAME);
 		} catch (LDAPObjectNotFoundException e) {
 			return new ArrayList<HashMap<String, Object>>();
 		}

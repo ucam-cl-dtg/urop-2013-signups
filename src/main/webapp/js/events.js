@@ -373,21 +373,19 @@ moduleScripts['signapp']['events'] = {
 												tokenLimit : 1,
 												resultsFormatter : function(
 														item) {
-													return "<li>"
-															+ "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>"
-															+ item.name
-															+ " ("
-															+ item.crsid
-															+ ")</div><div class='email'>"
-															+ item.crsid
-															+ "@cam.ac.uk</div></div></li>";
+													return getTemplateResult(
+															"signapp.events.slotDropDownItem", {
+																"name" : item.name,
+																"crsid" : item.crsid
+															});
 												},
 												tokenFormatter : function(item) {
-													return "<li><p>"
-															+ item.name
-															+ "<br>"
-															+ item.crsid
-															+ "</p></li>";
+													return getTemplateResult(
+															"signapp.events.slotValue", {
+																"name" : item.name,
+																"crsid" : item.crsid,
+																"collegename" : item.collegename,
+															});
 												},
 												onAdd : function(item) {
 													if (!$(this).data(
@@ -402,7 +400,8 @@ moduleScripts['signapp']['events'] = {
 							if ($(this).data("crsid") != "") {
 								$(this).tokenInput("add", {
 									crsid : $(this).data("crsid"),
-									name : $(this).data("name")
+									name : $(this).data("name"),
+									collegename : $(this).data("collegename")
 								});
 							}
 						});
