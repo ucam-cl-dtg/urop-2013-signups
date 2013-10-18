@@ -119,21 +119,21 @@
     {if $data.currentDate < $data.expiryDate.comparative }
       {if $data.sheetType == 'datetime'} 
         {if $data.currentDate < $row.date.comparativeString} 
-          {call .emptySlot} 
+          {call .activeSlot} 
             {param slot: $slot/}
           {/call}
         {else}
-          {call .establishedSlot} 
+          {call .expiredSlot} 
             {param slot: $slot/}
           {/call}
         {/if}
       {elseif $data.sheetType == 'manual'}
-        {call .emptySlot}
+        {call .activeSlot}
           {param slot: $slot/} 
         {/call}
       {/if}
     {else}
-      {call .establishedSlot}
+      {call .expiredSlot}
         {param slot: $slot/}
       {/call}    
     {/if}
@@ -141,10 +141,10 @@
 {/template}
 
 /**
- * Empty slot partial
+ * Partial for a slot which can be booked
  * @param slot
  */
-{template .emptySlot}
+{template .activeSlot}
   <input type="text" name="slot_crsids[]" class="slot-field" data-crsid="{$slot.owner.crsid}" data-name="{$slot.owner.name}" data-existing={$slot.owner.crsid != '' ? true : false}>
   <input type="hidden" name="slot_original_crsids[]" value="{$slot.owner.crsid}">
   <input type="hidden" name="slot_ids[]" value="{$slot.id}">
@@ -154,7 +154,7 @@
  * Established slot partial
  * @param slot
  */
-{template .establishedSlot}
+{template .expiredSlot}
   <div class="established-slot">
     {if $slot.owner.crsid != ''}
       <div class="full-slot">
