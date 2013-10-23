@@ -107,7 +107,9 @@ public class User implements Mappable {
 	public List<Event> getDatetimeEvents() {
 		Session session = HibernateUtil.getInstance().getSession();
 		return (List<Event>) session.createCriteria(Event.class)
-				.add(Restrictions.eq("sheetType", "datetime")).list();
+				.add(Restrictions.eq("sheetType", "datetime"))
+				.add(Restrictions.eq("owner",this))
+				.list();
 	}
 
 	public void addEvents(List<Event> events) {
