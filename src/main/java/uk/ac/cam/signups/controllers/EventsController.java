@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.cam.cl.dtg.ldap.LDAPObjectNotFoundException;
 import uk.ac.cam.cl.dtg.ldap.LDAPPartialQuery;
 import uk.ac.cam.cl.dtg.ldap.LDAPUser;
+import uk.ac.cam.cl.dtg.teaching.api.AuthenticationException;
 import uk.ac.cam.cl.dtg.teaching.api.FormValidationException;
 import uk.ac.cam.cl.dtg.teaching.api.ItemNotFoundException;
 import uk.ac.cam.signups.exceptions.AuthorizationException;
