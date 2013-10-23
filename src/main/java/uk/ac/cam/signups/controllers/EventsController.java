@@ -331,8 +331,15 @@ public class EventsController extends ApplicationController {
 	@GET
 	@Path("/calendar")
 	@Produces("text/calendar")
-	public Object getCalendar() throws SocketException, URISyntaxException {
-		User cu = initialiseUser();
+	public Object getCalendar() throws SocketException, URISyntaxException,
+			AuthenticationException {
+		
+		String userId = (String) sRequest.getAttribute("userId");
+		if(userId==null){ 
+			throw new AuthenticationException("No user specified");
+		}
+		
+		User cu = User.registerUser(userId);
 
 		Calendar calendar = new Calendar();
 		calendar.getProperties().add(new ProdId("-//OTT//OTT 1.0//EN"));
