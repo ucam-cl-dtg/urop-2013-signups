@@ -5,5 +5,5 @@ import java.util.Map;
 public interface Mappable {
 	public int getId();
 
-	public Map<String, ?> toMap();
+	public Map<String, ?> toMap(User currentUser);
 }

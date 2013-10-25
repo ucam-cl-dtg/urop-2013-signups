@@ -262,7 +262,8 @@ public class Event implements Mappable {
 				prettyExpiry);
 	}
 
-	public Map<String, ?> toMap() {
+	@Override
+	public Map<String, ?> toMap(User currentUser) {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
 		builder = builder.put("obfuscatedId", obfuscatedId);
 		builder = builder.put("title", title);
@@ -270,9 +271,9 @@ public class Event implements Mappable {
 		builder = builder.put("description", description == null ? "" : description);
 		builder = builder.put("room", room == null ? "" : room);
 		builder = builder.put("sheetType", sheetType);
-		builder = builder.put("owner", owner.toMap());
-		builder = builder.put("types", Util.getImmutableCollection(types));
-		builder = builder.put("lastRow", rows.last().toMap());
+		builder = builder.put("owner", owner.toMap(currentUser));
+		builder = builder.put("types", Util.getImmutableCollection(types,currentUser));
+		builder = builder.put("lastRow", rows.last().toMap(currentUser));
 
 		// Current date generator
 		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM");
@@ -302,7 +303,7 @@ public class Event implements Mappable {
 			for (Date key : dateMap.keySet()) {
 				String date = formatter.format(key);
 				dates.add(ImmutableMap.of("date", date, "rows",
-						Util.getImmutableCollection(dateMap.get(key))));
+						Util.getImmutableCollection(dateMap.get(key),currentUser)));
 			}
 
 			builder = builder.put("dates", dates);
@@ -313,7 +314,7 @@ public class Event implements Mappable {
 			builder = builder.put("dates",
 					new ArrayList<ImmutableMap<String, ?>>());
 			List<Map<String, ?>> immutableRows = Util
-					.getImmutableCollection(rows);
+					.getImmutableCollection(rows,currentUser);
 			builder = builder.put("rows", immutableRows);
 		}
 

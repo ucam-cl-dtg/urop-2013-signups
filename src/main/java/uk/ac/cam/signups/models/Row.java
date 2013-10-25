@@ -121,7 +121,8 @@ public class Row implements Mappable, Comparable<Row> {
 		this.type = type;
 	}
 
-	public Map<String, ?> toMap() {
+	@Override
+	public Map<String, ?> toMap(User currentUser) {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
 		if (getEvent().getSheetType().equals("datetime")) {
 			SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
@@ -151,9 +152,9 @@ public class Row implements Mappable, Comparable<Row> {
 		}
 		
 		builder = builder.put("id",id);
-		builder = builder.put("slots", Util.getImmutableCollection(slots));
+		builder = builder.put("slots", Util.getImmutableCollection(slots,currentUser));
 		if (type != null) {
-			builder = builder.put("type", type.toMap());
+			builder = builder.put("type", type.toMap(currentUser));
 		} else {
 			builder = builder.put("type", "no-type");
 		}

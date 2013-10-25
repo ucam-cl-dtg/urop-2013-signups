@@ -257,7 +257,8 @@ public class User implements Mappable {
 		return (((User) object).getCrsid().equals(this.crsid));
 	}
 
-	public Map<String, ?> toMap() {
+	@Override
+	public Map<String, ?> toMap(User currentUser) {
 		return ImmutableMap.of("crsid", crsid, "name", getName(), "anySlots",
 				getSlots().size() > 0,"collegename",getCollegeName());
 	}

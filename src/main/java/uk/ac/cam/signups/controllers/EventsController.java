@@ -127,7 +127,7 @@ public class EventsController extends ApplicationController {
 				pupils = currentDos.getPupils(page, partial);
 			}
 			return ImmutableMap.of("pupils",
-					Util.getImmutableCollection(pupils.getMappableIterable()),
+					Util.getImmutableCollection(pupils.getMappableIterable(),currentUser),
 					"exhausted", pupils.getExhausted());
 		} catch (NotADosException e) {
 			return ImmutableMap.of("error", e.getMessage());
@@ -156,10 +156,12 @@ public class EventsController extends ApplicationController {
 			errors = new ArrayList<String>();
 		}
 
-		boolean isOwner = initialiseUser().equals(event.getOwner());
+		User currentUser = initialiseUser();
+		
+		boolean isOwner = currentUser.equals(event.getOwner());
 
 		return ImmutableMap.of("isOwner", isOwner, "isActive",
-				event.isActive(), "data", event.toMap(), "errors", errors,
+				event.isActive(), "data", event.toMap(currentUser), "errors", errors,
 				"notifications", queryEventHistory(obfuscatedId, 0));
 	}
 
@@ -227,8 +229,9 @@ public class EventsController extends ApplicationController {
 	public Map<String, ?> generateMyEvents(int page) {
 		ImmutableMappableExhaustedPair<Event> events = initialiseUser()
 				.getMyEvents(page);
+		User currentUser = initialiseUser();
 		return ImmutableMap.of("data",
-				Util.getImmutableCollection(events.getMappableIterable()),
+				Util.getImmutableCollection(events.getMappableIterable(),currentUser),
 				"exhausted", events.getExhausted());
 	}
 
@@ -236,8 +239,9 @@ public class EventsController extends ApplicationController {
 	public Map<String, ?> generateAssociatedRows(int page, String mode) {
 		ImmutableMappableExhaustedPair<Row> rows = initialiseUser()
 				.getRowsSignedUp(page, mode);
+		User currentUser = initialiseUser();
 		return ImmutableMap.of("data",
-				Util.getImmutableCollection(rows.getMappableIterable()),
+				Util.getImmutableCollection(rows.getMappableIterable(),currentUser),
 				"exhausted", rows.getExhausted());
 	}
 
@@ -256,7 +260,7 @@ public class EventsController extends ApplicationController {
 						page, "dos");
 				return ImmutableMap
 						.of("data", Util.getImmutableCollection(rows
-								.getMappableIterable()), "exhausted", rows
+								.getMappableIterable(),cUser), "exhausted", rows
 								.getExhausted());
 			} else {
 				return ImmutableMap.of("error", "Not his pupil");
@@ -320,11 +324,12 @@ public class EventsController extends ApplicationController {
 	public Map<String, ?> queryEventHistory(@QueryParam("id") String id,
 			@QueryParam("page") int page) throws ItemNotFoundException {
 		Event event = Event.findById(id);
+		User currentUser = initialiseUser();
 		ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification> nots = event
 				.getNotifications(getNotificationApiWrapper(), page);
 
 		return ImmutableMap.of("list",
-				Util.getImmutableCollection(nots.getMappableIterable()),
+				Util.getImmutableCollection(nots.getMappableIterable(),currentUser),
 				"exhausted", nots.getExhausted());
 	}
 

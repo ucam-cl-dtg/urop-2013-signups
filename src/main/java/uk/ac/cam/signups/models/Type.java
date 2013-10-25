@@ -87,7 +87,8 @@ public class Type implements Mappable {
 		this.event = event;
 	}
 
-	public Map<String, ?> toMap() {
+	@Override
+	public Map<String, ?> toMap(User currentUser) {
 		return ImmutableMap.of("id", id, "name", name);
 	}
 

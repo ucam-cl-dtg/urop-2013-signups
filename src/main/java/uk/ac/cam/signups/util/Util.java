@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.ac.cam.signups.models.Mappable;
+import uk.ac.cam.signups.models.User;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
@@ -30,11 +31,11 @@ public class Util {
 	
 	
 	public static List<Map<String, ?>> getImmutableCollection(
-			Iterable<? extends Mappable> raws) {
+			Iterable<? extends Mappable> raws,User currentUser) {
 		List<Map<String, ?>> immutalizedCollection = new ArrayList<Map<String, ?>>();
 
 		for (Mappable raw : raws)
-			immutalizedCollection.add(raw.toMap());
+			immutalizedCollection.add(raw.toMap(currentUser));
 		return immutalizedCollection;
 	}
 
