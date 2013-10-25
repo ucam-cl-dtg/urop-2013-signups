@@ -161,8 +161,10 @@
         <div>
           <p>
             {$slot.owner.name}<br>
-            {$slot.owner.crsid}{' '}
-            {$slot.owner.collegename}
+            {$slot.owner.crsid}
+            {if $slot.owner.collegename != 'Unknown'}
+            	{' '}{$slot.owner.collegename}
+            {/if}
           </p>
         </div>
       </div>
