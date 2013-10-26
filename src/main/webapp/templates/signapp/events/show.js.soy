@@ -7,10 +7,11 @@
  * @param errors
  * @param isOwner
  * @param isActive
+ * @param currentUser
  * 
  */
 {template .show}
-  <div class="events" id="show">
+  <div class="events" id="show" currentcrsid="{$currentUser.crsid}" currentname="{$currentUser.name}" currentcollege="{$currentUser.collegename}">
     <h3>{$data.title}</h3>
     {if $data.description}<h4>{$data.description}</h4>{/if}
     <p>
@@ -110,32 +111,28 @@
 
 /**
  * Partial template to display slots
- * @param row
- * @param data 
+ * @param row 
+ * @param data
  *
  */
 {template .slots}
   {foreach $slot in $row.slots}
-    {if $data.currentDate < $data.expiryDate.comparative }
-      {if $data.sheetType == 'datetime'} 
-        {if $data.currentDate < $row.date.comparativeString} 
-          {call .activeSlot} 
-            {param slot: $slot/}
+    {if $slot.isupdateable }
+       {if $data.allowFreeform}
+       	  {call .activeSlot} 
+             {param slot: $slot/}
+             {param class: 'slot-field'/}
           {/call}
-        {else}
-          {call .expiredSlot} 
-            {param slot: $slot/}
+       {else}
+		  {call .activeSlot} 
+             {param slot: $slot/}
+             {param class: 'slot-nonfreeformfield'/}
           {/call}
-        {/if}
-      {elseif $data.sheetType == 'manual'}
-        {call .activeSlot}
-          {param slot: $slot/} 
-        {/call}
-      {/if}
+       {/if}
     {else}
-      {call .expiredSlot}
-        {param slot: $slot/}
-      {/call}    
+       {call .expiredSlot} 
+          {param slot: $slot/}
+       {/call}
     {/if}
   {/foreach}
 {/template}
@@ -143,9 +140,10 @@
 /**
  * Partial for a slot which can be booked
  * @param slot
+ * @param class
  */
 {template .activeSlot}
-  <input type="text" name="slot_crsids[]" class="slot-field" data-collegename="{$slot.owner.collegename}" data-crsid="{$slot.owner.crsid}" data-name="{$slot.owner.name}" data-existing={$slot.owner.crsid != '' ? true : false}>
+  <input type="text" name="slot_crsids[]" class="{$class}" data-collegename="{$slot.owner.collegename}" data-crsid="{$slot.owner.crsid}" data-name="{$slot.owner.name}" data-existing={$slot.owner.crsid != '' ? true : false}>
   <input type="hidden" name="slot_original_crsids[]" value="{$slot.owner.crsid}">
   <input type="hidden" name="slot_ids[]" value="{$slot.id}">
 {/template}

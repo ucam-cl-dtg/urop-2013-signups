@@ -15,12 +15,13 @@ moduleScripts['signapp']['events'] = {
 						$("#iframe-wrapper").removeClass("overflow-hidden");
 						$(this).text("Hide map");
 
-						// Clever hack to prevent map going blank when location is not
+						// Clever hack to prevent map going blank when location
+						// is not
 						// annotated.
 						$("iframe").css("width", "100%");
 					}
 				});
-				
+
 				$("input[type='submit']").click(function(e) {
 					if (!submitted) {
 						submitted = true;
@@ -275,7 +276,8 @@ moduleScripts['signapp']['events'] = {
 								function() {
 									if ($(".delete-time-slot").length != 1) {
 										$(this)
-												.parents(".single-slot-controls")
+												.parents(
+														".single-slot-controls")
 												.slideUp(
 														"fast",
 														function() {
@@ -355,6 +357,70 @@ moduleScripts['signapp']['events'] = {
 			}
 		});
 
+		var info_element = $("#show");
+		var current_crsid = info_element.attr("currentcrsid");
+		var current_name = info_element.attr("currentname");
+		var current_college = info_element.attr("currentcollege");
+
+		$(".slot-nonfreeformfield")
+				.each(
+						function(i) {
+							$(this)
+									.tokenInput(
+											[ {
+												crsid : current_crsid,
+												name : current_name,
+												collegename : current_college,
+											} ],
+											{
+												theme : "facebook",
+												tokenValue : "crsid",
+												propertyToSearch : "crsid",
+												minChars : 0,
+												searchDelay : 0,
+												hintText : "Type a CRSID",
+												preventDuplicates : true,
+												resultsLimit : 10,
+												searchingText : '',
+												animateDropdown : false,
+												tokenLimit : 1,
+												resultsFormatter : function(
+														item) {
+													return getTemplateResult(
+															"signapp.events.slotDropDownItem",
+															{
+																"name" : item.name,
+																"crsid" : item.crsid
+															});
+												},
+												tokenFormatter : function(item) {
+													return getTemplateResult(
+															"signapp.events.slotValue",
+															{
+																"name" : item.name,
+																"crsid" : item.crsid,
+																"collegename" : item.collegename,
+															});
+												},
+												onAdd : function(item) {
+													if (!$(this).data(
+															"existing")) {
+														$(this).prev().css(
+																"background",
+																"#f5ffbe");
+													}
+												},
+
+											});
+							if ($(this).data("crsid") != "") {
+								$(this).tokenInput("add", {
+									crsid : $(this).data("crsid"),
+									name : $(this).data("name"),
+									collegename : $(this).data("collegename")
+								});
+							}
+						});
+
 		$(".slot-field")
 				.each(
 						function(i) {
@@ -366,7 +432,8 @@ moduleScripts['signapp']['events'] = {
 												method : "post",
 												tokenValue : "crsid",
 												propertyToSearch : "crsid",
-												min_chars : 2,
+												minChars : 2,
+												searchDelay : 300,
 												hintText : "Type a CRSID",
 												preventDuplicates : true,
 												resultsLimit : 10,
@@ -374,14 +441,16 @@ moduleScripts['signapp']['events'] = {
 												resultsFormatter : function(
 														item) {
 													return getTemplateResult(
-															"signapp.events.slotDropDownItem", {
+															"signapp.events.slotDropDownItem",
+															{
 																"name" : item.name,
 																"crsid" : item.crsid
 															});
 												},
 												tokenFormatter : function(item) {
 													return getTemplateResult(
-															"signapp.events.slotValue", {
+															"signapp.events.slotValue",
+															{
 																"name" : item.name,
 																"crsid" : item.crsid,
 																"collegename" : item.collegename,
