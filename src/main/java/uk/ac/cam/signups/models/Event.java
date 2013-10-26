@@ -77,10 +77,21 @@ public class Event implements Mappable {
 	@Column(name = "dos_visibility", nullable = false, columnDefinition = "boolean default true")
 	private boolean dosVisibility;
 
+	@Column(name = "freeform_editable", nullable = false, columnDefinition = "boolean default true")
+	private boolean freeformEditable;
+
+	public boolean isFreeformEditable() {
+		return freeformEditable;
+	}
+
+	public void setFreeformEditable(boolean freeformEditable) {
+		this.freeformEditable = freeformEditable;
+	}
+
 	@ManyToOne
 	@JoinColumn(name = "USER_CRSID")
 	private User owner;
-	
+
 	private String description;
 
 	/**
@@ -274,7 +285,7 @@ public class Event implements Mappable {
 		builder = builder.put("owner", owner.toMap(currentUser));
 		builder = builder.put("types", Util.getImmutableCollection(types,currentUser));
 		builder = builder.put("lastRow", rows.last().toMap(currentUser));
-
+		builder = builder.put("allowFreeform",freeformEditable || currentUser.equals(owner));
 		// Current date generator
 		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM");
 		SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
