@@ -160,11 +160,15 @@ public class EventsController extends ApplicationController {
 		
 		boolean isOwner = currentUser.equals(event.getOwner());
 
-		return ImmutableMap.of("isOwner", isOwner, "isActive",
-				event.isActive(), "data", event.toMap(currentUser), "errors", errors,
-				"notifications", queryEventHistory(obfuscatedId, 0));
+		return ImmutableMap.<String,Object>builder()
+				.put("isOwner", isOwner)
+				.put("isActive", event.isActive()) 
+				.put("data", event.toMap(currentUser)) 
+				.put("errors", errors)
+				.put("notifications", queryEventHistory(obfuscatedId, 0)) 
+				.put("currentUser", currentUser.toMap(currentUser)).build();
 	}
-
+	
 	// Delete
 	@DELETE
 	@Path("/{obfuscatedId}")
