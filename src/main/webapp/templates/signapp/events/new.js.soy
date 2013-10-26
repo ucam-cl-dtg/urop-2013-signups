@@ -153,6 +153,21 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="columns large-2 small-4">Allow users to change bookings made by others</div>
+        <div class="columns large-10 small-8">
+          <div class="switch medium radius">
+            <input id="freeform-off" name="freeform_editable" type="radio" value="false"{$data.freeformEditable and $data.freeformEditable == 'false' ? ' checked' : ''}>
+            <label for="freeform-off" onclick="">No</label>
+          
+            <input id="freeform-on" name="freeform_editable" type="radio" value= "true"{not $data.freeformEditable or $data.freeformEditable == 'true' ? ' checked' : ''}>
+            <label for="freeform-on" onclick="">Yes</label>
+            
+            <span></span>
+          </div>
+        </div>
+      </div>
+      
 		  <div class="row">
 		    <div class="columns large-12 small-12">
 		      <input type="submit" value="Create event" class="small button" />

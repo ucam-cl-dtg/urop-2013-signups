@@ -61,7 +61,9 @@ public class EventForm {
 	String expiryDateMinute;
 	@FormParam("dos_visibility")
 	Boolean dosVisibility;
-
+	@FormParam("freeform_editable")
+	Boolean freeformEditable;
+	
 	ArrayListMultimap<String, String> errors;
 
 	Logger logger = LoggerFactory.getLogger(EventForm.class);
@@ -76,7 +78,8 @@ public class EventForm {
 		event.setTitle(title);
 		event.setSheetType(sheetType);
 		event.setDosVisibility(dosVisibility);
-
+		event.setFreeformEditable(freeformEditable);
+		
 		// Set obfuscated id
 		SecureRandom sr = new SecureRandom();
 		String obfuscatedId;
@@ -326,7 +329,8 @@ public class EventForm {
 		builder.put("datetimes", datetimes);
 
 		builder.put("dosVisibility", dosVisibility.toString());
-
+		builder.put("freeformEditable", freeformEditable.toString());
+		
 		return builder.build();
 	}
 }
