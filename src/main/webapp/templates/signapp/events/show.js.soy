@@ -6,7 +6,6 @@
  * @param notifications
  * @param errors
  * @param isOwner
- * @param isActive
  * @param currentUser
  * 
  */
@@ -34,15 +33,10 @@
   	{/if}
 
     <form class="custom" action="{$ij.api_prefix}/events/{$data.obfuscatedId}/fillSlots" method="post">
-      {if $isActive or $isOwner}
+      {if $isOwner}
         <div class="row">
           <div class="columns large-122">
-            {if $isActive}
-            	<input type="submit" value="Save changes" class="medium success button">
-            {/if}
-            {if $isOwner}
               <div class="button medium alert" id="delete-event">Delete event</div>
-            {/if}
           </div>
         </div>
       {/if}
@@ -91,15 +85,10 @@
         {/foreach} 
       {/if}
 
-      {if $isActive or $isOwner}
+      {if $isOwner}
         <div class="row">
           <div class="columns large-122">
-            {if $isActive}
-            	<input type="submit" value="Save changes" class="medium success button">
-            {/if}
-            {if $isOwner}
               <div class="button medium alert" id="delete-event">Delete event</div>
-            {/if}
           </div>
         </div>
       {/if}

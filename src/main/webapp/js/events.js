@@ -339,6 +339,9 @@ moduleScripts['signapp']['events'] = {
 		$("form").ajaxForm(function(data) {
 			applyTemplate($('.main'), "signapp.events.show", data);
 		});
+		
+		// Auto submit the form whenever someone changes the type of a booking
+		$("form select").change(function() { $("form").ajaxSubmit(); });
 
 		$("#map-toggle").click(function(e) {
 			e.preventDefault();
@@ -408,10 +411,26 @@ moduleScripts['signapp']['events'] = {
 														$(this).prev().css(
 																"background",
 																"#f5ffbe");
+
+														setTimeout(
+																function() {
+																	$("form")
+																			.ajaxSubmit();
+																}, 5);
 													}
 												},
-
+												onDelete : function(item) {
+													setTimeout(function() {
+														$("form").ajaxSubmit();
+													}, 5);
+												}
 											});
+
+							// This is needed to hide any dropdowns which have
+							// been left laying around by asynchronous form
+							// reloads
+							$(".token-input-dropdown-facebook").hide();
+
 							if ($(this).data("crsid") != "") {
 								$(this).tokenInput("add", {
 									crsid : $(this).data("crsid"),
@@ -462,9 +481,24 @@ moduleScripts['signapp']['events'] = {
 														$(this).prev().css(
 																"background",
 																"#f5ffbe");
+														setTimeout(
+																function() {
+																	$("form")
+																			.ajaxSubmit();
+																}, 5);
 													}
+												},
+												onDelete : function(item) {
+													setTimeout(function() {
+														$("form").ajaxSubmit();
+													}, 5);
 												}
 											});
+
+							// This is needed to hide any dropdowns which have
+							// been left laying around by asynchronous form
+							// reloads
+							$(".token-input-dropdown-facebook").hide();
 
 							if ($(this).data("crsid") != "") {
 								$(this).tokenInput("add", {
