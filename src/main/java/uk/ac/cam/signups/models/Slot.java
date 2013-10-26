@@ -89,7 +89,7 @@ public class Slot implements Mappable {
 		} else {
 			rOwner = ImmutableMap.of("crsid", "", "name", "");
 		}
-		return ImmutableMap.of("id", id, "owner", rOwner);
+		return ImmutableMap.of("id", id, "owner", rOwner,"isupdateable",isUpdateable(currentUser));
 	}
 
 	public void destroy(NotificationApiWrapper apiWrapper) {
@@ -116,5 +116,36 @@ public class Slot implements Mappable {
 
 		Session session = HibernateUtil.getInstance().getSession();
 		session.delete(this);
+	}
+
+	public boolean isUpdateable(User currentUser) {
+		
+		Event event = getRow().getEvent();
+		User eventOwner = event.getOwner();
+		User slotOwner = this.getOwner();
+		
+		// if the currentUser owns the event they can do what they like
+		if (currentUser.equals(eventOwner))
+			return true;
+	
+		// if the event is not in freeform mode then this slot is only editable
+		// if its not booked already or if its booked by the acting user
+		if (!event.isFreeformEditable()) {
+			if (slotOwner != null && !slotOwner.equals(currentUser))
+				return false;
+		}
+	
+		Date currentTime = new Date();
+	
+		// if the event has closed then don't allow edits
+		if (currentTime.after(event.getExpiryDate()))
+			return false;
+	
+		// if the slot time has passed then don't allow edits
+		if (Event.SHEETTYPE_DATETIME.equals(event.getSheetType())) {
+			if (currentTime.after(getRow().getTime()))
+				return false;
+		}
+		return true;
 	}
 }

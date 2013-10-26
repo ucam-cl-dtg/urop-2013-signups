@@ -1,6 +1,5 @@
 package uk.ac.cam.signups.forms;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class FillSlot {
 
 	@FormParam("original_types[]")
 	private int[] original_typeIds;
-	
+
 	@FormParam("row_ids[]")
 	private int[] rowIds;
 
@@ -52,17 +51,6 @@ public class FillSlot {
 	private Event event;
 
 	private Logger logger = LoggerFactory.getLogger(FillSlot.class);
-
-	private boolean isSlotUpdateable(Slot slot) {
-		Date currentTime = new Date();
-		if (currentTime.after(event.getExpiryDate()))
-			return false;
-		if (Event.SHEETTYPE_DATETIME.equals(event.getSheetType())) {
-			if (currentTime.after(slot.getRow().getTime()))
-				return false;
-		}
-		return true;
-	}
 
 	private static final int MODE_DO_NOTHING = 0;
 	private static final int MODE_REMOVE_OWNER = 1;
@@ -192,7 +180,7 @@ public class FillSlot {
 						+ " is not associated with event " + obfuscatedId);
 			}
 
-			if (isSlotUpdateable(slot)) {
+			if (slot.isUpdateable(currentUser)) {
 				Query q = createQuery(session, mode, slotID, newOwner,
 						previousOwner);
 				int count = q.executeUpdate();
@@ -265,7 +253,7 @@ public class FillSlot {
 				}
 			} else {
 				errors.add("Not changing slot at " + row.getTime()
-						+ " which has expired");
+						+ " which you cannot update");
 			}
 		}
 	}
