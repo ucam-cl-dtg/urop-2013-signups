@@ -204,6 +204,18 @@ public class Event implements Mappable {
 	}
 
 	public Date getExpiryDate() {
+		if (this.expiryDate == null) {
+			if (SHEETTYPE_DATETIME.equals(this.sheetType)) {
+				// offset the expiryDate by one ms to make sure any logic tests
+				// for booking the last slot will still pass
+				this.expiryDate = new Date(
+						this.rows.last().getTime().getTime() + 1);
+			} else {
+				// this can only happen if the database is inconsistent
+				final long oneHundredDays = 1000L*60*60*24*100;
+				this.expiryDate = new Date(System.currentTimeMillis() + oneHundredDays);
+			}
+		}
 		return this.expiryDate;
 	}
 
@@ -266,6 +278,7 @@ public class Event implements Mappable {
 				"EEEE, d MMMM 'at' kk:mm");
 		SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
 				"yyyy MM dd HH mm");
+		Date expiryDate = this.getExpiryDate();
 		String comparativeExpiry = comparativeFormatter.format(expiryDate
 				.getTime());
 		String prettyExpiry = formatter.format(expiryDate.getTime());
@@ -365,7 +378,7 @@ public class Event implements Mappable {
 	 */
 	public boolean isActive() {
 		Date currentTime = new Date();
-		if (currentTime.after(expiryDate)) return false;
+		if (currentTime.after(getExpiryDate()))	return false;
 		if (SHEETTYPE_DATETIME.equals(sheetType) && currentTime.after(rows.last().getTime())) return false;
 		return true;
 	}
