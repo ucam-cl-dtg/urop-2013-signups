@@ -1,6 +1,5 @@
 package uk.ac.cam.signups.models;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +26,7 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.cam.cl.dtg.teaching.api.Mapper;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
 import uk.ac.cam.signups.util.Util;
@@ -125,34 +125,12 @@ public class Row implements Mappable, Comparable<Row> {
 	public Map<String, ?> toMap(User currentUser) {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
 		if (getEvent().getSheetType().equals("datetime")) {
-			SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
-					"yyyy MM dd HH mm");
-			String comparativeString = comparativeFormatter.format(this.time);
-			ImmutableMap.Builder<String, Object> dateBuilder = new ImmutableMap.Builder<String, Object>();
-			dateBuilder = dateBuilder.put("year",
-					comparativeString.substring(0, 4));
-			dateBuilder = dateBuilder.put("month",
-					comparativeString.substring(5, 7));
-			dateBuilder = dateBuilder.put("day",
-					comparativeString.substring(8, 10));
-			dateBuilder = dateBuilder.put("hour",
-					comparativeString.substring(11, 13));
-			dateBuilder = dateBuilder.put("minute",
-					comparativeString.substring(14, 16));
-			dateBuilder = dateBuilder.put("comparativeString",
-					comparativeString);
-
-			// Date display
-			SimpleDateFormat formatter = new SimpleDateFormat(
-					"EEEE, d MMMM 'at' kk:mm");
-			String dateString = formatter.format(time);
-			builder = builder.put("dateDisplay", dateString);
-
-			builder = builder.put("date", dateBuilder.build());
+			builder = builder.put("time",Mapper.map(time));
 		}
 
 		builder = builder.put("id", id);
 		builder = builder.put("isupdateable",isUpdateable(currentUser));
+
 		builder = builder.put("slots",
 				Util.getImmutableCollection(slots, currentUser));
 		if (type != null) {
@@ -163,7 +141,7 @@ public class Row implements Mappable, Comparable<Row> {
 
 		builder.put("eventSummary", ImmutableMap.of("obfuscatedId",
 				event.getObfuscatedId(), "title", event.getTitle(),
-				"expiryDate", event.getExpiryDateMap()));
+				"expiryDate", Mapper.map(event.getExpiryDate())));
 		return builder.build();
 	}
 

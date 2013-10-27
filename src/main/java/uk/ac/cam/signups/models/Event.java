@@ -1,10 +1,10 @@
 package uk.ac.cam.signups.models;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cam.cl.dtg.teaching.api.ItemNotFoundException;
+import uk.ac.cam.cl.dtg.teaching.api.Mapper;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.Notification;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
@@ -273,19 +274,6 @@ public class Event implements Mappable {
 		return suggestionsMap;
 	}
 
-	public Map<String, String> getExpiryDateMap() {
-		SimpleDateFormat formatter = new SimpleDateFormat(
-				"EEEE, d MMMM 'at' kk:mm");
-		SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
-				"yyyy MM dd HH mm");
-		Date expiryDate = this.getExpiryDate();
-		String comparativeExpiry = comparativeFormatter.format(expiryDate
-				.getTime());
-		String prettyExpiry = formatter.format(expiryDate.getTime());
-		return ImmutableMap.of("comparative", comparativeExpiry, "pretty",
-				prettyExpiry);
-	}
-
 	@Override
 	public Map<String, ?> toMap(User currentUser) {
 		ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
@@ -299,15 +287,9 @@ public class Event implements Mappable {
 		builder = builder.put("types", Util.getImmutableCollection(types,currentUser));
 		builder = builder.put("lastRow", rows.last().toMap(currentUser));
 		builder = builder.put("allowFreeform",freeformEditable || currentUser.equals(owner));
-		// Current date generator
-		SimpleDateFormat formatter = new SimpleDateFormat("EEEE, d MMMM");
-		SimpleDateFormat comparativeFormatter = new SimpleDateFormat(
-				"yyyy MM dd HH mm");
-		String currentDate = comparativeFormatter.format(new Date());
-		builder = builder.put("currentDate", currentDate);
 
 		// Expiry date generator (pretty print and comparative)
-		builder = builder.put("expiryDate", getExpiryDateMap());
+		builder = builder.put("expiryDate", (Map<String, ?>) Mapper.map(getExpiryDate()));
 
 		if (sheetType.equals(SHEETTYPE_DATETIME)) {
 			// Map dates to sets of slots on that date
@@ -324,10 +306,12 @@ public class Event implements Mappable {
 			}
 
 			List<ImmutableMap<String, ?>> dates = new ArrayList<ImmutableMap<String, ?>>();
-			for (Date key : dateMap.keySet()) {
-				String date = formatter.format(key);
-				dates.add(ImmutableMap.of("date", date, "rows",
-						Util.getImmutableCollection(dateMap.get(key),currentUser)));
+			for (Entry<Date, SortedSet<Row>> entry : dateMap.entrySet()) {
+				Date key = entry.getKey();
+				SortedSet<Row> value = entry.getValue();
+
+				dates.add(ImmutableMap.of("date", Mapper.map(key), "rows",
+						Util.getImmutableCollection(value, currentUser)));
 			}
 
 			builder = builder.put("dates", dates);

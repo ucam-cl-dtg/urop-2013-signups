@@ -682,7 +682,7 @@ moduleScripts['signups']['events'] = {
 																				.find(
 																						"div.date")
 																				.text(
-																						obj["dateDisplay"]);
+																						obj["time"]["formattedDateTime"]);
 																	}
 
 																	target

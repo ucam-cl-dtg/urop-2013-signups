@@ -21,12 +21,11 @@
               <div class="columns large-12">
                 <a href="{$ij.url_prefix}/events/{$event.obfuscatedId}" class="button medium radius created-event">
                   <div class="title">{$event.title}</div>
-                  <div class="date">Expiry date: {$event.expiryDate.pretty}</div>
+                  <div class="date">Expiry date: {$event.expiryDate.formattedDateTime}</div>
                 </a>
               </div>
             </div>
           {/foreach}
-          
           {call .loadMore}
             {param exhausted: $eventsCreated.exhausted/}
             {param className: 'created'/}
@@ -101,9 +100,9 @@
           <div class="title">{$row.eventSummary.title}</div> 
           <div class="date">
             {if $category != 'signed-up'}
-              Expiry date: {$row.eventSummary.expiryDate.pretty}
+              Expiry date: {$row.eventSummary.expiryDate.formattedDateTime}
             {else}
-              Event date: {$row.dateDisplay} 
+              Event date: {$row.time.formattedDateTime} 
             {/if}
           </div>
         </a>
