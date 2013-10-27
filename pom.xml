@@ -6,7 +6,7 @@
 		<artifactId>otter-parent</artifactId>
 		<version>1.0.3-SNAPSHOT</version>
 	</parent>
-	<artifactId>signapp</artifactId>
+	<artifactId>signups</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.8-SNAPSHOT</version>
 	<name>Signup Application</name>

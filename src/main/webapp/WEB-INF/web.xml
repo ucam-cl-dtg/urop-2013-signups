@@ -20,7 +20,7 @@
 
 	<context-param>
 		<param-name>jsFiles</param-name>
-		<param-value>http://malsup.github.com/jquery.form.js,/soy/js/3/signapp.events.js,/js/signups.js,/js/events.js
+		<param-value>http://malsup.github.com/jquery.form.js,/soy/js/3/signups.events.js,/js/signups.js,/js/events.js
 		</param-value>
 	</context-param>
 
@@ -57,7 +57,7 @@
 		</filter-class>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>uk.ac.cam.signups.util.Signapps</param-value>
+			<param-value>uk.ac.cam.signups.util.Signups</param-value>
 		</init-param>
 	</filter>
 

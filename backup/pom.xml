@@ -8,13 +8,13 @@
     <relativePath></relativePath><!-- this is needed to stop maven warning that the parent pom conflicts with ../pom.xml -->
   </parent>
   <groupId>uk.ac.cam.cl.dtg.teaching</groupId>
-  <artifactId>signapp-backup</artifactId>
+  <artifactId>signups-backup</artifactId>
   <packaging>pom</packaging>
   <!-- This version number is left on SNAPSHOT because we re-run the
        job nightly and replace the previous artifact with this one -->
   <version>1.0.0-SNAPSHOT</version>
-  <name>Signapp Site Backup</name>
-  <description>Packages a backup of the data from a signapp installation on an Otter server.  Designed to be run at regular intervals producing SNAPSHOT versioned builds</description>
+  <name>Signups Site Backup</name>
+  <description>Packages a backup of the data from a signups installation on an Otter server.  Designed to be run at regular intervals producing SNAPSHOT versioned builds</description>
   <properties>
     <backup.script>${basedir}/src/main/scripts/backup.sh</backup.script>
     <backup.host>localhost</backup.host>

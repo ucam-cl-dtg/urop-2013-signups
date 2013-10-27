@@ -1,4 +1,4 @@
-moduleScripts['signapp']['events'] = {
+moduleScripts['signups']['events'] = {
 	'new' : [
 			function() {
 				// Prevent creating event twice on double click
@@ -32,7 +32,7 @@ moduleScripts['signapp']['events'] = {
 
 				$("form").ajaxForm({
 					success : function(data) {
-						applyTemplate($('.main'), "signapp.events.new", data);
+						applyTemplate($('.main'), "signups.events.new", data);
 					},
 					error : function(data) {
 						displayError(data, $('.main'));
@@ -337,7 +337,7 @@ moduleScripts['signapp']['events'] = {
 				});
 
 		$("form").ajaxForm(function(data) {
-			applyTemplate($('.main'), "signapp.events.show", data);
+			applyTemplate($('.main'), "signups.events.show", data);
 		});
 		
 		// Auto submit the form whenever someone changes the type of a booking
@@ -390,7 +390,7 @@ moduleScripts['signapp']['events'] = {
 												resultsFormatter : function(
 														item) {
 													return getTemplateResult(
-															"signapp.events.slotDropDownItem",
+															"signups.events.slotDropDownItem",
 															{
 																"name" : item.name,
 																"crsid" : item.crsid
@@ -398,7 +398,7 @@ moduleScripts['signapp']['events'] = {
 												},
 												tokenFormatter : function(item) {
 													return getTemplateResult(
-															"signapp.events.slotValue",
+															"signups.events.slotValue",
 															{
 																"name" : item.name,
 																"crsid" : item.crsid,
@@ -460,7 +460,7 @@ moduleScripts['signapp']['events'] = {
 												resultsFormatter : function(
 														item) {
 													return getTemplateResult(
-															"signapp.events.slotDropDownItem",
+															"signups.events.slotDropDownItem",
 															{
 																"name" : item.name,
 																"crsid" : item.crsid
@@ -468,7 +468,7 @@ moduleScripts['signapp']['events'] = {
 												},
 												tokenFormatter : function(item) {
 													return getTemplateResult(
-															"signapp.events.slotValue",
+															"signups.events.slotValue",
 															{
 																"name" : item.name,
 																"crsid" : item.crsid,
@@ -599,7 +599,7 @@ moduleScripts['signapp']['events'] = {
 							function(data) {
 								$.each(data["list"], function() {
 									applyTemplate($("#load-history"),
-											"signapp.events.historyItem", {
+											"signups.events.historyItem", {
 												notification : this
 											}, "before");
 								});
@@ -770,7 +770,7 @@ moduleScripts['signapp']['events'] = {
 							function(data) {
 								$.each(data["pupils"], function() {
 									applyTemplate($("#pupils"),
-											"signapp.events.pupil", {
+											"signups.events.pupil", {
 												pupil : this
 											}, "append");
 								});

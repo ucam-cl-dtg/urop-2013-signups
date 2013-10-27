@@ -12,9 +12,9 @@ import com.googlecode.htmleasy.HtmleasyProviders;
 
 import uk.ac.cam.signups.controllers.*;
 
-public class Signapps extends Application {
+public class Signups extends Application {
 
-	private static Logger log = LoggerFactory.getLogger(Signapps.class);
+	private static Logger log = LoggerFactory.getLogger(Signups.class);
 	public static final String APPLICATION_NAME = "signups";
 
 	public Set<Class<?>> getClasses() {

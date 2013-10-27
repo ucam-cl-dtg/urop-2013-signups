@@ -39,7 +39,7 @@ import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.Notification;
 import uk.ac.cam.cl.dtg.teaching.api.NotificationApi.NotificationApiWrapper;
 import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
 import uk.ac.cam.signups.util.ImmutableMappableExhaustedPair;
-import uk.ac.cam.signups.util.Signapps;
+import uk.ac.cam.signups.util.Signups;
 import uk.ac.cam.signups.util.Util;
 
 import com.google.common.collect.ImmutableMap;
@@ -122,8 +122,8 @@ public class Event implements Mappable {
 	public ImmutableMappableExhaustedPair<uk.ac.cam.signups.models.Notification> getNotifications(
 			NotificationApiWrapper getApiWrapper, int page) {
 		Set<Notification> notificationsSet = getApiWrapper
-				.getNotificationsWithForeignId(page * 10, 10, Signapps.APPLICATION_NAME,
-						this.getOwner().getCrsid(), "signapp-" + this.getId())
+				.getNotificationsWithForeignId(page * 10, 10, Signups.APPLICATION_NAME,
+						this.getOwner().getCrsid(), "signups-" + this.getId())
 				.getNotifications();
 		SortedSet<uk.ac.cam.signups.models.Notification> notificationsList = new TreeSet<uk.ac.cam.signups.models.Notification>();
 		for (Notification notification : notificationsSet) {
@@ -137,8 +137,8 @@ public class Event implements Mappable {
 		if (notificationsSet.size() % 10 != 0) {
 			exhausted = true;
 		} else if (getApiWrapper
-				.getNotificationsWithForeignId(page * 10 + 10, 1, Signapps.APPLICATION_NAME,
-						this.getOwner().getCrsid(), "signapp-" + this.getId())
+				.getNotificationsWithForeignId(page * 10 + 10, 1, Signups.APPLICATION_NAME,
+						this.getOwner().getCrsid(), "signups-" + this.getId())
 				.getNotifications().size() < 1) {
 			exhausted = true;
 		}

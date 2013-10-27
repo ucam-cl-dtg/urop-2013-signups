@@ -1,4 +1,4 @@
-moduleScripts['signapp'] = {
+moduleScripts['signups'] = {
 	'events' : {},
 	'groups' : {},
 	'deadlines' : {}
