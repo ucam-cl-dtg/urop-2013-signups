@@ -2,126 +2,63 @@
 
 /**
  * Template for the index action of Events Controller
- * @param eventsCreated 
- * @param eventsSignedUp
- * @param eventsNoTime
- * @param eventsArchived
- * 
+ * @param index 
+ * @param currentUser
  */
 {template .index}
-  <div class="events" id="index">
-    <!-- <a href="/dashboard/account#cal-import-links" class="ribbon bottom" data-bypass></a> -->
-    <!-- <a href="{$ij.api_prefix}/events/calendar" class="ribbon top" data-bypass></a> -->
-    <div class="row">
-      <div class="columns large-3">
-        <h3>Events you created</h3> 
-        {if length($eventsCreated.data) != 0}
-          {foreach $event in $eventsCreated.data}
-            <div class="row">
-              <div class="columns large-12">
-                <a href="{$ij.url_prefix}/events/{$event.obfuscatedId}" class="button medium radius created-event">
-                  <div class="title">{$event.title}</div>
-                  <div class="date">Expiry date: {$event.expiryDate.formattedDateTime}</div>
-                </a>
-              </div>
-            </div>
-          {/foreach}
-          {call .loadMore}
-            {param exhausted: $eventsCreated.exhausted/}
-            {param className: 'created'/}
-          {/call}
-        {else}
-          <div>You have not created any events yet.</div> 
-        {/if}
-      </div>
-      
-      <div class="columns large-3">
-        <h3>Upcoming events</h3> 
-        {if length($eventsSignedUp.data) != 0}
-          {call .eventsCollection}
-            {param events: $eventsSignedUp.data /}
-            {param category: 'signed-up'/}   
-          {/call}
-          {call .loadMore}
-            {param exhausted: $eventsSignedUp.exhausted/}
-            {param className: 'signed-up'/}
-          {/call}
-        {else}
-          <div>You do not have any upcoming events.</div> 
-        {/if}
-      </div>
-      
-      <div class="columns large-3">
-        <h3>Events without time</h3> 
-        {if length($eventsNoTime.data) != 0}
-          {call .eventsCollection}
-            {param events: $eventsNoTime.data /}
-            {param category: 'no-time' /}
-          {/call}
-          {call .loadMore}
-            {param exhausted: $eventsNoTime.exhausted/}
-            {param className: 'no-time'/}
-          {/call}
-        {else}
-          <div>You do not have any events with no time field.</div> 
-        {/if}
-      </div>
-      
-      <div class="columns large-3">
-        <h3>Archived events</h3> 
-        {if length($eventsArchived.data) != 0}
-          {call .eventsCollection}
-            {param events: $eventsArchived.data /}
-            {param category: 'archived'/}
-          {/call}
-          {call .loadMore}
-            {param exhausted: $eventsArchived.exhausted/}
-            {param className: 'archived'/}
-          {/call}
-        {else}
-          <div>You do not have any events in your archive.</div>
-        {/if}
-      </div>
+	<div class="row">
+		<div class="columns large-12 small-12">
+			<h3>Signups Event Summary</h3>
+		</div>
 	</div>
-	<div>You can export your events to an external calendar application by using the URL available on the <a href="/dashboard/account#cal-import-links" data-bypass>Accounts page</a>
-	</div> 
-  </div>
-{/template}
-
-/**
- * @param events
- * @param category
- */
-{template .eventsCollection}
-  {foreach $row in $events}
-    <div class="row">
-      <div class="columns large-12">
-        <a href="{$ij.url_prefix}/events/{$row.eventSummary.obfuscatedId}" class="button medium radius created-event">
-          <div class="title">{$row.eventSummary.title}</div> 
-          <div class="date">
-            {if $category != 'signed-up'}
-              Expiry date: {$row.eventSummary.expiryDate.formattedDateTime}
-            {else}
-              Event date: {$row.time.formattedDateTime} 
-            {/if}
-          </div>
-        </a>
-      </div>
-    </div>
-  {/foreach}
-{/template}
-
-/**
- * @param exhausted
- * @param className
- * 
- */
-{template .loadMore}
-  {if not $exhausted}
-    <div class="row">
-      <div class="columns large-12">
-        <a class="small button" id="load-{$className}">Load more</a>
-      </div>
-    </div> 
-  {/if}
-{/template}
+	<div class="row">
+		<div class="columns large-12 small-12">
+			<p>
+				This page shows events you have signed up for and activity on events that you have created. You can export this list to an external calendar application by using the URL available on the <a href="/dashboard/account#cal-import-links" data-bypass>Accounts page</a>. 
+			</p>
+			{if length($index) == 0}
+				<p>No results found.</p>
+			{/if}
+		</div>
+	</div>
+	<ul class="signups-summary-day-list">
+		{foreach $day in $index}
+			<li class="day-item"> 
+				<div class="date">{$day.day.formattedDate}</div>
+				<ul class="event-list">
+					{foreach $event in $day.events}
+						<li class="event-item">
+							<span class="event-title">
+								<a href="{$ij.url_prefix}/events/{$event.obfuscatedId}">{$event.title}</a> 
+							</span>
+							<ul class="row-list">
+								{if $event.empty}
+									<li class="row-item">
+										<span class="row-time">{'&nbsp;'|noAutoescape}</span>
+										<span class="slot-owner not-booked">FREE</span>
+									</li>
+								{else}
+									{foreach $row in $event.rows}
+										{if not($row.empty)}
+											<li class="row-item">
+												<span class="row-time">{$row.rowTime ? $row.rowTime.formattedTime : '#' + (index($row)+1)}</span> 
+												{foreach $crsid in $row.bookings}
+													{let $slotClass}
+														slot-owner
+														{$currentUser.crsid == $crsid ? ' owned' : ''}
+														{$crsid ? ' booked' : ' not-booked'}
+													{/let}
+													<span class="{$slotClass}">{$crsid ? $crsid : 'FREE'}</span> 
+												{/foreach}
+											</li>
+										{/if}
+									{/foreach}
+								{/if}
+							</ul>
+						</li>
+					{/foreach}
+				</ul>
+			</li>
+		{/foreach}
+	</ul>
+{/template} 

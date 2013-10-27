@@ -32,6 +32,9 @@ import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.UidGenerator;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.annotations.Form;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +45,7 @@ import uk.ac.cam.cl.dtg.ldap.LDAPUser;
 import uk.ac.cam.cl.dtg.teaching.api.AuthenticationException;
 import uk.ac.cam.cl.dtg.teaching.api.FormValidationException;
 import uk.ac.cam.cl.dtg.teaching.api.ItemNotFoundException;
+import uk.ac.cam.cl.dtg.teaching.hibernate.HibernateUtil;
 import uk.ac.cam.signups.exceptions.AuthorizationException;
 import uk.ac.cam.signups.exceptions.NotADosException;
 import uk.ac.cam.signups.forms.EventForm;
@@ -68,17 +72,31 @@ public class EventsController extends ApplicationController {
 	 */
 
 	// Index
+	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, ?> indexEvent() {
-		Map<String, ?> signedUp = generateAssociatedRows(0, "contemporary");
-		Map<String, ?> created = generateMyEvents(0);
-		Map<String, ?> archived = generateAssociatedRows(0, "archive");
-		Map<String, ?> noTime = generateAssociatedRows(0, "no-time");
-
-		return ImmutableMap.of("eventsSignedUp", signedUp, "eventsCreated",
-				created, "eventsArchived", archived, "eventsNoTime", noTime);
+		
+		User currentUser = initialiseUser();
+		
+		SummaryIndex index = new SummaryIndex();
+		
+		Session session = HibernateUtil.getInstance().getSession();		
+		
+		// find all the rows I have signed up for
+		Criteria myBookings= session.createCriteria(Row.class)
+				.createAlias("slots", "slots")
+				.add(Restrictions.eq("slots.owner", currentUser));
+		index.addAll(myBookings.list());
+		
+		// find all the rows others have signed up for in my events
+		Criteria myEvents = session.createCriteria(Row.class)
+				.createAlias("event", "event")
+				.add(Restrictions.eq("event.owner", currentUser));		
+		index.addAll(myEvents.list());
+		
+		return ImmutableMap.of("index",index.getResult(),"currentUser",currentUser.toMap(currentUser));
 	}
 
 	// Create
