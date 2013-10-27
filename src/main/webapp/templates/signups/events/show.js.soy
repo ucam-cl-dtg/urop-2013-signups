@@ -174,7 +174,7 @@
 {template .types}
   <div class="type-choice">
     {if length($data.types) > 1}
-      {if $data.currentDate < $data.expiryDate.comparative and (($data.sheetType == 'datetime' and $data.currentDate < $row.date.comparativeString) or $data.sheetType == 'manual')} 
+      {if $row.isupdateable} 
 		 <input type="hidden" name="row_ids[]" value="{$row.id}">
 		 <input type="hidden" name="original_types[]" value="{$row.type.id ? $row.type.id : 0}">
          <select class="small" name="types[]" >

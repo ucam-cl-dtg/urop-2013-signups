@@ -147,12 +147,14 @@ public class Row implements Mappable, Comparable<Row> {
 					"EEEE, d MMMM 'at' kk:mm");
 			String dateString = formatter.format(time);
 			builder = builder.put("dateDisplay", dateString);
-			
+
 			builder = builder.put("date", dateBuilder.build());
 		}
-		
-		builder = builder.put("id",id);
-		builder = builder.put("slots", Util.getImmutableCollection(slots,currentUser));
+
+		builder = builder.put("id", id);
+		builder = builder.put("isupdateable",isUpdateable(currentUser));
+		builder = builder.put("slots",
+				Util.getImmutableCollection(slots, currentUser));
 		if (type != null) {
 			builder = builder.put("type", type.toMap(currentUser));
 		} else {
@@ -163,6 +165,20 @@ public class Row implements Mappable, Comparable<Row> {
 				event.getObfuscatedId(), "title", event.getTitle(),
 				"expiryDate", event.getExpiryDateMap()));
 		return builder.build();
+	}
+
+	/**
+	 * Is this row updateable by this user. Returns true if any of the slots can
+	 * be updated by this user.
+	 * 
+	 * @param currentUser
+	 * @return
+	 */
+	public boolean isUpdateable(User currentUser) {
+		for(Slot s : getSlots()) {
+			if (s.isUpdateable(currentUser)) return true;
+		}
+		return false;
 	}
 
 	public int compareTo(Row row) {
