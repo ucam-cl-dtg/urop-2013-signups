@@ -160,17 +160,27 @@ public class Row implements Mappable, Comparable<Row> {
 	}
 
 	public int compareTo(Row row) {
-		if (row.time != null) {
-			return this.time.compareTo(row.time);
-		} else {
-			if (this.id > row.getId()) {
-				return 1;
-			} else if (this.id == row.getId()) {
-				return 0;
-			} else {
-				return -1;
-			}
+		// earlier rows should be first
+		// if a row doesn't have a time then use the expiry time of its event
+
+		Date thisTime = this.time;
+		if (thisTime == null)
+			thisTime = getEvent().getExpiryDate();
+
+		Date thatTime = row.time;
+		if (thatTime == null)
+			thatTime = row.getEvent().getExpiryDate();
+
+		if (thisTime == null || thatTime == null) {
+			logger.error(
+					"Failed to compare rows, failed to find times. Row1 = {}, Event1 = {}, Row2 = {}, Event2 = {}",
+					this, this.getEvent(), row, row.getEvent());
+			return new Integer(this.id).compareTo(row.id);
 		}
+
+		int result = thisTime.compareTo(thatTime);
+		if (result == 0) return new Integer(this.id).compareTo(row.id);
+		return result;
 	}
 
 	public void destroy(NotificationApiWrapper apiWrapper) {
