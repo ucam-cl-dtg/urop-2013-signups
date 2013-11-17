@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -33,8 +32,8 @@ import com.google.common.collect.ImmutableMap;
 @Entity
 @Table(name = "USERS")
 public class User implements Mappable {
-	@Transient
-	private Logger logger = LoggerFactory.getLogger(User.class);
+
+	private static Logger logger = LoggerFactory.getLogger(User.class);
 
 	@Id
 	private String crsid;
@@ -231,6 +230,7 @@ public class User implements Mappable {
 					}
 				}
 			} catch (LDAPObjectNotFoundException e) {
+				logger.info("Failed to find user {} in directory ",crsid);
 				return null;
 			}
 
