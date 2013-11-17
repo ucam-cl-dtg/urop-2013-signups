@@ -231,7 +231,6 @@ public class User implements Mappable {
 				}
 			} catch (LDAPObjectNotFoundException e) {
 				logger.info("Failed to find user {} in directory ",crsid);
-				return null;
 			}
 
 			User newUser = new User(crsid, instID);
