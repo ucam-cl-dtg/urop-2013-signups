@@ -89,7 +89,7 @@ public class Slot implements Mappable {
 		} else {
 			rOwner = ImmutableMap.of("crsid", "", "name", "");
 		}
-		return ImmutableMap.of("id", id, "owner", rOwner,"isupdateable",isUpdateable(currentUser));
+		return ImmutableMap.of("id", id, "owner", rOwner,"isupdateable",isUpdateable(currentUser), "isexpired",isExpired(currentUser));
 	}
 
 	public void destroy(NotificationApiWrapper apiWrapper) {
@@ -135,17 +135,23 @@ public class Slot implements Mappable {
 				return false;
 		}
 	
+		return !isExpired(currentUser);
+	}
+	
+	public boolean isExpired(User currentUser) {
+		Event event = getRow().getEvent();
+
 		Date currentTime = new Date();
-	
-		// if the event has closed then don't allow edits
+		
+		// if the event has closed then it has expired
 		if (currentTime.after(event.getExpiryDate()))
-			return false;
+			return true;
 	
-		// if the slot time has passed then don't allow edits
+		// if the slot time has passed then it has expired
 		if (Event.SHEETTYPE_DATETIME.equals(event.getSheetType())) {
 			if (currentTime.after(getRow().getTime()))
-				return false;
+				return true;
 		}
-		return true;
+		return false;
 	}
 }
