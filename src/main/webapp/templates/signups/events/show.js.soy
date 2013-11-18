@@ -52,11 +52,11 @@
               </div> 
               
               <div class="row rows">
-                <div class="columns large-12">
+                <div class="columns large-12 booking-rows">
                   {foreach $row in $dateGroup.rows}
                     <div class="row">
                       <div class="columns large-1 time-label">
-                        {$row.time.formattedTime}
+                      	<p>{$row.time.formattedTime}</p>
                       </div> 
 
                       <div class="columns large-11 slots">
@@ -106,23 +106,31 @@
  */
 {template .slots}
   {foreach $slot in $row.slots}
+  	{let $slotclass}
+  		{'event-slot '}
+  		{$slot.isexpired ? 'expired-slot ' : 'not-expired-slot '}
+  		{$slot.isupdateable ? 'bookable-slot ' : 'not-bookable-slot '} 
+  		{$slot.owner.crsid != '' ? 'filled-slot ' : 'not-filled-slot '}
+  	{/let}
+  	<div class="{$slotclass}">
     {if $slot.isupdateable }
        {if $data.allowFreeform}
-       	  {call .activeSlot} 
+       	  {call .bookableSlot} 
              {param slot: $slot/}
              {param class: 'slot-field'/}
           {/call}
        {else}
-		  {call .activeSlot} 
+		  {call .bookableSlot} 
              {param slot: $slot/}
              {param class: 'slot-nonfreeformfield'/}
           {/call}
        {/if}
     {else}
-       {call .expiredSlot} 
+       {call .disabledSlot} 
           {param slot: $slot/}
        {/call}
     {/if}
+    </div>
   {/foreach}
 {/template}
 
@@ -131,7 +139,7 @@
  * @param slot
  * @param class
  */
-{template .activeSlot}
+{template .bookableSlot}
   <input type="text" name="slot_crsids[]" class="{$class}" data-collegename="{$slot.owner.collegename}" data-crsid="{$slot.owner.crsid}" data-name="{$slot.owner.name}" data-existing={$slot.owner.crsid != '' ? true : false}>
   <input type="hidden" name="slot_original_crsids[]" value="{$slot.owner.crsid}">
   <input type="hidden" name="slot_ids[]" value="{$slot.id}">
@@ -141,11 +149,8 @@
  * Established slot partial
  * @param slot
  */
-{template .expiredSlot}
-  <div class="established-slot">
+{template .disabledSlot}
     {if $slot.owner.crsid != ''}
-      <div class="full-slot">
-        <div>
           <p>
             {$slot.owner.name}<br>
             {$slot.owner.crsid}
@@ -153,16 +158,9 @@
             	{' '}{$slot.owner.collegename}
             {/if}
           </p>
-        </div>
-      </div>
     {else}
-      <div class="empty-slot">
-        <div>
           <p>Unavailable</p>
-        </div>
-      </div>
     {/if}
-  </div> 
 {/template}
 
 /**

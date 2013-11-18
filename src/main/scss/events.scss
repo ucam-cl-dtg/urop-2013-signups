@@ -219,11 +219,14 @@ div.events#new {
 }
 
 //
-// Specific event
+// Specific event signup page
 //
 
 div.events#show {
 	
+    $slotHeight:47px;
+    $slotHeightLess2:45px;
+
   .big-errors-box {
 
     ul {
@@ -239,53 +242,69 @@ div.events#show {
     } 
   }
 	
-	.overflow-hidden {
-	  overflow: hidden;
-	  height: 0px;
-	  width: 100%;
-	}
-	
-  .established-slot {
-    display: inline-block;
-    width: 145px;
-    border: 1px solid #CCC;
-    background-color: #E9E9E9;
-    margin: 0 10px 15px 0;
-    vertical-align: top;
-
-    .empty-slot {
-      height: 41px;
-      padding: 1px 3px 1px 3px;
-      margin: 7px 3px 3px 3px;
-      vertical-align: top;
-      text-align:center;
-
-      div p {
-        line-height: 26px;
-        vertical-align: middle;
+  .time-label{
+      p {
+	  display: table-cell;     
+	  vertical-align:middle;
+	  height: $slotHeight;
       }
-    }
-
-    .full-slot {
-      height: 41px;
-      padding: 1px 3px 1px 3px;
-      margin: 7px 3px 3px 3px;
-    }
-
-    p {
-      margin: 0;
-    }
   }
 
+  .overflow-hidden {
+      overflow: hidden;
+      height: 0px;
+      width: 100%;
+  }
+  
+  .event-slot {
+      display: inline-block;
+      width: 145px;
+      height: $slotHeight;
+      margin: 0 0.5em 0 0.5em
+  }
+
+  .not-expired-slot {
+      border: 1px solid #ccc;
+  }
+
+  .expired-slot {
+      color:#ccc;
+      border: 1px solid #fff;
+      ul.token-input-list-facebook {
+	  border: 1px solid #ccc;
+	  li.token-input-token-facebook {
+	      color: #ccc;
+	  }
+      }
+  }
+
+  .bookable-slot {
+      border: 0;
+  }
+
+  .not-bookable-slot.not-expired-slot {
+      border: 1px solid #fff;      
+  }
+
+  .not-bookable-slot {
+
+     p {
+	 display: table-cell;     
+	 vertical-align:middle;
+	 height: $slotHeight;
+	 padding-left: 3px
+     }
+  }
+  
   .draggable-custom {
     cursor: move;
   }
 
   .token-input-list-facebook {
     display: inline-block;
+    margin: 0;
     width: 145px;
-    height: 47px;
-    margin-right: 10px;
+    height: $slotHeight;
 
     li.token-input-selected-token-facebook {
       color: black;
@@ -294,13 +313,20 @@ div.events#show {
 
     li.token-input-token-facebook {
       cursor: inherit;
-      margin-top: 7px;
+      margin:0; 
+      padding: 0;
       display: inline-block;
       background-color: transparent;
       width: 137px;
       border: 0;
       position: relative;
 
+      p {
+	  display: table-cell;     
+	  vertical-align:middle;
+	  height: $slotHeightLess2;
+	  padding-left: 3px
+      }
 
       .token-input-delete-token-facebook {
         position: absolute;
@@ -310,11 +336,11 @@ div.events#show {
     }
 
     li.token-input-input-token-facebook {
-      height: 47px;
+      height: $slotHeightLess2;
 
       input {
         box-shadow: none;
-        height: 47px;
+        height: $slotHeightLess2;
       }
     }
   }
@@ -324,26 +350,12 @@ div.events#show {
     padding: 10px;
     border: 1px #f4f4f4 solid;
 
-    &:nth-child(odd) {
-      background: #f9f9f9; 
-    }
-  
-	  .time-label{
-	    font-size: 16px;
-	    height: 40px;
-	    text-align: center;
-	    padding-top: 14px;
-	  }
-	  
 	  .date-label {
 	    height: 30px;
 	    font-size: 16px;
 	    font-weight: 700;
 	  }
 	  
-	  .large-11 {
-	    padding-left: 20px;
-	  }
   }
   
   .row-name {
@@ -387,7 +399,6 @@ div.events#show {
 
   div.type-choice {
     display: inline-block;
-    margin: 0 0 5px 0;
     height: 47px;
     vertical-align: top;
     line-height: 47px;
@@ -405,7 +416,6 @@ div.events#show {
 
   .type {
     width: 145px;
-    font-size: 16px;
     text-align: center;
     height: 100%;
     vertical-align: middle;
