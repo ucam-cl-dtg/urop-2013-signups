@@ -16,11 +16,12 @@
 			<p>
 				This page shows events you have signed up for and activity on events that you have created. You can export this list to an external calendar application by using the URL available on the <a href="/dashboard/account#cal-import-links" data-bypass>Accounts page</a>. 
 			</p>
-			{if length($index) == 0}
+			{if $index and length($index) == 0}
 				<p>No results found.</p>
 			{/if}
 		</div>
 	</div>
+	{if $index}
 	<ul class="signups-summary-day-list">
 		{foreach $day in $index}
 			<li class="day-item"> 
@@ -61,4 +62,5 @@
 			</li>
 		{/foreach}
 	</ul>
+	{/if}
 {/template} 
