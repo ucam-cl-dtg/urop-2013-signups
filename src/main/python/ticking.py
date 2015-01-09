@@ -5,13 +5,16 @@ import dateutil.parser
 
 def main():
     db = DatabaseOps()
-    
-    create("2015-01-15","A,B,C,D,E,F","",db)
-    create("2015-01-15","","G,H",db)
+
+    create("2015-01-15 14:00","ML / Session 1","","A,B",db)
+    create("2015-01-15 14:00","Java / Session 1","A,B,C,D,E,F,G","",db)
+
+    create("2015-01-15 16:00","ML / Session 2","","A,B",db)
+    create("2015-01-15 16:00","Java / Session 2","A,B,C,D,E,F","",db)
 
     db.con.commit()
 
-def create(sessionDate, javaTickers, mlTickers,db):
+def create(sessionDate, sessionSuffix, javaTickers, mlTickers,db):
     titlePrefix = "1A Ticking Session"
     javaTickers = javaTickers.split(",") if len(javaTickers) > 0 else []
     mlTickers = mlTickers.split(",") if len(mlTickers) > 0 else []
@@ -27,14 +30,10 @@ def create(sessionDate, javaTickers, mlTickers,db):
     if len(mlTickers) > 0:
         description+= " Tickers %s are for ML only." % ",".join(mlTickers)
 
-    e = Event.create(titlePrefix +" / Session 1",description,"acr31",None,"William Gates Building","Intel Lab","datetime",False,True,"Ticking",db)
-    e.addRange("%s 14:00" % sessionDate,5,24,len(allTickers),db)
+    e = Event.create(titlePrefix +" / "+sessionSuffix,description,"acr31",None,"William Gates Building","Intel Lab","datetime",False,True,"Ticking",db)
+    e.addRange("%s" % sessionDate,5,24,len(allTickers),db)
     e.setExpiryToEnd(db)
-    print "Session 1: http://otter.cl.cam.ac.uk/signups/events/%s" % (e.obfuscatedId)
-    e = Event.create(titlePrefix +" / Session 2",description,"acr31",None,"William Gates Building","Intel Lab","datetime",False,True,"Ticking",db)
-    e.addRange("%s 16:00" % sessionDate,5,24,len(allTickers),db)
-    e.setExpiryToEnd(db)
-    print "Session 2: http://otter.cl.cam.ac.uk/signups/events/%s" % (e.obfuscatedId)
+    print "%s: http://otter.cl.cam.ac.uk/signups/events/%s" % (sessionSuffix,e.obfuscatedId)
 
 
 if __name__ == "__main__":
